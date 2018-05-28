@@ -12,6 +12,9 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.Change;
+import com.google.api.services.drive.model.Channel;
+import unice.polytech.si4.pnsinnov.teamm.misc.ConfigurationLoader;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,6 +26,7 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -30,6 +34,7 @@ import java.util.List;
 @Path("myresource")
 public class MyResource {
 
+	private String host = ConfigurationLoader.getInstance().getHost();
 	private static final File DATA_STORE_DIR = new File("target/store");
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	private static final String APPLICATION_NAME = "PrivateMemo";
@@ -50,7 +55,8 @@ public class MyResource {
 //    }
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getIt() {
+	public String getIt() throws IOException {
+		System.out.println(host);
 		try {
 			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
@@ -79,8 +85,40 @@ public class MyResource {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+//		Channel notifications = watchChange(drive,"MyDrive","web_hook","http://"+host+"/PrivateMemo/api/notifications");
+		Channel notifications = watchChange(drive, UUID.randomUUID().toString(), "web_hook", "https://www.bounouas.com/notifications", drive
+				.changes().getStartPageToken());
+		System.out.println("Watching repo");
+		for (int i = 0; i < 10; i++) {
+			String pageToken = drive.changes().getStartPageToken().execute().getStartPageToken();
+			List<Change> changes = drive.changes().list(pageToken)
+					.execute().getChanges();
+			System.out.println(changes);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
+		//TODO: Resource file
 		return "Got it!";
 	}
+
+	private static Channel watchChange(Drive service, String channelId,
+	                                   String channelType, String channelAddress, Drive.Changes.GetStartPageToken pageToken) {
+		Channel channel = new Channel();
+		channel.setId(channelId);
+		channel.setType(channelType);
+		channel.setAddress(channelAddress);
+		try {
+			return service.changes().watch(service.changes().getStartPageToken().execute().getStartPageToken(), channel).execute();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 
 	private static Credential authorize() throws Exception {
 		// load client secrets
