@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class GDriveOAuth {
 	private static final Logger logger = Logger.getLogger(GDriveOAuth.class.getName());
 
-	@POST
+	@GET
 	public void receiveCodeGDrive(@FormParam("code") String code) {
 		GDriveSession gDriveSession = Login.gDriveSession;
 		if (gDriveSession.credential == null) {
