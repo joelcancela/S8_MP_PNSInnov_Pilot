@@ -25,19 +25,20 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
-            <a href="api/myresource" class="btn btn-primary btn-lg active" role="button"><i
+            <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
                     class="fab fa-google-drive"></i>
                 Connect to Google Drive</a>
         </div>
         <div class="col-sm-4">
-            <a href="api/myresource" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
+            <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
                 Connect to Dropbox</a>
         </div>
         <div class="col-sm-4">
-            <a href="api/myresource" class="btn btn-primary btn-lg active" role="button"><i class="fas fa-cloud"></i>
+            <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fas fa-cloud"></i>
                 Connect to One Drive</a>
         </div>
     </div>
+</div>
 </body>
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"

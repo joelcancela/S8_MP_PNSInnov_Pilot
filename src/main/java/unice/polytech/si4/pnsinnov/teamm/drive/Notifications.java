@@ -1,11 +1,9 @@
-package unice.polytech.si4.pnsinnov.teamm;
+package unice.polytech.si4.pnsinnov.teamm.drive;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,21 +21,9 @@ import java.util.stream.Collectors;
 public class Notifications {
 	private static final Logger logger = LogManager.getLogger(Notifications.class);
 
-	/**
-	 * Method handling HTTP GET requests. The returned object will be sent
-	 * to the client as "text/plain" media type.
-	 *
-	 * @return String that will be returned as a text/plain response.
-	 */
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getIt() {
-		return "Got it!";
-	}
-
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
-	public String postHandle(@Context HttpHeaders headers) {
+	public String postHandle(@Context HttpHeaders headers) {//TODO: Control headers & call getChanges() in drive
 		MultivaluedMap<String, String> rh = headers.getRequestHeaders();
 		String str = rh.entrySet()
 				.stream()
