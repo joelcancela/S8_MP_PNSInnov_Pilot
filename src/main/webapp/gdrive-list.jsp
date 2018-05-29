@@ -1,3 +1,6 @@
+<%@ page import="unice.polytech.si4.pnsinnov.teamm.drools.ProxyGoogleDrive" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.google.api.services.drive.model.File" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!doctype html>
 <html lang="en">
@@ -24,7 +27,11 @@
     <h2>Google Drive</h2>
 </div>
 <div class="container">
-    <button type="button" class="btn btn-success">Classify</button>
+    <button type="button"
+            class="btn btn-success"
+            onclick="<%new ProxyGoogleDrive().applyRules(((List<File>)request.getAttribute("list")));%>">
+        Classify
+    </button>
     <h3>Files</h3>
     <table class="table">
         <tbody>
