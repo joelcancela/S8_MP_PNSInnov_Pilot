@@ -1,6 +1,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.google.api.services.drive.model.File" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -23,17 +21,22 @@
 </head>
 <body>
 <div class="container">
-    <h2>Google Drive files</h2>
-    <table>
-        <c:forEach items="${list}" var="item">
-            <tr>
-                <td><c:out value="${item.getName()}"/></td>
-            </tr>
-        </c:forEach>
-    </table>
+    <h2>Google Drive</h2>
 </div>
 <div class="container">
-
+    <button type="button" class="btn btn-success">Classify</button>
+    <h3>Files</h3>
+    <table class="table">
+        <tbody>
+        <c:forEach items="${list}" var="item">
+            <tr>
+                <td>
+                    <a href="<c:out value="${item.getWebViewLink()}"/>"><c:out value="${item.getName()}"/></a>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 </div>
 </body>
 <!-- Latest compiled and minified JavaScript -->
