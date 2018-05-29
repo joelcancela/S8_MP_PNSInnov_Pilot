@@ -1,8 +1,6 @@
 package unice.polytech.si4.pnsinnov.teamm.drive;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -14,11 +12,13 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.Channel;
+import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,20 +39,17 @@ public class GDrive {
 	private FileDataStoreFactory dataStoreFactory;
 	private HttpTransport httpTransport;
 	private Drive drive;
+	private Credential credential;
 
 	public void initialize() {
-		try {
-			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-			Credential credential = authorize();
-			drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
-					APPLICATION_NAME).build();
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage());
-		}
+		credential = Login.gDriveSession.credential;
+		drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
+				APPLICATION_NAME).build();
 	}
 
-	private Credential authorize() throws IOException {
+	public GDrive() throws IOException, GeneralSecurityException {
+		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+		dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
 		// load client secrets
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
 				new InputStreamReader(GDrive.class.getResourceAsStream("/client_secrets.json")));
@@ -61,8 +58,7 @@ public class GDrive {
 				httpTransport, JSON_FACTORY, clientSecrets,
 				Collections.singleton(DriveScopes.DRIVE)).setDataStoreFactory(dataStoreFactory)
 				.build();
-		// authorize
-		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver.Builder().setPort(9089).build()).authorize("user");
+		Login.gDriveSession.setFlow(flow);
 	}
 
 	public List<com.google.api.services.drive.model.File> getFilesList() throws IOException {
@@ -78,7 +74,7 @@ public class GDrive {
 
 	public Channel subscribeToChanges() {
 		//TODO: change hardcoded host
-		Channel notifications = watchChange(drive, UUID.randomUUID().toString(), "https://"+ConfigurationLoader.getInstance().getHost()+"/notifications");
+		Channel notifications = watchChange(drive, UUID.randomUUID().toString(), "https://" + ConfigurationLoader.getInstance().getHost() + "/notifications");
 		logger.log(Level.INFO, "Watching for changes on Google Drive");
 		return notifications;
 	}
