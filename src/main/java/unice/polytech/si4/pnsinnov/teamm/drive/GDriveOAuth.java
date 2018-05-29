@@ -3,7 +3,7 @@ package unice.polytech.si4.pnsinnov.teamm.drive;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
 import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import java.io.IOException;
 import java.util.logging.Level;
