@@ -7,6 +7,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeReque
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class GDriveSession
@@ -14,16 +16,18 @@ import java.io.IOException;
  * @author Joël CANCELA VAZ
  */
 public class GDriveSession {
+	private final Logger logger = Logger.getLogger(GDriveSession.class.getName());
 	GoogleAuthorizationCodeFlow flow;
 	Credential credential;
 	String userID;
-	String redirectURL = "https://www."+ConfigurationLoader.getInstance().getHost() + "/GDriveOAuth";
+	String redirectURL = "https://" + ConfigurationLoader.getInstance().getHost() + "/GDriveOAuth";
 
 	public GoogleAuthorizationCodeRequestUrl getAuthRequest() {
 		return flow.newAuthorizationUrl().setRedirectUri(redirectURL);
 	}
 
 	public void setCredential(String code) throws IOException {//NOT SURE TODO:
+		logger.log(Level.INFO, "AuthCode: " + code);
 		TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectURL).execute();
 		credential = this.flow.createAndStoreCredential(response, userID);
 	}
