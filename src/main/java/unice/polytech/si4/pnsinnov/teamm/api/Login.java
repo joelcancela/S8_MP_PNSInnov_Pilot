@@ -26,6 +26,7 @@ public class Login {
 		if (driveType.equals("google")) {
 			googleDrive = new GDrive();
 			googleDrive.initialize();
+			googleDrive.subscribeToChanges();
 			try {
 				logger.log(Level.INFO, googleDrive.getFilesList().toString());
 			} catch (IOException e) {
