@@ -5,6 +5,7 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -62,7 +63,7 @@ public class GDrive {
 				Collections.singleton(DriveScopes.DRIVE)).setDataStoreFactory(dataStoreFactory)
 				.build();
 		// authorize
-		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver.Builder().setPort(9089).build()).authorize("user");
+		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver.Builder().setHost(ConfigurationLoader.getInstance().getHost()).build()).authorize("user");
 	}
 
 	public List<com.google.api.services.drive.model.File> getFilesList() throws IOException {
