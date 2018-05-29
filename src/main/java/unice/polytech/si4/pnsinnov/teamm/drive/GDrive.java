@@ -14,6 +14,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.Channel;
+import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,9 +77,8 @@ public class GDrive {
 	}
 
 	public Channel subscribeToChanges() {
-		Channel notifications = watchChange(drive, UUID.randomUUID().toString(), "https://www.bounouas.com/notifications");
 		//TODO: change hardcoded host
-//		Channel notifications = watchChange(drive, UUID.randomUUID().toString(), "https://"+ConfigurationLoader.getInstance().getHost()+"/notifications");
+		Channel notifications = watchChange(drive, UUID.randomUUID().toString(), "https://"+ConfigurationLoader.getInstance().getHost()+"/notifications");
 		logger.log(Level.INFO, "Watching for changes on Google Drive");
 		return notifications;
 	}

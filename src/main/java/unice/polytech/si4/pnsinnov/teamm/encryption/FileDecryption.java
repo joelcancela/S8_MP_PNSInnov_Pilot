@@ -40,7 +40,7 @@ public class FileDecryption {
 	public String getIt() {
 
 		if(key.isEmpty()) return "A key must be provided";
-		
+
 		try {
 			Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
 			cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key.getBytes(), KEY_ALGORITHM));
