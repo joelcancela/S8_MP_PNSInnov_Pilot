@@ -62,7 +62,7 @@ public class GDrive {
 				Collections.singleton(DriveScopes.DRIVE)).setDataStoreFactory(dataStoreFactory)
 				.build();
 		// authorize
-		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver.Builder().setPort(9089).build()).authorize("user");
 	}
 
 	public List<com.google.api.services.drive.model.File> getFilesList() throws IOException {
