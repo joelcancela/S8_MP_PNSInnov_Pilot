@@ -20,10 +20,7 @@ import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,6 +74,10 @@ public class GDrive {
 		return files;
 	}
 
+	public com.google.api.services.drive.model.File getFileWithId(String id) throws IOException {
+		return drive.files().get(id).execute();
+	}
+
 	public Channel subscribeToChanges() {
 		//TODO: change hardcoded host
 		Channel notifications = watchChange(drive, UUID.randomUUID().toString(), "https://"+ConfigurationLoader.getInstance().getHost()+"/notifications");
@@ -111,28 +112,26 @@ public class GDrive {
 		}
 	}
 
-	public List<com.google.api.services.drive.model.File> classifyFiles(){
+	public List<com.google.api.services.drive.model.File> classifyFiles() throws IOException {
 		List<com.google.api.services.drive.model.File> result = new ArrayList<>();
 		List<com.google.api.services.drive.model.File> temp = new ArrayList<>();
-		try {
-			List<com.google.api.services.drive.model.File> files = getFilesList();
-			for (com.google.api.services.drive.model.File file : files) {
-				if (file.getParents() == null){
-					result.add(file);
-				} else if (file.getMimeType() != "application/vnd.google-apps.folder") {
-					temp.add(file);
-				} else {
-					result.add(file);
-					for (com.google.api.services.drive.model.File infile : temp){
-						if (infile.getParents().get(0) == file.getId()){
-							result.add(infile);
-						}
+		List<com.google.api.services.drive.model.File> files = getFilesList();
+		for (com.google.api.services.drive.model.File file : files) {
+			if (file.getParents() == null){
+				result.add(file);
+			} else if (! file.getMimeType().equals("application/vnd.google-apps.folder")) {
+				temp.add(file);
+			} else {
+				result.add(file);
+				for (com.google.api.services.drive.model.File infile : temp){
+					if (infile.getParents().get(0).equals(file.getId())){
+						result.add(infile);
+						temp.remove(infile);
 					}
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+		result.addAll(temp);
 		return result;
 	}
 }
