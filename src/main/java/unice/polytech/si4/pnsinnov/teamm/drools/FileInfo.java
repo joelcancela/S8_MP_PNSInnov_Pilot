@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileInfo {
-    private String drivePath = "C:/Users/user/Desktop/DriveTest/";
     private String extension;
     private String mimeType;
     private String nameFile;
@@ -40,7 +39,7 @@ public class FileInfo {
     }
 
     public void moveFile(String folderName) {
-        if(!Files.isDirectory(FileSystems.getDefault().getPath(drivePath + folderName))){
+        /*if(!Files.isDirectory(FileSystems.getDefault().getPath(drivePath + folderName))){
             new File(drivePath + folderName).mkdir();
         }
         Path movefrom = FileSystems.getDefault().getPath(drivePath + nameFile);
@@ -49,7 +48,7 @@ public class FileInfo {
             Files.move(movefrom, target);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void printFile() {

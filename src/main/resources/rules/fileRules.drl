@@ -14,8 +14,8 @@ end
 
 rule "mimeTypeFile" salience 1
 when
-    $file:FileInfo(mimeType == "image/png")
+    $file:FileInfo(mimeType == "application/vnd.google-apps.document")
 then
     System.out.println("MIME Type rule checked !");
-    $file.moveFile("PNG");
+    $file.moveFile("GDocs");
 end
