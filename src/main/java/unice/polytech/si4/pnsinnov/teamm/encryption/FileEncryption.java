@@ -59,15 +59,7 @@ public class FileEncryption {
 			Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
 			cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes(), KEY_ALGORITHM));
 			return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes()));
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
 			e.printStackTrace();
 		}
 
