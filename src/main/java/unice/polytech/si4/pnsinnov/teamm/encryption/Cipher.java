@@ -1,4 +1,4 @@
-package unice.polytech.si4.pnsinnov.teamm;
+package unice.polytech.si4.pnsinnov.teamm.encryption;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -6,7 +6,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.Scanner;
 
 /**
@@ -15,7 +14,6 @@ import java.util.Scanner;
 @Path("mycipher")
 public class Cipher {
 
-	private static final File DATA_STORE_DIR = new File("target/store");
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent
 	 * to the client as "text/plain" media type.
@@ -40,4 +38,5 @@ public class Cipher {
 		}
 		return stringBuilder.toString();
 	}
+
 }
