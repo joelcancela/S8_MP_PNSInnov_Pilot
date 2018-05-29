@@ -110,4 +110,29 @@ public class GDrive {
 			System.out.println(changes);
 		}
 	}
+
+	public List<com.google.api.services.drive.model.File> classifyFiles(){
+		List<com.google.api.services.drive.model.File> result = new ArrayList<>();
+		List<com.google.api.services.drive.model.File> temp = new ArrayList<>();
+		try {
+			List<com.google.api.services.drive.model.File> files = getFilesList();
+			for (com.google.api.services.drive.model.File file : files) {
+				if (file.getParents() == null){
+					result.add(file);
+				} else if (file.getMimeType() != "application/vnd.google-apps.folder") {
+					temp.add(file);
+				} else {
+					result.add(file);
+					for (com.google.api.services.drive.model.File infile : temp){
+						if (infile.getParents().get(0) == file.getId()){
+							result.add(infile);
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }
