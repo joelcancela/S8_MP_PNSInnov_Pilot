@@ -29,6 +29,7 @@ public class GDriveOAuth {
 				logger.log(Level.INFO, e.getMessage());
 			}
 		}
+		logger.log(Level.SEVERE,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GDRIVE IS CALLED");
 		return Response.status(200).build();
 	}
 }
