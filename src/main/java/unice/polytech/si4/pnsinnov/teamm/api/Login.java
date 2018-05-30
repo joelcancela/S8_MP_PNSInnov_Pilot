@@ -50,4 +50,8 @@ public class Login {
 		return Response.status(200).build();
 	}
 
+
+	public static boolean isAlreadyLoggedIn() {
+		return gDriveSession.getCredential() != null;
+	}
 }
