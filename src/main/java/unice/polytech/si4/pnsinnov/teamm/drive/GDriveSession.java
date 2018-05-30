@@ -37,8 +37,8 @@ public class GDriveSession {
 		logger.log(Level.INFO, "Flow: " + flow.toString());
 		GoogleAuthorizationCodeTokenRequest tokenRequest = flow.newTokenRequest(code);
 		logger.log(Level.INFO, "TOKEN RQST: " + tokenRequest);
-		logger.log(Level.INFO, "REDIRECT URL: " + redirectURLGDrive);
-		tokenRequest = tokenRequest.setRedirectUri(redirectURLGDrive);
+		logger.log(Level.INFO, "REDIRECT URL: " + redirectURLOAuth);
+		tokenRequest = tokenRequest.setRedirectUri(redirectURLOAuth);
 		logger.log(Level.INFO, "TOKEN RQST: " + tokenRequest);
 		TokenResponse response = tokenRequest.execute();
 		logger.log(Level.INFO, "TOKEN RESPONSE: " + response);
