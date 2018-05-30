@@ -25,29 +25,24 @@ import java.util.logging.Logger;
 public class Login {
 
 	private static final Logger logger = Logger.getLogger(Login.class.getName());
-	//FIXME: LATER Multiple session
 	public static GDrive googleDrive;
-	public static GDriveSession gDriveSession = new GDriveSession("user");//TODO:
+	public static GDriveSession gDriveSession = new GDriveSession("user");
+	//FIXME:  Multiple sessions with UUID
 
 	@GET
-	public Response authorizeGDrive(@Context HttpServletRequest request,
-	                                @Context HttpServletResponse response,
-	                                @QueryParam("drive") String driveType) throws
-			IOException, ServletException {//FIXME: UGLY TEMP
-		// FIX for multiples
-		// drives
-		// types
+	public Response authorizeDrive(@Context HttpServletRequest request,
+	                               @Context HttpServletResponse response,
+	                               @QueryParam("drive") String driveType) throws
+			IOException, ServletException {
 		if (driveType.equals("google")) {
-			if(Login.gDriveSession.getCredential() == null) {
+			if (Login.gDriveSession.getCredential() == null) {
 				try {
 					googleDrive = new GDrive();
-				} catch (IOException e) {
+				} catch (IOException | GeneralSecurityException e) {
 					logger.log(Level.SEVERE, e.getMessage());
-				} catch (GeneralSecurityException e) {
-					e.printStackTrace();
 				}
 				return Response.seeOther(gDriveSession.getAuthRequest().toURI()).build();
-			}else{
+			} else {
 				request.setAttribute("list", googleDrive.getFilesList());
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			}

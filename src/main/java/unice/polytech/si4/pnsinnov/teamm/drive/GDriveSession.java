@@ -8,7 +8,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeToken
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -22,7 +21,6 @@ public class GDriveSession {
 	Credential credential;
 	String userID;
 	String redirectURLOAuth = "https://" + ConfigurationLoader.getInstance().getHost() + "/GDriveOAuth";
-	String redirectURLGDrive = "https://" + ConfigurationLoader.getInstance().getHost() + "/GDrive";
 
 	public GDriveSession(String userID) {
 		this.userID = userID;
@@ -32,18 +30,11 @@ public class GDriveSession {
 		return flow.newAuthorizationUrl().setRedirectUri(redirectURLOAuth);
 	}
 
-	public void setCredential(String code) throws IOException {//NOT SURE TODO:
-		logger.log(Level.INFO, "AuthCode: " + code);
-		logger.log(Level.INFO, "Flow: " + flow.toString());
+	public void setCredential(String code) throws IOException {
 		GoogleAuthorizationCodeTokenRequest tokenRequest = flow.newTokenRequest(code);
-		logger.log(Level.INFO, "TOKEN RQST: " + tokenRequest);
-		logger.log(Level.INFO, "REDIRECT URL: " + redirectURLOAuth);
 		tokenRequest = tokenRequest.setRedirectUri(redirectURLOAuth);
-		logger.log(Level.INFO, "TOKEN RQST: " + tokenRequest);
 		TokenResponse response = tokenRequest.execute();
-		logger.log(Level.INFO, "TOKEN RESPONSE: " + response);
-		logger.log(Level.INFO, "USERID: " + userID);
-		credential = this.flow.createAndStoreCredential(response, userID);//FIXME: NPE ON RESPONSE
+		credential = this.flow.createAndStoreCredential(response, userID);
 	}
 
 	public void setFlow(GoogleAuthorizationCodeFlow flow) {

@@ -3,7 +3,6 @@ package unice.polytech.si4.pnsinnov.teamm.drive;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -23,7 +22,6 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,9 +71,8 @@ public class GDrive {
 		return files;
 	}
 
-	public Channel subscribeToChanges() {
-		//TODO: change hardcoded host
-		Channel notifications = watchChange(drive, UUID.randomUUID().toString(), "https://" + ConfigurationLoader.getInstance().getHost() + "/notifications");
+	public Channel subscribeToChanges() {//TODO: watch mutliples sessions
+		Channel notifications = watchChange(drive, "userID", "https://" + ConfigurationLoader.getInstance().getHost() + "/notifications");
 		logger.log(Level.INFO, "Watching for changes on Google Drive");
 		return notifications;
 	}
