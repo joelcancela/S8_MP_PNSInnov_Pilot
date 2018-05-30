@@ -20,6 +20,8 @@ import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.logging.Level;
@@ -110,7 +112,8 @@ public class GDrive {
 	public com.google.api.services.drive.model.File uploadFile(boolean useDirectUpload, File file) throws IOException {
 		com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
 		fileMetadata.setName(file.getName());
-		FileContent mediaContent = new FileContent("", file);//FIXME 1st arg: Type Mime
+        logger.log(Level.INFO, "Uploading a file " + file.getName() + " typed " + Files.probeContentType(Paths.get(file.getPath())));
+		FileContent mediaContent = new FileContent(Files.probeContentType(Paths.get(file.getPath())), file);
 		Drive.Files.Create insert = drive.files().create(fileMetadata, mediaContent);
 		MediaHttpUploader uploader = insert.getMediaHttpUploader();
 		uploader.setDirectUploadEnabled(useDirectUpload);
