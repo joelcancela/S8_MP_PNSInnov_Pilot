@@ -114,6 +114,7 @@ public class GDrive {
 					.execute();
 			for (Change change : changes.getChanges()) {
 				if(change.getFile() == null){
+					logger.log(Level.SEVERE, change.toPrettyString());
 					continue;
 				}
 				boolean isFolder = change.getFile().getMimeType().contains("folder");
