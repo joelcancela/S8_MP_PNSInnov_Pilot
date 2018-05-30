@@ -24,7 +24,7 @@ public class Login {
 	private static final Logger logger = Logger.getLogger(Login.class.getName());
 	//FIXME: LATER Multiple session
 	public static GDrive googleDrive;
-	public static GDriveSession gDriveSession = new GDriveSession();
+	public static GDriveSession gDriveSession = new GDriveSession("user");//TODO:
 
 	@GET
 	public Response authorizeGDrive(@QueryParam("drive") String driveType) throws

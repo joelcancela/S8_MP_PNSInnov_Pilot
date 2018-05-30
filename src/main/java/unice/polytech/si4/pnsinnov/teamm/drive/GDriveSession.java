@@ -23,6 +23,10 @@ public class GDriveSession {
 	String userID;
 	String redirectURL = "https://" + ConfigurationLoader.getInstance().getHost() + "/GDriveOAuth";
 
+	public GDriveSession(String userID) {
+		this.userID = userID;
+	}
+
 	public GoogleAuthorizationCodeRequestUrl getAuthRequest() {
 		return flow.newAuthorizationUrl().setRedirectUri(redirectURL);
 	}
