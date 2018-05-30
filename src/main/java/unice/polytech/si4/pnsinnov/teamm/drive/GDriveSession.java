@@ -20,7 +20,7 @@ public class GDriveSession {
 	GoogleAuthorizationCodeFlow flow;
 	Credential credential;
 	String userID;
-	String redirectURLOAuth = "https://" + ConfigurationLoader.getInstance().getHost() + "/GDriveOAuth";
+	String redirectURLOAuth = ConfigurationLoader.getInstance().getHost() + "/PrivateMemo/api/GDriveOAuth";
 
 	public GDriveSession(String userID) {
 		this.userID = userID;
