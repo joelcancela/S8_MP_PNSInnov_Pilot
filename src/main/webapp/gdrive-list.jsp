@@ -43,6 +43,7 @@
     <h3>Files</h3>
     <table class="table">
         <tbody>
+        <p><c:out value="${ownFile.toString()}"/></p>
         <c:forEach items="${list}" var="item">
             <tr>
                 <td>

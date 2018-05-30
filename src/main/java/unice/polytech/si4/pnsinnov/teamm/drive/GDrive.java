@@ -138,7 +138,7 @@ public class GDrive {
 	}
 
 	public OwnFile classifyFiles() throws IOException {
-        com.google.api.services.drive.model.File rootFile = Login.googleDrive.drive.files().get("root").setFields("id").execute();
+        com.google.api.services.drive.model.File rootFile = drive.files().get("root").setFields("id").execute();
 		List<OwnFile> folders = new ArrayList<>();
 		List<OwnFile> files = new ArrayList<>();
 		OwnFile root = new OwnFile(rootFile);

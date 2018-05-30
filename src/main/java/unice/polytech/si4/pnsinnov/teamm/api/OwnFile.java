@@ -23,4 +23,13 @@ public class OwnFile {
     public boolean addFile(OwnFile file){
         return files.add(file);
     }
+
+    @Override
+    public String toString() {
+        return "OwnFile{" +
+                "file=" + file +
+                ", folders=" + folders +
+                ", files=" + files +
+                '}';
+    }
 }
