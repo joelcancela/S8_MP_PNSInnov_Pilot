@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Class GDrive
@@ -117,6 +118,7 @@ public class GDrive {
         List<com.google.api.services.drive.model.File> folders = new ArrayList<>();
         Map<String, List<com.google.api.services.drive.model.File>> filesInFolder = new HashMap<>();
         List<com.google.api.services.drive.model.File> files = getFilesList();
+        System.out.println("FILES FROM GOOGLE : " +  files.stream().map(file -> file.getName()).collect(Collectors.toList()));
         for (com.google.api.services.drive.model.File file : files) {
             if (file.getParents() != null) { //only my files, not files shared with me
                 if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
@@ -147,6 +149,7 @@ public class GDrive {
                 result.addAll(filesInFolder.get(id));
             }
         }
+        System.out.println("CLASSIFY RETURNS : " +  result.stream().map(file -> file.getName()).collect(Collectors.toList()));
         return result;
     }
 }

@@ -37,12 +37,12 @@ public class Login {
 			googleDrive.initialize();
 			googleDrive.subscribeToChanges();
 			try {
-				logger.log(Level.INFO, googleDrive.classifyFiles().toString());
+				logger.log(Level.INFO, googleDrive.getFilesList().toString());
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, e.getMessage());
 			}
 		}
-		request.setAttribute("list", googleDrive.classifyFiles());
+		request.setAttribute("list", googleDrive.getFilesList());
 		request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 	}
 

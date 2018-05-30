@@ -6,6 +6,7 @@ import com.google.api.services.drive.model.FileList;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
 import java.io.IOException;
+import java.util.List;
 
 public class FileInfo {
     private File file;
@@ -44,6 +45,17 @@ public class FileInfo {
         this.nameFile = nameFile;
     }
 
+    public void printParent() {
+
+        System.out.println("FOLDER NAMED : " + this.file.getName());
+
+        try {
+            System.out.println("trying getParents on : " + this.file.getName() + " id " + this.file.getId());
+            System.out.println("Found parent : " + Login.googleDrive.drive.files().get(this.file.getId()).setFields("parents").execute());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void moveFile(String folderName) {
         boolean folderExist = false;
         File fileMetaData = null;
@@ -91,11 +103,13 @@ public class FileInfo {
 
         StringBuilder previousParents = new StringBuilder();
         if (fileParents != null) {
-
-            for (String parent : fileParents.getParents()) {
-                System.out.println("Parent : " + parent);
-                previousParents.append(parent);
-                previousParents.append(',');
+            List<String> parents = fileParents.getParents();
+            if (parents != null) {
+                for (String parent : parents) {
+                    System.out.println("Parent : " + parent);
+                    previousParents.append(parent);
+                    previousParents.append(',');
+                }
             }
         }
             // Move the file to the new folder
