@@ -1,0 +1,21 @@
+package rules;
+import unice.polytech.si4.pnsinnov.teamm.drools.FileInfo
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.FileSystems;
+
+rule "Extension file" salience 2
+when
+    $file:FileInfo(extension == "pdf")
+then
+    System.out.println("Extension file rule checked !");
+    $file.moveFile("PDF");
+end
+
+rule "mimeTypeFile" salience 1
+when
+    $file:FileInfo(mimeType == "application/vnd.google-apps.document")
+then
+    System.out.println("MIME Type rule checked !");
+    $file.moveFile("GDocs");
+end
