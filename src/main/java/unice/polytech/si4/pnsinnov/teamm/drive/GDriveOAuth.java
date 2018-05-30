@@ -41,6 +41,6 @@ public class GDriveOAuth {
 		googleDrive.subscribeToChanges();
 
 		request.setAttribute("list", googleDrive.getFilesList());
-		request.getRequestDispatcher("/PrivateMemo/gdrive-list.jsp").forward(request, response);
+		request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 	}
 }
