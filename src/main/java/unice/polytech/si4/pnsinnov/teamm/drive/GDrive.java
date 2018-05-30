@@ -15,6 +15,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.Change;
+import com.google.api.services.drive.model.ChangeList;
 import com.google.api.services.drive.model.Channel;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
@@ -44,11 +45,19 @@ public class GDrive {
 	private HttpTransport httpTransport;
 	public Drive drive;
 	private Credential credential;
+	private String savedStartPageToken;
 
 	public void initialize() {
 		credential = Login.gDriveSession.credential;
 		drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
 				APPLICATION_NAME).build();
+		try {
+			savedStartPageToken = drive.changes()
+					.getStartPageToken().execute().getStartPageToken();
+			logger.log(Level.INFO,"TOKEN PAGE :"+savedStartPageToken);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, e.getMessage());
+		}
 	}
 
 	public GDrive() throws IOException, GeneralSecurityException {
@@ -90,7 +99,7 @@ public class GDrive {
 		channel.setType("web_hook");
 		channel.setAddress(channelAddress);
 		try {
-			return service.changes().watch(service.changes().getStartPageToken().execute().getStartPageToken(), channel).execute();
+			return service.changes().watch(savedStartPageToken, channel).execute();
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
@@ -102,10 +111,20 @@ public class GDrive {
 	}
 
 	public void getChanges() throws IOException {
-		String pageToken = drive.changes().getStartPageToken().execute().getStartPageToken();
-		List<Change> changes = drive.changes().list(pageToken)
-				.execute().getChanges();
-		logger.log(Level.INFO, changes.toString());
+		logger.log(Level.INFO,"TOKEN PAGE :"+savedStartPageToken);
+		String pageToken = savedStartPageToken;
+		while (pageToken != null) {
+			ChangeList changes = drive.changes().list(pageToken)
+					.execute();
+			for (Change change : changes.getChanges()) {
+				logger.log(Level.INFO, "Change found for file: " + change.getFileId() +" name: "+change.getFile().getName());
+			}
+			if (changes.getNewStartPageToken() != null) {
+				// Last page, save this token for the next polling interval
+				savedStartPageToken = changes.getNewStartPageToken();
+			}
+			pageToken = changes.getNextPageToken();
+		}
 	}
 
 	/**
