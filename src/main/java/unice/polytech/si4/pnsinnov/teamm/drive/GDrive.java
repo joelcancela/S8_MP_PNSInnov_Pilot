@@ -39,7 +39,7 @@ public class GDrive {
 	private final String APPLICATION_NAME = "PrivateMemo";
 	private FileDataStoreFactory dataStoreFactory;
 	private HttpTransport httpTransport;
-	private Drive drive;
+	public Drive drive;
 
 	public void initialize() {
 		try {

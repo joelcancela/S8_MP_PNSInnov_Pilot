@@ -4,6 +4,14 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.FileSystems;
 
+rule "Google spreadsheet" salience 3
+when
+    $file:FileInfo(mimeType == "application/vnd.google-apps.spreadsheet")
+then
+    System.out.println(" Spreadsheet detected!");
+    $file.moveFile("Spreadsheet");
+end
+
 rule "Extension file" salience 2
 when
     $file:FileInfo(extension == "pdf")

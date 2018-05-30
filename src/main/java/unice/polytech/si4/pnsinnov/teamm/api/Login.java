@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class Login {
 
 	private static final Logger logger = Logger.getLogger(Login.class.getName());
-	private GDrive googleDrive;
+	public static GDrive googleDrive;
 
 	@GET
 	public void instantiateGDrive(@Context HttpServletRequest request,

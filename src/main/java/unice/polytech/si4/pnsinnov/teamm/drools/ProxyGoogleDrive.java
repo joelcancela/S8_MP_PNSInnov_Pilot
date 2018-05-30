@@ -23,6 +23,7 @@ public class ProxyGoogleDrive {
             fileInfo.setMimeType(file.getMimeType());
             fileInfo.setNameFile(file.getName());
             fileInfos.add(fileInfo);
+            fileInfo.setFile(file);
         }
 
         KieServices ks = KieServices.Factory.get();
