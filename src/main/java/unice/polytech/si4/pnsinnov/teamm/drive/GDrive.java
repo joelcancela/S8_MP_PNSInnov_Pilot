@@ -137,21 +137,38 @@ public class GDrive {
 		downloader.download(new GenericUrl(uploadedFile.getWebContentLink()), out);
 	}
 
-	public List<OwnFile> classifyFiles() throws IOException {
+	public OwnFile classifyFiles() throws IOException {
+        com.google.api.services.drive.model.File rootFile = Login.googleDrive.drive.files().get("root").setFields("id").execute();
 		List<OwnFile> folders = new ArrayList<>();
-		List<com.google.api.services.drive.model.File> files = getFilesList();
-//		System.out.println("FILES FROM GOOGLE : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
-		for (com.google.api.services.drive.model.File file : files) {
-			if (file.getParents() != null && file.getMimeType().equals("application/vnd.google-apps.folder")) {
-			    folders.add(new OwnFile(file, true));
-			}
+		List<OwnFile> files = new ArrayList<>();
+		OwnFile root = new OwnFile(rootFile);
+		folders.add(root);
+		List<com.google.api.services.drive.model.File> filesDrive = getFilesList();
+		for (com.google.api.services.drive.model.File file : filesDrive) {
+		    if (file.getParents() != null) {
+                if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
+                    folders.add(new OwnFile(file));
+                } else {
+                    files.add(new OwnFile(file));
+                }
+            }
 		}
-
-        for (OwnFile ownFile : folders) {
-
+        for (OwnFile child : folders) {
+            for (OwnFile possibleParent : folders) {
+                if (possibleParent.file.getId().equals(child.file.getParents().get(0))){
+                    possibleParent.addFolder(child);
+                    break;
+                }
+            }
         }
-
-//		System.out.println("CLASSIFY RETURNS : " + result.stream().map(file -> file.getName()).collect(Collectors.toList()));
-		return folders;
+        for (OwnFile child : files) {
+            for (OwnFile possibleParent : folders) {
+                if (possibleParent.file.getId().equals(child.file.getParents().get(0))){
+                    possibleParent.addFile(child);
+                    break;
+                }
+            }
+        }
+		return root;
 	}
 }

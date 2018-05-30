@@ -6,16 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OwnFile {
-    private File file;
+    public File file;
     private List<OwnFile> folders;
     private List<OwnFile> files;
-    private boolean folder;
 
-    public OwnFile(File file, boolean isFolder) {
+    public OwnFile(File file) {
         this.file = file;
         this.folders = new ArrayList<>();
         this.files = new ArrayList<>();
-        this.folder = isFolder;
     }
 
     public boolean addFolder(OwnFile folder){
