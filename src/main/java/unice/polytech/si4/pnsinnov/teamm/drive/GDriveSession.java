@@ -21,14 +21,15 @@ public class GDriveSession {
 	GoogleAuthorizationCodeFlow flow;
 	Credential credential;
 	String userID;
-	String redirectURL = "https://" + ConfigurationLoader.getInstance().getHost() + "/GDriveOAuth";
+	String redirectURLOAuth = "https://" + ConfigurationLoader.getInstance().getHost() + "/GDriveOAuth";
+	String redirectURLGDrive = "https://" + ConfigurationLoader.getInstance().getHost() + "/GDrive";
 
 	public GDriveSession(String userID) {
 		this.userID = userID;
 	}
 
 	public GoogleAuthorizationCodeRequestUrl getAuthRequest() {
-		return flow.newAuthorizationUrl().setRedirectUri(redirectURL);
+		return flow.newAuthorizationUrl().setRedirectUri(redirectURLOAuth);
 	}
 
 	public void setCredential(String code) throws IOException {//NOT SURE TODO:
@@ -36,8 +37,8 @@ public class GDriveSession {
 		logger.log(Level.INFO, "Flow: " + flow.toString());
 		GoogleAuthorizationCodeTokenRequest tokenRequest = flow.newTokenRequest(code);
 		logger.log(Level.INFO, "TOKEN RQST: " + tokenRequest);
-		logger.log(Level.INFO, "REDIRECT URL: " + redirectURL);
-		tokenRequest = tokenRequest.setRedirectUri(redirectURL);
+		logger.log(Level.INFO, "REDIRECT URL: " + redirectURLGDrive);
+		tokenRequest = tokenRequest.setRedirectUri(redirectURLGDrive);
 		logger.log(Level.INFO, "TOKEN RQST: " + tokenRequest);
 		TokenResponse response = tokenRequest.execute();
 		logger.log(Level.INFO, "TOKEN RESPONSE: " + response);
