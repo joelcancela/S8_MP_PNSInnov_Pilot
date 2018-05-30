@@ -4,6 +4,10 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.media.MediaHttpDownloader;
+import com.google.api.client.googleapis.media.MediaHttpUploader;
+import com.google.api.client.http.FileContent;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -15,9 +19,7 @@ import com.google.api.services.drive.model.Channel;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.logging.Level;
@@ -94,11 +96,44 @@ public class GDrive {
 	}
 
 	public void getChanges() throws IOException {
-			String pageToken = drive.changes().getStartPageToken().execute().getStartPageToken();
-			List<Change> changes = drive.changes().list(pageToken)
-					.execute().getChanges();
-			logger.log(Level.INFO, changes.toString());
+		String pageToken = drive.changes().getStartPageToken().execute().getStartPageToken();
+		List<Change> changes = drive.changes().list(pageToken)
+				.execute().getChanges();
+		logger.log(Level.INFO, changes.toString());
 	}
+
+	/**TODO: To try and test
+	 * Uploads a file using either resumable or direct media upload.
+	 */
+	public com.google.api.services.drive.model.File uploadFile(boolean useDirectUpload, File file) throws IOException {
+		com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
+		fileMetadata.setName(file.getName());
+		FileContent mediaContent = new FileContent("", file);//FIXME 1st arg: Type Mime
+		Drive.Files.Create insert = drive.files().create(fileMetadata, mediaContent);
+		MediaHttpUploader uploader = insert.getMediaHttpUploader();
+		uploader.setDirectUploadEnabled(useDirectUpload);
+		return insert.execute();
+	}
+
+	/**TODO: To try and test
+	 * Downloads a file using either resumable or direct media download.
+	 */
+	public void downloadFile(boolean useDirectDownload, com.google.api.services.drive.model.File uploadedFile)
+			throws IOException {
+		// create parent directory (if necessary)
+		File parentDir = new File("/downloads/userID");
+		if (!parentDir.exists() && !parentDir.mkdirs()) {
+			throw new IOException("Unable to create parent directory");
+		}
+		OutputStream out = new FileOutputStream(new File(parentDir, uploadedFile.getName()));
+
+		MediaHttpDownloader downloader =
+				new MediaHttpDownloader(httpTransport, drive.getRequestFactory().getInitializer());
+		downloader.setDirectDownloadEnabled(useDirectDownload);
+		downloader.download(new GenericUrl(uploadedFile.getWebContentLink()), out);
+	}
+
+
 	public List<com.google.api.services.drive.model.File> classifyFiles() throws IOException {
 		List<com.google.api.services.drive.model.File> result = new ArrayList<>();
 		List<com.google.api.services.drive.model.File> folders = new ArrayList<>();
@@ -123,13 +158,13 @@ public class GDrive {
 		for (String id : filesInFolder.keySet()) {
 			com.google.api.services.drive.model.File searchedFolder = null;
 			for (com.google.api.services.drive.model.File folder : folders) {
-				if (folder.getId().equals(id)){
+				if (folder.getId().equals(id)) {
 					searchedFolder = folder;
 				}
 			}
-			if (searchedFolder == null){
+			if (searchedFolder == null) {
 				result.addAll(filesInFolder.get(id));
-			} else{
+			} else {
 				result.add(searchedFolder);
 				result.addAll(filesInFolder.get(id));
 			}
