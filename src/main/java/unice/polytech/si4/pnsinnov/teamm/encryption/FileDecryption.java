@@ -1,5 +1,10 @@
 package unice.polytech.si4.pnsinnov.teamm.encryption;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -10,19 +15,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * Created by Nassim B on 5/28/18.
  */
 @Path("filedecryption")
 public class FileDecryption {
-
+	private static final Logger logger = LogManager.getLogger(FileDecryption.class);
 	private final String CIPHER_ALGO = "AES";
 	private static final String KEY_ALGORITHM = "AES";
 
@@ -45,16 +46,8 @@ public class FileDecryption {
 			Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
 			cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key.getBytes(), KEY_ALGORITHM));
 			return new String (cipher.doFinal(Base64.decodeBase64(encrypted)));
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+			logger.log(Level.ERROR, e.getMessage());
 		}
 
 		return "Encrypted";

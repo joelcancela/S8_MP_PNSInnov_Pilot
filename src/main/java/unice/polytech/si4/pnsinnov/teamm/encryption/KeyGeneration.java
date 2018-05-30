@@ -1,5 +1,9 @@
 package unice.polytech.si4.pnsinnov.teamm.encryption;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.ws.rs.GET;
@@ -15,7 +19,7 @@ import java.util.Optional;
  */
 @Path("generateKey")
 public class KeyGeneration {
-
+	private static final Logger logger = LogManager.getLogger(KeyGeneration.class);
 	private final String CIPHER_ALGO = "AES";
 
 	@GET
@@ -34,7 +38,7 @@ public class KeyGeneration {
 			KeyGenerator keyGenerator = KeyGenerator.getInstance(CIPHER_ALGO);
 			key = Optional.of(keyGenerator.generateKey());
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.log(Level.ERROR, e.getMessage());
 		}
 		return key;
 	}

@@ -1,15 +1,14 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FileInfo {
     private String extension;
     private String mimeType;
     private String nameFile;
+    private static final Logger logger = LogManager.getLogger(FileInfo.class);
 
     public FileInfo() {
     }
@@ -52,7 +51,7 @@ public class FileInfo {
     }
 
     public void printFile() {
-        System.out.println("Extension : " + extension + ", MIME type : " + mimeType);
+        logger.log(Level.INFO,"Extension : " + extension + ", MIME type : " + mimeType);
     }
 }
 

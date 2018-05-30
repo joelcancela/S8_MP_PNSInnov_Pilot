@@ -33,7 +33,7 @@ public class Notifications {
 			try {
 				Login.googleDrive.getChanges();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 		}
 	}
