@@ -45,7 +45,7 @@ public class FileInfo {
     }
 
     public void moveFile(String folderName) {
-        boolean folderExist = false;
+        /*boolean folderExist = false;
         folderName = folderName + "Folder";
         try {
             FileList result = Login.googleDrive.drive.files().list()
@@ -103,16 +103,6 @@ public class FileInfo {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        /*if(!Files.isDirectory(FileSystems.getDefault().getPath(drivePath + folderName))){
-            new File(drivePath + folderName).mkdir();
-        }
-        Path movefrom = FileSystems.getDefault().getPath(drivePath + nameFile);
-        Path target = FileSystems.getDefault().getPath(drivePath + folderName + "/" + nameFile);
-        try {
-            Files.move(movefrom, target);
-        } catch (IOException e) {
-            e.printStackTrace();
         }*/
     }
 
