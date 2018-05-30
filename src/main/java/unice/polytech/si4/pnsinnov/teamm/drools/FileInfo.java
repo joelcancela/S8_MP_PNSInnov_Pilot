@@ -1,8 +1,10 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
-
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
 import java.io.IOException;
@@ -13,6 +15,7 @@ public class FileInfo {
     private String extension;
     private String mimeType;
     private String nameFile;
+    private static final Logger logger = LogManager.getLogger(FileInfo.class);
 
     public FileInfo() {
     }
@@ -127,7 +130,7 @@ public class FileInfo {
     }
 
     public void printFile() {
-        System.out.println("Extension : " + extension + ", MIME type : " + mimeType);
+        logger.log(Level.INFO,"Extension : " + extension + ", MIME type : " + mimeType);
     }
 }
 

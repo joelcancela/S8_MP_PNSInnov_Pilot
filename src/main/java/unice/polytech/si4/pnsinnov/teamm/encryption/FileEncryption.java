@@ -1,5 +1,10 @@
 package unice.polytech.si4.pnsinnov.teamm.encryption;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -15,14 +20,13 @@ import java.io.FileNotFoundException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * Created by Nassim B on 5/28/18.
  */
 @Path("fileencryption")
 public class FileEncryption {
-
+	private static final Logger logger = LogManager.getLogger(FileEncryption.class);
 	private final String CIPHER_ALGO = "AES";
 	private static final String KEY_ALGORITHM = "AES";
 
@@ -49,9 +53,9 @@ public class FileEncryption {
 				stringBuilder.append(scanner.next());
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("##### JPNE #####");
-			System.out.println(fileurl);
+			logger.log(Level.ERROR, e.getMessage());
+			logger.log(Level.INFO,"##### JPNE #####");
+			logger.log(Level.INFO,fileurl);
 		}
 
 
@@ -60,7 +64,7 @@ public class FileEncryption {
 			cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes(), KEY_ALGORITHM));
 			return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes()));
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
-			e.printStackTrace();
+			logger.log(Level.ERROR, e.getMessage());
 		}
 
 		return stringBuilder.toString();
