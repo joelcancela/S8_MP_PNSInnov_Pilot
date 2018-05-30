@@ -15,7 +15,7 @@ public class ConfigurationLoader {
 
 	private static final Logger logger = Logger.getLogger(ConfigurationLoader.class.getName());
 	private static ConfigurationLoader instance = null;
-	private static String host;
+	private String host;
 
 	private ConfigurationLoader() {
 	}
@@ -39,7 +39,7 @@ public class ConfigurationLoader {
 		}
 	}
 
-	public static String getHost() {
+	public String getHost() {
 		return host;
 	}
 }

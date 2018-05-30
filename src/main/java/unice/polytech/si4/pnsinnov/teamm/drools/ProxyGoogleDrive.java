@@ -1,6 +1,9 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
 import com.google.api.services.drive.model.File;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -9,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProxyGoogleDrive {
-
+    private static final Logger logger = LogManager.getLogger(ProxyGoogleDrive.class);
 
     public ProxyGoogleDrive() {
     }
@@ -29,10 +32,10 @@ public class ProxyGoogleDrive {
         KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.getKieClasspathContainer();
 
-        System.out.println("Rules to check MIME Type = application/pdf and extension = pdf");
+        logger.log(Level.INFO,"Rules to check MIME Type = application/pdf and extension = pdf");
 
         for (FileInfo file : fileInfos) {
-            System.out.println("Tested file : "+file.getNameFile());
+            logger.log(Level.INFO,"Tested file : "+file.getNameFile());
             testFile(kContainer, file);
         }
 
