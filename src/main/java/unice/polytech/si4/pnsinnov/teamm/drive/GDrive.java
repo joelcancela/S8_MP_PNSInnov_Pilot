@@ -113,8 +113,10 @@ public class GDrive {
 			ChangeList changes = drive.changes().list(pageToken)
 					.execute();
 			for (Change change : changes.getChanges()) {
-				logger.log(Level.INFO, "Change found for file: " + change.getFileId() +" name: "+change.getFile()
-						.getName()+" what changed: "+change.getKind());
+				logger.log(Level.INFO, change.toString());
+				logger.log(Level.INFO, change.toPrettyString());
+				/*logger.log(Level.INFO, "Change found for file: " + change.getFileId() +" name: "+change.getFile()
+						.getName()+" what changed: "+change.getKind());*/
 			}
 			if (changes.getNewStartPageToken() != null) {
 				// Last page, save this token for the next polling interval
