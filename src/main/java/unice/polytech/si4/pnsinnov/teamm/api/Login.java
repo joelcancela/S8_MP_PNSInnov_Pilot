@@ -4,9 +4,12 @@ import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -27,20 +30,27 @@ public class Login {
 	public static GDriveSession gDriveSession = new GDriveSession("user");//TODO:
 
 	@GET
-	public Response authorizeGDrive(@QueryParam("drive") String driveType) throws
+	public Response authorizeGDrive(@Context HttpServletRequest request,
+	                                @Context HttpServletResponse response,
+	                                @QueryParam("drive") String driveType) throws
 			IOException, ServletException {//FIXME: UGLY TEMP
 		// FIX for multiples
 		// drives
 		// types
 		if (driveType.equals("google")) {
-			try {
-				googleDrive = new GDrive();
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage());
-			} catch (GeneralSecurityException e) {
-				e.printStackTrace();
+			if(Login.gDriveSession.getCredential() == null) {
+				try {
+					googleDrive = new GDrive();
+				} catch (IOException e) {
+					logger.log(Level.SEVERE, e.getMessage());
+				} catch (GeneralSecurityException e) {
+					e.printStackTrace();
+				}
+				return Response.seeOther(gDriveSession.getAuthRequest().toURI()).build();
+			}else{
+				request.setAttribute("list", googleDrive.getFilesList());
+				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			}
-			return Response.seeOther(gDriveSession.getAuthRequest().toURI()).build();
 		}
 		return Response.status(200).build();
 	}

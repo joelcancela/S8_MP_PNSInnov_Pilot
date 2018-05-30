@@ -49,4 +49,8 @@ public class GDriveSession {
 	public void setFlow(GoogleAuthorizationCodeFlow flow) {
 		this.flow = flow;
 	}
+
+	public Credential getCredential() {
+		return credential;
+	}
 }
