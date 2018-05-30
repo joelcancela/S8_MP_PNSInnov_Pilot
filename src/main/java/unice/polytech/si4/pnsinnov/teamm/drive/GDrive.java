@@ -138,9 +138,13 @@ public class GDrive {
 	}
 
 	public OwnFile classifyFiles() throws IOException {
-        com.google.api.services.drive.model.File rootFile = drive.files().get("root").setFields("id").execute();
-		List<OwnFile> folders = new ArrayList<>();
+        String rootId = drive.files().get("root").setFields("id").execute().getId();
+		com.google.api.services.drive.model.File rootFile = new com.google.api.services.drive.model.File();
+		rootFile.setParents(new ArrayList<>());
+		rootFile.setId(rootId);
+        List<OwnFile> folders = new ArrayList<>();
 		List<OwnFile> files = new ArrayList<>();
+
 		OwnFile root = new OwnFile(rootFile);
 		folders.add(root);
 		List<com.google.api.services.drive.model.File> filesDrive = getFilesList();
@@ -155,7 +159,9 @@ public class GDrive {
 		}
         for (OwnFile child : folders) {
             for (OwnFile possibleParent : folders) {
-                if (possibleParent.file.getId().equals(child.file.getParents().get(0))){
+				System.out.println("Parent : "+possibleParent.file+" "+possibleParent.file.getId());
+				System.out.println("Child : "+child.file+" "+child.file.getParents());
+                if (child.file.getParents().size() > 0 && possibleParent.file.getId().equals(child.file.getParents().get(0))){
                     possibleParent.addFolder(child);
                     break;
                 }
