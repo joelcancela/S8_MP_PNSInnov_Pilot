@@ -145,22 +145,20 @@ public class GDrive {
         List<OwnFile> folders = new ArrayList<>();
 		List<OwnFile> files = new ArrayList<>();
 
-		OwnFile root = new OwnFile(rootFile);
+		OwnFile root = new OwnFile(rootFile, true);
 		folders.add(root);
 		List<com.google.api.services.drive.model.File> filesDrive = getFilesList();
 		for (com.google.api.services.drive.model.File file : filesDrive) {
 		    if (file.getParents() != null) {
                 if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-                    folders.add(new OwnFile(file));
+                    folders.add(new OwnFile(file, true));
                 } else {
-                    files.add(new OwnFile(file));
+                    files.add(new OwnFile(file, false));
                 }
             }
 		}
         for (OwnFile child : folders) {
             for (OwnFile possibleParent : folders) {
-				System.out.println("Parent : "+possibleParent.file+" "+possibleParent.file.getId());
-				System.out.println("Child : "+child.file+" "+child.file.getParents());
                 if (child.file.getParents().size() > 0 && possibleParent.file.getId().equals(child.file.getParents().get(0))){
                     possibleParent.addFolder(child);
                     break;
