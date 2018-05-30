@@ -29,7 +29,7 @@ public class Notifications {
 		String userID = rh.getFirst("x-goog-channel-id");
 		String headersChange = rh.getFirst("x-goog-resource-state");
 		if(userID.equals(Login.userid)){//FIXME: multiples sessions voir GDrive:75
-			logger.log(Level.INFO, "Changes received for "+userID+" headerChange:"+headersChange.equals("change"));
+			logger.log(Level.INFO, "Changes received for ["+userID+"] headerChange:"+headersChange);
 			try {
 				Login.googleDrive.getChanges();
 			} catch (IOException e) {

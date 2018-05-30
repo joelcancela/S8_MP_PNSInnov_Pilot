@@ -52,7 +52,6 @@ public class GDrive {
 		try {
 			savedStartPageToken = drive.changes()
 					.getStartPageToken().execute().getStartPageToken();
-			logger.log(Level.INFO,"TOKEN PAGE :"+savedStartPageToken);
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
@@ -86,7 +85,7 @@ public class GDrive {
 	public Channel subscribeToChanges() {//TODO: watch mutliples sessions
 		Channel notifications = watchChange(drive, Login.userid, ConfigurationLoader.getInstance().getHost() +
 				"/PrivateMemo/api/notifications");
-		logger.log(Level.INFO, "Watching for changes on Google Drive");
+		logger.log(Level.INFO, "Watching for changes on Google Drive for user: "+Login.userid);
 		return notifications;
 	}
 
@@ -109,13 +108,13 @@ public class GDrive {
 	}
 
 	public void getChanges() throws IOException {
-		logger.log(Level.INFO,"TOKEN PAGE :"+savedStartPageToken);
 		String pageToken = savedStartPageToken;
 		while (pageToken != null) {
 			ChangeList changes = drive.changes().list(pageToken)
 					.execute();
 			for (Change change : changes.getChanges()) {
-				logger.log(Level.INFO, "Change found for file: " + change.getFileId() +" name: "+change.getFile().getName());
+				logger.log(Level.INFO, "Change found for file: " + change.getFileId() +" name: "+change.getFile()
+						.getName()+" what changed: "+change.getKind());
 			}
 			if (changes.getNewStartPageToken() != null) {
 				// Last page, save this token for the next polling interval
