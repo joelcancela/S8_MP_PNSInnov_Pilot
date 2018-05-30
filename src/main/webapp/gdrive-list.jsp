@@ -47,6 +47,8 @@
             <tr>
                 <td>
                     <a href="<c:out value="${item.getWebViewLink()}"/>"><c:out value="${item.getName()}"/></a>
+                    Link : <c:out value="${item.getId()}"/>
+                    <a href="downloadDrive?filename=<c:out value="${item.getName()}"/>&filelink=<c:out value="${item.getId()}"/>">Download</a>
                 </td>
             </tr>
         </c:forEach>

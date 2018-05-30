@@ -20,7 +20,9 @@ import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.*;
@@ -125,19 +127,29 @@ public class GDrive {
 	 * TODO: To try and test
 	 * Downloads a file using either resumable or direct media download.
 	 */
-	public void downloadFile(boolean useDirectDownload, com.google.api.services.drive.model.File uploadedFile)
+	public void downloadFile(boolean useDirectDownload, String fileName, String fileid)
 			throws IOException {
 		// create parent directory (if necessary)
-		File parentDir = new File("/downloads/userID");
+
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        logger.log(Level.INFO, "Current folder is : " + s);
+        Path destination = Paths.get(s + "/downloads/userID");
+		File parentDir = new File(destination.toString());
 		if (!parentDir.exists() && !parentDir.mkdirs()) {
 			throw new IOException("Unable to create parent directory");
 		}
-		OutputStream out = new FileOutputStream(new File(parentDir, uploadedFile.getName()));
 
-		MediaHttpDownloader downloader =
+		File output = new File(parentDir, fileName);
+		OutputStream out = new FileOutputStream(output);
+		//com.google.api.services.drive.model.File file = Login.googleDrive.drive.files().get(fileid).execute();
+		Login.googleDrive.drive.files().get(fileid).executeMediaAndDownloadTo(out);
+		//Login.googleDrive.drive.files().get(fileid).executeAndDownloadTo(out);
+		//out.write(file.)
+		/*MediaHttpDownloader downloader =
 				new MediaHttpDownloader(httpTransport, drive.getRequestFactory().getInitializer());
 		downloader.setDirectDownloadEnabled(useDirectDownload);
-		downloader.download(new GenericUrl(uploadedFile.getWebContentLink()), out);
+		downloader.download(new GenericUrl(contentLinkDownload), out);*/
 	}
 
 	public List<com.google.api.services.drive.model.File> classifyFiles() throws IOException {

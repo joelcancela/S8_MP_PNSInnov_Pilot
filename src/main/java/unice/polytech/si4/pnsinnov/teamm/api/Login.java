@@ -1,5 +1,6 @@
 package unice.polytech.si4.pnsinnov.teamm.api;
 
+import com.google.api.services.drive.model.File;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
@@ -13,6 +14,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +47,18 @@ public class Login {
 				}
 				return Response.seeOther(gDriveSession.getAuthRequest().toURI()).build();
 			} else {
-				request.setAttribute("list", googleDrive.getFilesList());
+				List<File> files = googleDrive.getFilesList();
+
+				for (File f : files) {
+					if (f.getWebContentLink() == null) continue;
+					logger.log(Level.INFO, "Cutting content link : " + f.getWebContentLink());
+					if (!f.getWebContentLink().isEmpty()) {
+						f.setWebContentLink(f.getWebContentLink().substring(0, f.getWebContentLink().indexOf('&')));
+					}
+					logger.log(Level.INFO, "New content link : " + f.getWebContentLink());
+				}
+
+				request.setAttribute("list", files);
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			}
 		}
