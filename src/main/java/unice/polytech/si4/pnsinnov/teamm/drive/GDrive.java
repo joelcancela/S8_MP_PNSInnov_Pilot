@@ -142,6 +142,7 @@ public class GDrive {
 		com.google.api.services.drive.model.File rootFile = new com.google.api.services.drive.model.File();
 		rootFile.setParents(new ArrayList<>());
 		rootFile.setId(rootId);
+		rootFile.setName("Drive Root");
         List<OwnFile> folders = new ArrayList<>();
 		List<OwnFile> files = new ArrayList<>();
 
