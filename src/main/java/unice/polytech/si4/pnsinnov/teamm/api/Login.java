@@ -26,7 +26,7 @@ public class Login {
 
 	private static final Logger logger = Logger.getLogger(Login.class.getName());
 	public static GDrive googleDrive;
-	public static GDriveSession gDriveSession = new GDriveSession("user");
+	public static GDriveSession gDriveSession = new GDriveSession("skynet-id-00");
 	//FIXME:  Multiple sessions with UUID
 
 	@GET

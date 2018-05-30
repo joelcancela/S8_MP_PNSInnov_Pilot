@@ -28,7 +28,7 @@ public class Notifications {
 		MultivaluedMap<String, String> rh = headers.getRequestHeaders();
 		String userID = rh.getFirst("x-goog-channel-id");
 		String headersChange = rh.getFirst("x-goog-resource-state");
-		if(userID.equals("userID") && headersChange.equals("change")){//FIXME: multiples sessions voir GDrive:75
+		if(userID.equals("skynet-id-00") && headersChange.equals("change")){//FIXME: multiples sessions voir GDrive:75
 			logger.log(Level.INFO, "Changes received for "+userID);
 			try {
 				Login.googleDrive.getChanges();
