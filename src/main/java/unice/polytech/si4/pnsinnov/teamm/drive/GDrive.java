@@ -73,7 +73,8 @@ public class GDrive {
 	}
 
 	public Channel subscribeToChanges() {//TODO: watch mutliples sessions
-		Channel notifications = watchChange(drive, "skynet-id-00", ConfigurationLoader.getInstance().getHost() + "/PrivateMemo/api/notifications");
+		Channel notifications = watchChange(drive, Login.userid, ConfigurationLoader.getInstance().getHost() +
+				"/PrivateMemo/api/notifications");
 		logger.log(Level.INFO, "Watching for changes on Google Drive");
 		return notifications;
 	}

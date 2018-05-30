@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,8 +26,9 @@ import java.util.logging.Logger;
 public class Login {
 
 	private static final Logger logger = Logger.getLogger(Login.class.getName());
+	public static String userid = UUID.randomUUID().toString();
 	public static GDrive googleDrive;
-	public static GDriveSession gDriveSession = new GDriveSession("skynet-id-00");
+	public static GDriveSession gDriveSession = new GDriveSession(userid);
 	//FIXME:  Multiple sessions with UUID
 
 	@GET
