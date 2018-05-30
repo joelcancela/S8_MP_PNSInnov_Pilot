@@ -52,6 +52,7 @@ public class GDrive {
 		try {
 			pageToken = drive.changes()
 					.getStartPageToken().execute().getStartPageToken();
+			logger.log(Level.INFO,"TOKEN PAGE :"+pageToken);
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
@@ -108,6 +109,7 @@ public class GDrive {
 	}
 
 	public void getChanges() throws IOException {
+		logger.log(Level.INFO,"TOKEN PAGE :"+pageToken);
 		ChangeList changes = drive.changes().list(pageToken).execute();
 		for (Change change : changes.getChanges()) {
 			logger.log(Level.INFO, "Change found for file: " + change.getFileId() +" name: "+change.getFile().getName());
