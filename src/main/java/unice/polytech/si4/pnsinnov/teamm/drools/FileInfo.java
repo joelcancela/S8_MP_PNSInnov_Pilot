@@ -46,30 +46,33 @@ public class FileInfo {
 
     public void moveFile(String folderName) {
         boolean folderExist = false;
-        folderName = folderName + "Folder";
+        File fileMetaData = null;
+        System.out.println("### WORK FOR : " + this.file.getName() + " ###");
         try {
             FileList result = Login.googleDrive.drive.files().list()
                     .setQ("mimeType='application/vnd.google-apps.folder'")
                     .execute();
             for (File f : result.getFiles()) {
-                if (f.getName() == folderName) {
+                //System.out.println("Checking existance : " + f.getName() + " - " + folderName );
+                if (f.getName().equals(folderName)) {
+                    fileMetaData = f;
+                    System.out.println("Folder exists");
                     folderExist = true;
-                    break;
                 }
-                System.out.println("!!!@@@###Found : " + f.getName());
+                //System.out.println("!!!@@@###Found : " + f.getName());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        File folder = null;
+
         if (!folderExist) {
-            File fileMetaData = new File();
+            fileMetaData = new File();
             fileMetaData.setName(folderName);
             fileMetaData.setMimeType("application/vnd.google-apps.folder");
             try {
-                folder = Login.googleDrive.drive.files().create(fileMetaData).setFields("id").execute();
-                System.out.println("Folder " + folderName + " created");
+                fileMetaData = Login.googleDrive.drive.files().create(fileMetaData).setFields("id").execute();
+                System.out.println("WARNNNIIINNNG : Folder " + folderName + " created");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -77,43 +80,36 @@ public class FileInfo {
 
 
         // Retrieve the existing parents to remove
+
         File fileParents = null;
         try {
-            System.out.println("trying getParents on : " + this.file.getName());
-            //fileParents = Login.googleDrive.drive.files().get(this.file.getId())
-            System.out.println(Login.googleDrive.drive.files().get(this.file.getId()).setFields("parents").execute());
+            System.out.println("trying getParents on : " + this.file.getName() + " id " + this.file.getId());
+            fileParents = Login.googleDrive.drive.files().get(this.file.getId()).setFields("parents").execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        StringBuilder previousParents = new StringBuilder();
         if (fileParents != null) {
-            StringBuilder previousParents = new StringBuilder();
-            System.out.println("getParents on : " + fileParents.getName());
+
             for (String parent : fileParents.getParents()) {
                 System.out.println("Parent : " + parent);
                 previousParents.append(parent);
                 previousParents.append(',');
             }
+        }
             // Move the file to the new folder
             try {
+                System.out.println("Will remove parents : " + previousParents.toString() + " for file : " + this.file.getName());
+                System.out.println("Will add    parents : " + fileMetaData.getId() + " for file : " + this.file.getName());
                 file = Login.googleDrive.drive.files().update(this.file.getId(), null)
-                        .setAddParents(folder.getId())
+                        .setAddParents(fileMetaData.getId())
                         .setRemoveParents(previousParents.toString())
                         .setFields("id, parents")
                         .execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        /*if(!Files.isDirectory(FileSystems.getDefault().getPath(drivePath + folderName))){
-            new File(drivePath + folderName).mkdir();
-        }
-        Path movefrom = FileSystems.getDefault().getPath(drivePath + nameFile);
-        Path target = FileSystems.getDefault().getPath(drivePath + folderName + "/" + nameFile);
-        try {
-            Files.move(movefrom, target);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
     public void printFile() {
