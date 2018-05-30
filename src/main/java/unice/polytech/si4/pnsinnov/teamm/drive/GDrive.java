@@ -17,6 +17,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.Channel;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.api.OwnFile;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.*;
@@ -136,43 +137,21 @@ public class GDrive {
 		downloader.download(new GenericUrl(uploadedFile.getWebContentLink()), out);
 	}
 
-	public List<com.google.api.services.drive.model.File> classifyFiles() throws IOException {
-		List<com.google.api.services.drive.model.File> result = new ArrayList<>();
-		List<com.google.api.services.drive.model.File> folders = new ArrayList<>();
-		Map<String, List<com.google.api.services.drive.model.File>> filesInFolder = new HashMap<>();
+	public List<OwnFile> classifyFiles() throws IOException {
+		List<OwnFile> folders = new ArrayList<>();
 		List<com.google.api.services.drive.model.File> files = getFilesList();
-		System.out.println("FILES FROM GOOGLE : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
+//		System.out.println("FILES FROM GOOGLE : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
 		for (com.google.api.services.drive.model.File file : files) {
-			if (file.getParents() != null) { //only my files, not files shared with me
-				if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-					folders.add(file);
-				} else {
-					if (filesInFolder.containsKey(file.getParents().get(0))) {
-						filesInFolder.get(file.getParents().get(0)).add(file);
-					} else {
-						List<com.google.api.services.drive.model.File> l = new ArrayList<>();
-						l.add(file);
-						filesInFolder.put(file.getParents().get(0), l);
-					}
-				}
+			if (file.getParents() != null && file.getMimeType().equals("application/vnd.google-apps.folder")) {
+			    folders.add(new OwnFile(file, true));
 			}
 		}
 
-		for (String id : filesInFolder.keySet()) {
-			com.google.api.services.drive.model.File searchedFolder = null;
-			for (com.google.api.services.drive.model.File folder : folders) {
-				if (folder.getId().equals(id)) {
-					searchedFolder = folder;
-				}
-			}
-			if (searchedFolder == null) {
-				result.addAll(filesInFolder.get(id));
-			} else {
-				result.add(searchedFolder);
-				result.addAll(filesInFolder.get(id));
-			}
-		}
-		System.out.println("CLASSIFY RETURNS : " + result.stream().map(file -> file.getName()).collect(Collectors.toList()));
-		return result;
+        for (OwnFile ownFile : folders) {
+
+        }
+
+//		System.out.println("CLASSIFY RETURNS : " + result.stream().map(file -> file.getName()).collect(Collectors.toList()));
+		return folders;
 	}
 }

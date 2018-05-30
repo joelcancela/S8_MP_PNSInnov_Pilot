@@ -17,4 +17,12 @@ public class OwnFile {
         this.files = new ArrayList<>();
         this.folder = isFolder;
     }
+
+    public boolean addFolder(OwnFile folder){
+        return folders.add(folder);
+    }
+
+    public boolean addFile(OwnFile file){
+        return files.add(file);
+    }
 }
