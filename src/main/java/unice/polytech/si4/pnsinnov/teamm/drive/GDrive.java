@@ -95,12 +95,10 @@ public class GDrive {
 		drive.channels().stop(channel);
 	}
 
-	public void getChanges() throws IOException {//FIXME: When the notifications will be triggered by POST
-		for (int i = 0; i < 10; i++) {
+	public void getChanges() throws IOException {
 			String pageToken = drive.changes().getStartPageToken().execute().getStartPageToken();
 			List<Change> changes = drive.changes().list(pageToken)
 					.execute().getChanges();
-			System.out.println(changes);
-		}
+			logger.log(Level.INFO, changes.toString());
 	}
 }

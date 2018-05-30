@@ -3,6 +3,7 @@ package unice.polytech.si4.pnsinnov.teamm.drive;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,7 +12,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import java.util.stream.Collectors;
+import java.io.IOException;
 
 
 /**
@@ -23,13 +24,17 @@ public class Notifications {
 
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
-	public String postHandle(@Context HttpHeaders headers) {//TODO: Control headers & call getChanges() in drive
+	public void postHandle(@Context HttpHeaders headers) {
 		MultivaluedMap<String, String> rh = headers.getRequestHeaders();
-		String str = rh.entrySet()
-				.stream()
-				.map(e -> e.getKey() + " = " + e.getValue())
-				.collect(Collectors.joining("\n"));
-		logger.log(Level.WARN, str);
-		return str;
+		String userID = rh.getFirst("x-goog-channel-id");
+		String headersChange = rh.getFirst("x-goog-resource-state");
+		if(userID.equals("userID") && headersChange.equals("change")){//FIXME: multiples sessions voir GDrive:75
+			logger.log(Level.INFO, "Changes received for "+userID);
+			try {
+				Login.googleDrive.getChanges();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
