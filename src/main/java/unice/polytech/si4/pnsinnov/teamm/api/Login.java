@@ -43,7 +43,7 @@ public class Login {
 				}
 				return Response.seeOther(gDriveSession.getAuthRequest().toURI()).build();
 			} else {
-				request.setAttribute("list", googleDrive.classifyFiles());
+				request.setAttribute("list", googleDrive.getFilesList());
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			}
 		}

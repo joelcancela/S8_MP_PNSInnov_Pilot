@@ -24,6 +24,7 @@ import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Class GDrive
@@ -102,7 +103,8 @@ public class GDrive {
 		logger.log(Level.INFO, changes.toString());
 	}
 
-	/**TODO: To try and test
+	/**
+	 * TODO: To try and test
 	 * Uploads a file using either resumable or direct media upload.
 	 */
 	public com.google.api.services.drive.model.File uploadFile(boolean useDirectUpload, File file) throws IOException {
@@ -115,7 +117,8 @@ public class GDrive {
 		return insert.execute();
 	}
 
-	/**TODO: To try and test
+	/**
+	 * TODO: To try and test
 	 * Downloads a file using either resumable or direct media download.
 	 */
 	public void downloadFile(boolean useDirectDownload, com.google.api.services.drive.model.File uploadedFile)
@@ -133,12 +136,12 @@ public class GDrive {
 		downloader.download(new GenericUrl(uploadedFile.getWebContentLink()), out);
 	}
 
-
 	public List<com.google.api.services.drive.model.File> classifyFiles() throws IOException {
 		List<com.google.api.services.drive.model.File> result = new ArrayList<>();
 		List<com.google.api.services.drive.model.File> folders = new ArrayList<>();
 		Map<String, List<com.google.api.services.drive.model.File>> filesInFolder = new HashMap<>();
 		List<com.google.api.services.drive.model.File> files = getFilesList();
+		System.out.println("FILES FROM GOOGLE : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
 		for (com.google.api.services.drive.model.File file : files) {
 			if (file.getParents() != null) { //only my files, not files shared with me
 				if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
@@ -169,6 +172,7 @@ public class GDrive {
 				result.addAll(filesInFolder.get(id));
 			}
 		}
+		System.out.println("CLASSIFY RETURNS : " + result.stream().map(file -> file.getName()).collect(Collectors.toList()));
 		return result;
 	}
 }

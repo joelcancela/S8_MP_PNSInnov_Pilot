@@ -21,6 +21,7 @@ public class ProxyGoogleDrive {
         List<FileInfo> fileInfos = new ArrayList<>();
 
         for (File file : files) {
+            System.out.println("APPLY RULE ON " + file.getName());
             FileInfo fileInfo = new FileInfo();
             fileInfo.setExtension(file.getFileExtension());
             fileInfo.setMimeType(file.getMimeType());

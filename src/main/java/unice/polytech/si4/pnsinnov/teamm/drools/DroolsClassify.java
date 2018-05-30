@@ -11,13 +11,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("drools")
 public class DroolsClassify {
     @POST
     public void classifyFiles(@Context HttpServletRequest request,
                               @Context HttpServletResponse response) throws IOException, ServletException {
-        List<File> files = Login.googleDrive.classifyFiles();
+        List<File> files = Login.googleDrive.getFilesList();
+        System.out.println("PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
         new ProxyGoogleDrive().applyRules(files);
         request.setAttribute("list", files);
         request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
