@@ -113,6 +113,9 @@ public class GDrive {
 			ChangeList changes = drive.changes().list(pageToken)
 					.execute();
 			for (Change change : changes.getChanges()) {
+				if(change.getFile() == null){
+					continue;
+				}
 				boolean isFolder = change.getFile().getMimeType().contains("folder");
 				boolean isDeleted = change.getRemoved();
 				StringBuilder stringLog = new StringBuilder();
@@ -121,7 +124,7 @@ public class GDrive {
 				} else {
 					stringLog.append("The file ");
 				}
-				stringLog.append("with ID:[" + change.getFileId() + "], named: " + change.getFile());
+				stringLog.append("with ID:[" + change.getFileId() + "], named: " + change.getFile().getName());
 				if (isDeleted) {
 					stringLog.append(" was removed");
 				} else {
