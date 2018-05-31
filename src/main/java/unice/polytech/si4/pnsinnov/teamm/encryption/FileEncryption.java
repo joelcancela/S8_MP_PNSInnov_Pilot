@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -15,8 +16,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -30,7 +31,7 @@ public class FileEncryption {
 	private final String CIPHER_ALGO = "AES";
 	private static final String KEY_ALGORITHM = "AES";
 
-	@QueryParam("key") String key;
+	@QueryParam("fileid") String fileid;
 
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent
@@ -41,11 +42,20 @@ public class FileEncryption {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getIt() {
-		String fileurl = FileEncryption.class.getResource("/tocrypt.txt").getFile();
-		File file = new File(fileurl);
+
+		if(fileid.isEmpty() || fileid == null) return "A fileid must be provided";
+
+		String downloadedPath = null;
+		try {
+			downloadedPath = Login.googleDrive.downloadFile(false, fileid, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		logger.log(Level.INFO, "File downloaded to " + downloadedPath);
+		File file = new File(downloadedPath);
 		StringBuilder stringBuilder = new StringBuilder();
 
-		if(key.isEmpty()) return "A key must be provided";
 
 		try {
 			Scanner scanner = new Scanner(file);
@@ -55,15 +65,30 @@ public class FileEncryption {
 		} catch (FileNotFoundException e) {
 			logger.log(Level.ERROR, e.getMessage());
 			logger.log(Level.INFO,"##### JPNE #####");
-			logger.log(Level.INFO,fileurl);
+			//logger.log(Level.INFO,fileurl);
 		}
 
 
 		try {
 			Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
-			cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes(), KEY_ALGORITHM));
-			return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes()));
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+			cipher.init(Cipher.ENCRYPT_MODE, KeyGeneration.getKey());
+
+
+			FileInputStream inputStream = new FileInputStream(file);
+			byte[] inputBytes = new byte[(int) file.length()];
+			inputStream.read(inputBytes);
+
+			byte[] outputBytes = cipher.doFinal(inputBytes);
+
+			FileOutputStream outputStream = new FileOutputStream(file.getPath()+"-crypted");
+			outputStream.write(outputBytes);
+
+			inputStream.close();
+			outputStream.close();
+
+			//return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes());
+			return "File crypted and named : " + file.getName() + "-crypted";
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
 			logger.log(Level.ERROR, e.getMessage());
 		}
 

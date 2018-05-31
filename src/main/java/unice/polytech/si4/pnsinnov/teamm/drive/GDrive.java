@@ -180,9 +180,7 @@ public class GDrive {
 	 * TODO: To try and test
 	 * Downloads a file using either resumable or direct media download.
 	 */
-	public void downloadFile(boolean useDirectDownload, String fileid, String exportedMime) throws IOException {
-
-
+	public String downloadFile(boolean useDirectDownload, String fileid, String exportedMime) throws IOException {
 		com.google.api.services.drive.model.File file = Login.googleDrive.drive.files().get(fileid).execute();
 		String fileName = file.getName();
 		String mimetype = file.getMimeType();
@@ -225,6 +223,7 @@ public class GDrive {
 		} else {
 			Login.googleDrive.drive.files().get(fileid).executeMediaAndDownloadTo(out);
 		}
+		return output.getPath();
 	}
 
 
