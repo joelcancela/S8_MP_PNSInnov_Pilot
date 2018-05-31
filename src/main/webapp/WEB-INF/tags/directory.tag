@@ -26,9 +26,20 @@
                     <a class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
                         <i class="fas fa-download"></i>
                     </a>
-                    <a class="file" href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>">
-                        <i class="fas fa-lock"></i>
-                    </a>
+
+                    <c:choose>
+                        <c:when test="${file.file.getName().endsWith(\"-crypted\")}">
+                            <a class="file" href="filedecryption?encrypted=<c:out value="${file.file.getName()}"/>">
+                                <i class="fas fa-lock-open"></i>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="file" href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>">
+                                <i class="fas fa-lock"></i>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+
                 </li>
             </c:forEach>
         </ul>
