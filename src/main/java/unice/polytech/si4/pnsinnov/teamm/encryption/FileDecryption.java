@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -62,11 +63,15 @@ public class FileDecryption {
 			byte[] outputBytes = cipher.doFinal(inputBytes);
 
 			logger.log(Level.INFO, "OUTPUT FILE : " + destination.toString() + "/" + inputFile.getName() + "-decrypted");
-			FileOutputStream outputStream = new FileOutputStream(destination.toString() + "/" + inputFile.getName() + "-decrypted");
+			File outFile = new File(destination.toString() + "/" + inputFile.getName() + "-decrypted");
+			FileOutputStream outputStream = new FileOutputStream(outFile);
 			outputStream.write(outputBytes);
 
 			inputStream.close();
 			outputStream.close();
+
+			Login.googleDrive.uploadFile(false, outFile);
+
 
 			return "File decrypted and named " + inputFile.getName() + "-decrypted";
 			//return new String (cipher.doFinal(Base64.decodeBase64(encrypted)));

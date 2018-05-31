@@ -40,7 +40,7 @@ public class GDriveOAuth {
 		googleDrive.initialize();
 		googleDrive.subscribeToChanges();
 
-		request.setAttribute("list", googleDrive.getFilesList());
+		//request.setAttribute("list", googleDrive.getFilesList());
 		request.setAttribute("ownFile", googleDrive.classifyFiles());
 		request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 	}
