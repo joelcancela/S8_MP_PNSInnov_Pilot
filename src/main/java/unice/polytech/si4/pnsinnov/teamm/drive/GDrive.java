@@ -54,7 +54,6 @@ public class GDrive {
 		try {
 			savedStartPageToken = drive.changes()
 					.getStartPageToken().execute().getStartPageToken();
-			logger.log(Level.INFO,"TOKEN PAGE :"+savedStartPageToken);
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
@@ -88,7 +87,7 @@ public class GDrive {
 	public Channel subscribeToChanges() {//TODO: watch mutliples sessions
 		Channel notifications = watchChange(drive, Login.userid, ConfigurationLoader.getInstance().getHost() +
 				"/PrivateMemo/api/notifications");
-		logger.log(Level.INFO, "Watching for changes on Google Drive");
+		logger.log(Level.INFO, "Watching for changes on Google Drive for user: " + Login.userid);
 		return notifications;
 	}
 
@@ -111,13 +110,30 @@ public class GDrive {
 	}
 
 	public void getChanges() throws IOException {
-		logger.log(Level.INFO,"TOKEN PAGE :"+savedStartPageToken);
 		String pageToken = savedStartPageToken;
 		while (pageToken != null) {
 			ChangeList changes = drive.changes().list(pageToken)
 					.execute();
 			for (Change change : changes.getChanges()) {
-				logger.log(Level.INFO, "Change found for file: " + change.getFileId() +" name: "+change.getFile().getName());
+				if(change.getFile() == null){
+					logger.log(Level.SEVERE, change.toPrettyString());
+					continue;
+				}
+				boolean isFolder = change.getFile().getMimeType().contains("folder");
+				boolean isDeleted = change.getRemoved();
+				StringBuilder stringLog = new StringBuilder();
+				if (isFolder) {
+					stringLog.append("The folder ");
+				} else {
+					stringLog.append("The file ");
+				}
+				stringLog.append("with ID:[" + change.getFileId() + "], named: " + change.getFile().getName());
+				if (isDeleted) {
+					stringLog.append(" was removed");
+				} else {
+					stringLog.append(" was changed");
+				}
+				logger.log(Level.INFO, stringLog.toString());
 			}
 			if (changes.getNewStartPageToken() != null) {
 				// Last page, save this token for the next polling interval
@@ -134,7 +150,7 @@ public class GDrive {
 	public com.google.api.services.drive.model.File uploadFile(boolean useDirectUpload, File file) throws IOException {
 		com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
 		fileMetadata.setName(file.getName());
-        logger.log(Level.INFO, "Uploading a file " + file.getName() + " typed " + Files.probeContentType(Paths.get(file.getPath())));
+		logger.log(Level.INFO, "Uploading a file " + file.getName() + " typed " + Files.probeContentType(Paths.get(file.getPath())));
 		FileContent mediaContent = new FileContent(Files.probeContentType(Paths.get(file.getPath())), file);
 		Drive.Files.Create insert = drive.files().create(fileMetadata, mediaContent);
 		MediaHttpUploader uploader = insert.getMediaHttpUploader();
