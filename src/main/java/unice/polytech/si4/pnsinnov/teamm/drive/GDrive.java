@@ -17,7 +17,9 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.ChangeList;
 import com.google.api.services.drive.model.Channel;
+import com.google.api.services.drive.model.FileList;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.api.OwnFile;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.*;
@@ -59,37 +61,63 @@ public class GDrive {
 		}
 	}
 
-	public GDrive() throws IOException, GeneralSecurityException {
-		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-		dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-		// load client secrets
-		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-				new InputStreamReader(GDrive.class.getResourceAsStream("/client_secrets.json")));
-		// set up authorization code flow
-		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-				httpTransport, JSON_FACTORY, clientSecrets,
-				Collections.singleton(DriveScopes.DRIVE)).setDataStoreFactory(dataStoreFactory)
-				.build();
-		Login.gDriveSession.setFlow(flow);
-	}
+    public GDrive() throws IOException, GeneralSecurityException {
+        httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+        // load client secrets
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+                new InputStreamReader(GDrive.class.getResourceAsStream("/client_secrets.json")));
+        // set up authorization code flow
+        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+                httpTransport, JSON_FACTORY, clientSecrets,
+                Collections.singleton(DriveScopes.DRIVE)).setDataStoreFactory(dataStoreFactory)
+                .build();
+        Login.gDriveSession.setFlow(flow);
+    }
 
-	public List<com.google.api.services.drive.model.File> getFilesList() throws IOException {
-		Drive.Files.List request = drive.files().list().setFields("nextPageToken, files");
-		List<com.google.api.services.drive.model.File> files = new ArrayList<>(request.execute().getFiles());
-		if (files.isEmpty()) {
-			logger.log(Level.INFO, "No files found.");
-		} else {
-			logger.log(Level.INFO, files.size() + " Files found.");
-		}
-		return files;
-	}
+    public List<com.google.api.services.drive.model.File> getFilesList() throws IOException {
+        Drive.Files.List request = drive.files().list().setFields("nextPageToken, files");
+        List<com.google.api.services.drive.model.File> files = new ArrayList<>(request.execute().getFiles());
+        if (files.isEmpty()) {
+            logger.log(Level.INFO, "No files found.");
+        } else {
+            logger.log(Level.INFO, files.size() + " Files found.");
+        }
+        return files;
+    }
 
-	public Channel subscribeToChanges() {//TODO: watch mutliples sessions
-		Channel notifications = watchChange(drive, Login.userid, ConfigurationLoader.getInstance().getHost() +
-				"/PrivateMemo/api/notifications");
-		logger.log(Level.INFO, "Watching for changes on Google Drive for user: " + Login.userid);
-		return notifications;
-	}
+    public List<com.google.api.services.drive.model.File> getAutomaticFilesList() {
+        List<com.google.api.services.drive.model.File> automaticFiles = new ArrayList<>();
+        String folderId = null;
+        FileList folders = null;
+        try {
+            folders = drive.files().list().setQ("mimeType='application/vnd.google-apps.folder' and name = 'automatic'").execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (com.google.api.services.drive.model.File f : folders.getFiles()) {
+            if (f.getName().equals("automatic")) {
+                folderId = f.getId();
+            }
+        }
+        try {
+            List<com.google.api.services.drive.model.File> files = getFilesList();
+            for (com.google.api.services.drive.model.File file: files) {
+                if (!file.getMimeType().equals("application/vnd.google-apps.folder") && file.getParents() != null && file.getParents().get(0).equals(folderId)){
+                    automaticFiles.add(file);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return automaticFiles;
+    }
+
+    public Channel subscribeToChanges() {//TODO: watch mutliples sessions
+        Channel notifications = watchChange(drive, "skynet-id-00", ConfigurationLoader.getInstance().getHost() + "/PrivateMemo/api/notifications");
+        logger.log(Level.INFO, "Watching for changes on Google Drive");
+        return notifications;
+    }
 
 	private Channel watchChange(Drive service, String channelId,
 	                            String channelAddress) {
@@ -98,7 +126,7 @@ public class GDrive {
 		channel.setType("web_hook");
 		channel.setAddress(channelAddress);
 		try {
-			return service.changes().watch(savedStartPageToken, channel).execute();
+			return service.changes().watch(service.changes().getStartPageToken().execute().getStartPageToken(), channel).execute();
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
@@ -187,43 +215,43 @@ public class GDrive {
 		downloader.download(new GenericUrl(contentLinkDownload), out);*/
 	}
 
-	public List<com.google.api.services.drive.model.File> classifyFiles() throws IOException {
-		List<com.google.api.services.drive.model.File> result = new ArrayList<>();
-		List<com.google.api.services.drive.model.File> folders = new ArrayList<>();
-		Map<String, List<com.google.api.services.drive.model.File>> filesInFolder = new HashMap<>();
-		List<com.google.api.services.drive.model.File> files = getFilesList();
-		System.out.println("FILES FROM GOOGLE : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
-		for (com.google.api.services.drive.model.File file : files) {
-			if (file.getParents() != null) { //only my files, not files shared with me
-				if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-					folders.add(file);
-				} else {
-					if (filesInFolder.containsKey(file.getParents().get(0))) {
-						filesInFolder.get(file.getParents().get(0)).add(file);
-					} else {
-						List<com.google.api.services.drive.model.File> l = new ArrayList<>();
-						l.add(file);
-						filesInFolder.put(file.getParents().get(0), l);
-					}
-				}
-			}
-		}
+    public OwnFile classifyFiles() throws IOException {
+        String rootId = drive.files().get("root").setFields("id").execute().getId();
+        com.google.api.services.drive.model.File rootFile = new com.google.api.services.drive.model.File();
+        rootFile.setParents(new ArrayList<>());
+        rootFile.setId(rootId);
+        rootFile.setName("Drive Root");
+        List<OwnFile> folders = new ArrayList<>();
+        List<OwnFile> files = new ArrayList<>();
 
-		for (String id : filesInFolder.keySet()) {
-			com.google.api.services.drive.model.File searchedFolder = null;
-			for (com.google.api.services.drive.model.File folder : folders) {
-				if (folder.getId().equals(id)) {
-					searchedFolder = folder;
-				}
-			}
-			if (searchedFolder == null) {
-				result.addAll(filesInFolder.get(id));
-			} else {
-				result.add(searchedFolder);
-				result.addAll(filesInFolder.get(id));
-			}
-		}
-		System.out.println("CLASSIFY RETURNS : " + result.stream().map(file -> file.getName()).collect(Collectors.toList()));
-		return result;
-	}
+        OwnFile root = new OwnFile(rootFile, true);
+        folders.add(root);
+        List<com.google.api.services.drive.model.File> filesDrive = getFilesList();
+        for (com.google.api.services.drive.model.File file : filesDrive) {
+            if (file.getParents() != null) {
+                if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
+                    folders.add(new OwnFile(file, true));
+                } else {
+                    files.add(new OwnFile(file, false));
+                }
+            }
+        }
+        for (OwnFile child : folders) {
+            for (OwnFile possibleParent : folders) {
+                if (child.file.getParents().size() > 0 && possibleParent.file.getId().equals(child.file.getParents().get(0))) {
+                    possibleParent.addFolder(child);
+                    break;
+                }
+            }
+        }
+        for (OwnFile child : files) {
+            for (OwnFile possibleParent : folders) {
+                if (possibleParent.file.getId().equals(child.file.getParents().get(0))) {
+                    possibleParent.addFile(child);
+                    break;
+                }
+            }
+        }
+        return root;
+    }
 }
