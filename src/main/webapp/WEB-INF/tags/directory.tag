@@ -4,18 +4,30 @@
 <c:if test="${!empty tree}">
     <c:choose>
         <c:when test="${tree.getFile().getName() == \"Drive Root\"}">
-            <p><i class="fas fa-server"></i><a href="<c:out value="${tree.file.getWebViewLink()}"/>"> <c:out value="${tree}" /></a></p>
+            <span class="fileName"><i class="fas fa-server"></i><a href="<c:out value="${tree.file.getWebViewLink()}"/>"> <c:out
+                    value="${tree}"/></a></span>
         </c:when>
         <c:otherwise>
-            <p><a href="<c:out value="${tree.file.getWebViewLink()}"/>"><c:out value="${tree}" /></a></p>
+            <span><a href="<c:out value="${tree.file.getWebViewLink()}"/>"><c:out value="${tree}"/></a></span>
         </c:otherwise>
     </c:choose>
-    <ul class="fa-ul">
-        <c:forEach items="${tree.getFolders()}" var="folder">
-            <li><span class="fa-li"><i class="fas fa-folder-open"></i></span><ownTags:directory tree="${folder}" /></li>
-        </c:forEach>
-        <c:forEach items="${tree.getFiles()}" var="file">
-            <li><span class="fa-li"><i class="fas fa-file"></i></span><ownTags:directory tree="${file}" /><a href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>"><i class="fas fa-download"></i></a></li>
-        </c:forEach>
-    </ul>
+    <c:if test="${!tree.getFolders().isEmpty() || !tree.getFiles().isEmpty()}">
+        <ul class="fa-ul">
+            <c:forEach items="${tree.getFolders()}" var="folder">
+                <li><span class="fa-li"><i class="fas fa-folder-open"></i></span><ownTags:directory tree="${folder}"/>
+                </li>
+            </c:forEach>
+            <c:forEach items="${tree.getFiles()}" var="file">
+                <li>
+                <span class="fa-li">
+                    <i class="fas fa-file"></i>
+                </span>
+                    <ownTags:directory tree="${file}"/>
+                    <a class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
+                        <i class="fas fa-download"></i>
+                    </a>
+                </li>
+            </c:forEach>
+        </ul>
+    </c:if>
 </c:if>
