@@ -3,14 +3,6 @@
 <%@ page import="unice.polytech.si4.pnsinnov.teamm.drools.ProxyGoogleDrive" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="ownTags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%
-    if (request.getParameter("submit1") != null) {
-%>
-<jsp:forward page="drools-rules.jsp"/>
-<%
-        return;
-    }
-%>
 <!doctype html>
 
 <html lang="en">

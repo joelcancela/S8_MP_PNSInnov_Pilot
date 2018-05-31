@@ -22,6 +22,7 @@ public class DroolsClassify {
         System.out.println("PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
         new ProxyGoogleDrive().applyRules(files);
         request.setAttribute("list", files);
+        request.setAttribute("ownFile", Login.googleDrive.classifyFiles());
         request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
     }
 }
