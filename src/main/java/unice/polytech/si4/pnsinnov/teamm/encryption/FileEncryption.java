@@ -80,11 +80,14 @@ public class FileEncryption {
 
 			byte[] outputBytes = cipher.doFinal(inputBytes);
 
-			FileOutputStream outputStream = new FileOutputStream(file.getPath()+"-crypted");
+			File outFile = new File(file.getPath()+"-crypted");
+			FileOutputStream outputStream = new FileOutputStream(outFile);
 			outputStream.write(outputBytes);
 
 			inputStream.close();
 			outputStream.close();
+
+			Login.googleDrive.uploadFile(false, outFile);
 
 			//return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes());
 			return "File crypted and named : " + file.getName() + "-crypted";
