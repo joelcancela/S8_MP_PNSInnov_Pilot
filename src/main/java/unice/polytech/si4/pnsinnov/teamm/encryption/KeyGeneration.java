@@ -20,25 +20,24 @@ import java.util.Optional;
 @Path("generateKey")
 public class KeyGeneration {
 	private static final Logger logger = LogManager.getLogger(KeyGeneration.class);
-	private final String CIPHER_ALGO = "AES";
+	private final static String CIPHER_ALGO = "AES";
+	private static SecretKey key;
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getString() {
-		Optional<SecretKey> key = generateKey();
-		if (key.isPresent()) {
-			return Base64.getEncoder().encodeToString(key.get().getEncoded());
-		}
-		return "Impossible to retrieve a key";
+	public String getEncodedString() {
+		return Base64.getEncoder().encodeToString(getKey().getEncoded());
 	}
 
-	public Optional<SecretKey> generateKey() {
-		Optional<SecretKey> key = Optional.empty();
-		try {
-			KeyGenerator keyGenerator = KeyGenerator.getInstance(CIPHER_ALGO);
-			key = Optional.of(keyGenerator.generateKey());
-		} catch (NoSuchAlgorithmException e) {
-			logger.log(Level.ERROR, e.getMessage());
+	public static SecretKey getKey() {
+		if (key == null) {
+			KeyGenerator keyGenerator = null;
+			try {
+				keyGenerator = KeyGenerator.getInstance(CIPHER_ALGO);
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+			key = keyGenerator.generateKey();
 		}
 		return key;
 	}

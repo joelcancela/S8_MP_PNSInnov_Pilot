@@ -15,6 +15,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -27,7 +32,6 @@ public class FileDecryption {
 	private final String CIPHER_ALGO = "AES";
 	private static final String KEY_ALGORITHM = "AES";
 
-	@QueryParam("key") String key;
 	@QueryParam("encrypted") String encrypted;
 
 	/**
@@ -40,13 +44,33 @@ public class FileDecryption {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getIt() {
 
-		if(key.isEmpty()) return "A key must be provided";
+		if(encrypted.isEmpty() || encrypted == null) return "An encrypted file must be provided";
 
 		try {
 			Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
-			cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key.getBytes(), KEY_ALGORITHM));
-			return new String (cipher.doFinal(Base64.decodeBase64(encrypted)));
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+			cipher.init(Cipher.DECRYPT_MODE, KeyGeneration.getKey());
+
+			java.nio.file.Path currentRelativePath = Paths.get("");
+			java.nio.file.Path destination = Paths.get(currentRelativePath.toAbsolutePath().toString() + "/downloads");
+
+			File inputFile =new File(destination + "/" + encrypted);
+
+			FileInputStream inputStream = new FileInputStream(inputFile);
+			byte[] inputBytes = new byte[(int) inputFile.length()];
+			inputStream.read(inputBytes);
+
+			byte[] outputBytes = cipher.doFinal(inputBytes);
+
+			logger.log(Level.INFO, "OUTPUT FILE : " + destination.toString() + "/" + inputFile.getName() + "-decrypted");
+			FileOutputStream outputStream = new FileOutputStream(destination.toString() + "/" + inputFile.getName() + "-decrypted");
+			outputStream.write(outputBytes);
+
+			inputStream.close();
+			outputStream.close();
+
+			return "File decrypted and named " + inputFile.getName() + "-decrypted";
+			//return new String (cipher.doFinal(Base64.decodeBase64(encrypted)));
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException |IOException e) {
 			logger.log(Level.ERROR, e.getMessage());
 		}
 
