@@ -4,10 +4,8 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.googleapis.media.MediaHttpDownloader;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -21,7 +19,6 @@ import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -146,29 +143,51 @@ public class GDrive {
 	 * TODO: To try and test
 	 * Downloads a file using either resumable or direct media download.
 	 */
-	public void downloadFile(boolean useDirectDownload, String fileName, String fileid)
-			throws IOException {
-		// create parent directory (if necessary)
+	public void downloadFile(boolean useDirectDownload, String fileid, String exportedMime) throws IOException {
+
+
+		com.google.api.services.drive.model.File file = Login.googleDrive.drive.files().get(fileid).execute();
+		String fileName = file.getName();
+		String mimetype = file.getMimeType();
+
+		List<String> gdriveMime = new ArrayList<>();
+		gdriveMime.add("application/vnd.google-apps.presentation");
+		gdriveMime.add("application/vnd.google-apps.spreadsheet");
+		gdriveMime.add("application/vnd.google-apps.document");
+
+
+		// Mock mime exporting parameter
+		HashMap<String, AbstractMap.SimpleEntry> exportedMimeMap = new HashMap();
+		AbstractMap.SimpleEntry<String, String> presentation = new AbstractMap.SimpleEntry<>("application/vnd.oasis.opendocument.presentation", ".odp");
+		exportedMimeMap.put("application/vnd.google-apps.presentation",presentation);
+		AbstractMap.SimpleEntry<String, String> spreadsheet = new AbstractMap.SimpleEntry<>("application/vnd.oasis.opendocument.spreadsheet", ".ods");
+		exportedMimeMap.put("application/vnd.google-apps.spreadsheet",spreadsheet);
+		AbstractMap.SimpleEntry<String, String> document = new AbstractMap.SimpleEntry<>("application/vnd.oasis.opendocument.text", ".odt");
+		exportedMimeMap.put("application/vnd.google-apps.document",document);
+
+		//GDrive file get exported mime and add extension
+		if (gdriveMime.contains(mimetype)) {
+			exportedMime = exportedMimeMap.get(mimetype).getKey().toString();
+			fileName +=  exportedMimeMap.get(mimetype).getValue();
+		}
 
         Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        logger.log(Level.INFO, "Current folder is : " + s);
-        Path destination = Paths.get(s + "/downloads/userID");
-		File parentDir = new File(destination.toString());
+        Path destination = Paths.get(currentRelativePath.toAbsolutePath().toString() + "/downloads");
+
+        File parentDir = new File(destination.toString());
 		if (!parentDir.exists() && !parentDir.mkdirs()) {
 			throw new IOException("Unable to create parent directory");
 		}
 
 		File output = new File(parentDir, fileName);
 		OutputStream out = new FileOutputStream(output);
-		//com.google.api.services.drive.model.File file = Login.googleDrive.drive.files().get(fileid).execute();
-		Login.googleDrive.drive.files().get(fileid).executeMediaAndDownloadTo(out);
-		//Login.googleDrive.drive.files().get(fileid).executeAndDownloadTo(out);
-		//out.write(file.)
-		/*MediaHttpDownloader downloader =
-				new MediaHttpDownloader(httpTransport, drive.getRequestFactory().getInitializer());
-		downloader.setDirectDownloadEnabled(useDirectDownload);
-		downloader.download(new GenericUrl(contentLinkDownload), out);*/
+
+
+		if (gdriveMime.contains(mimetype)) {
+			Login.googleDrive.drive.files().export(fileid, exportedMime).executeMediaAndDownloadTo(out);
+		} else {
+			Login.googleDrive.drive.files().get(fileid).executeMediaAndDownloadTo(out);
+		}
 	}
 
 	public List<com.google.api.services.drive.model.File> classifyFiles() throws IOException {
