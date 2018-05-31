@@ -15,7 +15,7 @@
             <li><span class="fa-li"><i class="fas fa-folder-open"></i></span><ownTags:directory tree="${folder}" /></li>
         </c:forEach>
         <c:forEach items="${tree.getFiles()}" var="file">
-            <li><span class="fa-li"><i class="fas fa-file"></i></span><ownTags:directory tree="${file}" /><a href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">Download</a></li>
+            <li><span class="fa-li"><i class="fas fa-file"></i></span><ownTags:directory tree="${file}" /><a href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>"><i class="fas fa-download"></i></a></li>
         </c:forEach>
     </ul>
 </c:if>

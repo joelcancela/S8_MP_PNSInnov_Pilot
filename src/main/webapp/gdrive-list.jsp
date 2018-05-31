@@ -32,16 +32,26 @@
 </head>
 <body>
 <div class="container">
-    <h2>Google Drive</h2>
+    <h2 style="margin-bottom: 1em;">Google Drive</h2>
 </div>
 <div class="container">
-    <form action="drools" method="post">
-        <input type="submit" value="Classify" class="btn btn-success" onclick="spin2win()">
+    <form action="drools" method="post" style="margin: 0px;">
+        <input type="submit" value="Classify" class="btn btn-success" data-toggle="modal" data-target="#ownModal">
     </form>
 
-    <img src="../img/12-64.png" class="rotating hidden" id="spinner"/>
+    <div class="modal fade" id="ownModal" tabindex="-1" role="dialog" aria-labelledby="ownModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <%--<div class="modal-header"></div>--%>
+                <div class="modal-body">
+                    <img src="../img/12-64.png" class="rotating" id="spinner"/>
+                </div>
+                <%--<div class="modal-footer"></div>--%>
+            </div>
+        </div>
+    </div>
 
-    <h3>Files</h3>
+    <h3 style="margin: 1em 0 1em;">Files</h3>
     <ownTags:directory tree="${ownFile}" />
 </div>
 </body>
@@ -51,5 +61,4 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
-<script src="../js/prettyList.js"></script>
 </html>
