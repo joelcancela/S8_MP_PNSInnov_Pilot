@@ -26,6 +26,9 @@
                     <a class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
                         <i class="fas fa-download"></i>
                     </a>
+                    <a class="file" href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>">
+                        <i class="fas fa-lock"></i>
+                    </a>
                 </li>
             </c:forEach>
         </ul>
