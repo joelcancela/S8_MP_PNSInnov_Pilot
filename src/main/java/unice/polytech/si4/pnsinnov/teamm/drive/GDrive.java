@@ -39,27 +39,27 @@ import java.util.stream.Collectors;
  * @author Joël CANCELA VAZ
  */
 public class GDrive {
-	private final Logger logger = Logger.getLogger(GDrive.class.getName());
-	private final File DATA_STORE_DIR = new File("target/store");
-	private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-	private final String APPLICATION_NAME = "PrivateMemo";
-	private FileDataStoreFactory dataStoreFactory;
-	private HttpTransport httpTransport;
-	public Drive drive;
-	private Credential credential;
-	private String savedStartPageToken;
+    private final Logger logger = Logger.getLogger(GDrive.class.getName());
+    private final File DATA_STORE_DIR = new File("target/store");
+    private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private final String APPLICATION_NAME = "PrivateMemo";
+    private FileDataStoreFactory dataStoreFactory;
+    private HttpTransport httpTransport;
+    public Drive drive;
+    private Credential credential;
+    private String savedStartPageToken;
 
-	public void initialize() {
-		credential = Login.gDriveSession.credential;
-		drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
-				APPLICATION_NAME).build();
-		try {
-			savedStartPageToken = drive.changes()
-					.getStartPageToken().execute().getStartPageToken();
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage());
-		}
-	}
+    public void initialize() {
+        credential = Login.gDriveSession.credential;
+        drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
+                APPLICATION_NAME).build();
+        try {
+            savedStartPageToken = drive.changes()
+                    .getStartPageToken().execute().getStartPageToken();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
+    }
 
     public GDrive() throws IOException, GeneralSecurityException {
         httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -88,29 +88,22 @@ public class GDrive {
 
     public List<com.google.api.services.drive.model.File> getAutomaticFilesList() {
         List<com.google.api.services.drive.model.File> automaticFiles = new ArrayList<>();
-        String folderId = null;
-        FileList folders = null;
         try {
-            folders = drive.files().list().setQ("mimeType='application/vnd.google-apps.folder' and name = 'automatic'").execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (com.google.api.services.drive.model.File f : folders.getFiles()) {
-            if (f.getName().equals("automatic")) {
-                folderId = f.getId();
-            }
-        }
-        try {
-            List<com.google.api.services.drive.model.File> files = getFilesList();
-            for (com.google.api.services.drive.model.File file: files) {
-                if (!file.getMimeType().equals("application/vnd.google-apps.folder") && file.getParents() != null && file.getParents().get(0).equals(folderId)){
-                    automaticFiles.add(file);
-                }
+            List<OwnFile> found = Login.googleDrive.classifyFiles().getFolders().stream().filter(f -> f.file.getName().equals("automatic")).collect(Collectors.toList());
+            if (!found.isEmpty()){
+                addAllFiles(found.get(0), automaticFiles);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return automaticFiles;
+    }
+
+    public void addAllFiles(OwnFile root, List<com.google.api.services.drive.model.File> toAdd){
+        toAdd.addAll(root.getFiles().stream().map(f -> f.file).collect(Collectors.toList()));
+        for (OwnFile ownfile : root.getFolders()) {
+            addAllFiles(ownfile, toAdd);
+        }
     }
 
     public Channel subscribeToChanges() {//TODO: watch mutliples sessions
@@ -119,101 +112,101 @@ public class GDrive {
         return notifications;
     }
 
-	private Channel watchChange(Drive service, String channelId,
-	                            String channelAddress) {
-		Channel channel = new Channel();
-		channel.setId(channelId);
-		channel.setType("web_hook");
-		channel.setAddress(channelAddress);
-		try {
-			return service.changes().watch(service.changes().getStartPageToken().execute().getStartPageToken(), channel).execute();
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage());
-		}
-		return null;
-	}
+    private Channel watchChange(Drive service, String channelId,
+                                String channelAddress) {
+        Channel channel = new Channel();
+        channel.setId(channelId);
+        channel.setType("web_hook");
+        channel.setAddress(channelAddress);
+        try {
+            return service.changes().watch(service.changes().getStartPageToken().execute().getStartPageToken(), channel).execute();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
+        return null;
+    }
 
-	public void unsubscribeChannel(Channel channel) throws IOException {
-		drive.channels().stop(channel);
-	}
+    public void unsubscribeChannel(Channel channel) throws IOException {
+        drive.channels().stop(channel);
+    }
 
-	public void getChanges() throws IOException {
-		String pageToken = savedStartPageToken;
-		while (pageToken != null) {
-			ChangeList changes = drive.changes().list(pageToken)
-					.execute();
-			for (Change change : changes.getChanges()) {
-				if(change.getFile() == null){
-					logger.log(Level.SEVERE, change.toPrettyString());
-					continue;
-				}
-				boolean isFolder = change.getFile().getMimeType().contains("folder");
-				boolean isDeleted = change.getRemoved();
-				StringBuilder stringLog = new StringBuilder();
-				if (isFolder) {
-					stringLog.append("The folder ");
-				} else {
-					stringLog.append("The file ");
-				}
-				stringLog.append("with ID:[" + change.getFileId() + "], named: " + change.getFile().getName());
-				if (isDeleted) {
-					stringLog.append(" was removed");
-				} else {
-					stringLog.append(" was changed");
-				}
-				logger.log(Level.INFO, stringLog.toString());
-			}
-			if (changes.getNewStartPageToken() != null) {
-				// Last page, save this token for the next polling interval
-				savedStartPageToken = changes.getNewStartPageToken();
-			}
-			pageToken = changes.getNextPageToken();
-		}
-	}
+    public void getChanges() throws IOException {
+        String pageToken = savedStartPageToken;
+        while (pageToken != null) {
+            ChangeList changes = drive.changes().list(pageToken)
+                    .execute();
+            for (Change change : changes.getChanges()) {
+                if (change.getFile() == null) {
+                    logger.log(Level.SEVERE, change.toPrettyString());
+                    continue;
+                }
+                boolean isFolder = change.getFile().getMimeType().contains("folder");
+                boolean isDeleted = change.getRemoved();
+                StringBuilder stringLog = new StringBuilder();
+                if (isFolder) {
+                    stringLog.append("The folder ");
+                } else {
+                    stringLog.append("The file ");
+                }
+                stringLog.append("with ID:[" + change.getFileId() + "], named: " + change.getFile().getName());
+                if (isDeleted) {
+                    stringLog.append(" was removed");
+                } else {
+                    stringLog.append(" was changed");
+                }
+                logger.log(Level.INFO, stringLog.toString());
+            }
+            if (changes.getNewStartPageToken() != null) {
+                // Last page, save this token for the next polling interval
+                savedStartPageToken = changes.getNewStartPageToken();
+            }
+            pageToken = changes.getNextPageToken();
+        }
+    }
 
-	/**
-	 * TODO: To try and test
-	 * Uploads a file using either resumable or direct media upload.
-	 */
-	public com.google.api.services.drive.model.File uploadFile(boolean useDirectUpload, File file) throws IOException {
-		com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-		fileMetadata.setName(file.getName());
-		logger.log(Level.INFO, "Uploading a file " + file.getName() + " typed " + Files.probeContentType(Paths.get(file.getPath())));
-		FileContent mediaContent = new FileContent(Files.probeContentType(Paths.get(file.getPath())), file);
-		Drive.Files.Create insert = drive.files().create(fileMetadata, mediaContent);
-		MediaHttpUploader uploader = insert.getMediaHttpUploader();
-		uploader.setDirectUploadEnabled(useDirectUpload);
-		return insert.execute();
-	}
+    /**
+     * TODO: To try and test
+     * Uploads a file using either resumable or direct media upload.
+     */
+    public com.google.api.services.drive.model.File uploadFile(boolean useDirectUpload, File file) throws IOException {
+        com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
+        fileMetadata.setName(file.getName());
+        logger.log(Level.INFO, "Uploading a file " + file.getName() + " typed " + Files.probeContentType(Paths.get(file.getPath())));
+        FileContent mediaContent = new FileContent(Files.probeContentType(Paths.get(file.getPath())), file);
+        Drive.Files.Create insert = drive.files().create(fileMetadata, mediaContent);
+        MediaHttpUploader uploader = insert.getMediaHttpUploader();
+        uploader.setDirectUploadEnabled(useDirectUpload);
+        return insert.execute();
+    }
 
-	/**
-	 * TODO: To try and test
-	 * Downloads a file using either resumable or direct media download.
-	 */
-	public void downloadFile(boolean useDirectDownload, String fileName, String fileid)
-			throws IOException {
-		// create parent directory (if necessary)
+    /**
+     * TODO: To try and test
+     * Downloads a file using either resumable or direct media download.
+     */
+    public void downloadFile(boolean useDirectDownload, String fileName, String fileid)
+            throws IOException {
+        // create parent directory (if necessary)
 
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         logger.log(Level.INFO, "Current folder is : " + s);
         Path destination = Paths.get(s + "/downloads/userID");
-		File parentDir = new File(destination.toString());
-		if (!parentDir.exists() && !parentDir.mkdirs()) {
-			throw new IOException("Unable to create parent directory");
-		}
+        File parentDir = new File(destination.toString());
+        if (!parentDir.exists() && !parentDir.mkdirs()) {
+            throw new IOException("Unable to create parent directory");
+        }
 
-		File output = new File(parentDir, fileName);
-		OutputStream out = new FileOutputStream(output);
-		//com.google.api.services.drive.model.File file = Login.googleDrive.drive.files().get(fileid).execute();
-		Login.googleDrive.drive.files().get(fileid).executeMediaAndDownloadTo(out);
-		//Login.googleDrive.drive.files().get(fileid).executeAndDownloadTo(out);
-		//out.write(file.)
+        File output = new File(parentDir, fileName);
+        OutputStream out = new FileOutputStream(output);
+        //com.google.api.services.drive.model.File file = Login.googleDrive.drive.files().get(fileid).execute();
+        Login.googleDrive.drive.files().get(fileid).executeMediaAndDownloadTo(out);
+        //Login.googleDrive.drive.files().get(fileid).executeAndDownloadTo(out);
+        //out.write(file.)
 		/*MediaHttpDownloader downloader =
 				new MediaHttpDownloader(httpTransport, drive.getRequestFactory().getInitializer());
 		downloader.setDirectDownloadEnabled(useDirectDownload);
 		downloader.download(new GenericUrl(contentLinkDownload), out);*/
-	}
+    }
 
     public OwnFile classifyFiles() throws IOException {
         String rootId = drive.files().get("root").setFields("id").execute().getId();

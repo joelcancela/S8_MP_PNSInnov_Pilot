@@ -33,7 +33,7 @@ public class ProxyGoogleDrive {
         KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.getKieClasspathContainer();
 
-        logger.log(Level.INFO,"Rules to check MIME Type = application/pdf and extension = pdf");
+        logger.log(Level.INFO,"RULES TRIGGERED");
 
         for (FileInfo file : fileInfos) {
             logger.log(Level.INFO,"Tested file : "+file.getNameFile());
