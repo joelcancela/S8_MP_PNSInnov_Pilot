@@ -1,11 +1,16 @@
-h2 h3 {
-    padding-bottom: 3em;
+.container > h2 {
+    margin-bottom: 2em;
 }
 
-tr {
-    margin: 0.75em;
+form {
+    float: left;
+    margin: 2em 50px 2em 0;
 }
 
-button {
-    margin: 3em 0;
+input {
+    padding: 64px 0;
+}
+
+h3 {
+    margin: 2em 0 1em;
 }
