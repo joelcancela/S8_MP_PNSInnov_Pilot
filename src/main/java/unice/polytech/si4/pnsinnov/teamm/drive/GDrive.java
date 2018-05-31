@@ -90,7 +90,7 @@ public class GDrive {
         try {
             List<com.google.api.services.drive.model.File> files = getFilesList();
             for (com.google.api.services.drive.model.File file: files) {
-                if (file.getParents() != null && file.getParents().get(0).equals(folderId)){
+                if (!file.getMimeType().equals("application/vnd.google-apps.folder") && file.getParents() != null && file.getParents().get(0).equals(folderId)){
                     automaticFiles.add(file);
                 }
             }
