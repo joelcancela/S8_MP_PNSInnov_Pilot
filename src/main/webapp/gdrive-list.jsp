@@ -32,10 +32,10 @@
 </head>
 <body>
 <div class="container">
-    <h2>Google Drive</h2>
+    <h2 style="margin-bottom: 1em;">Google Drive</h2>
 </div>
 <div class="container">
-    <form action="drools" method="post">
+    <form action="drools" method="post" style="margin: 0px;">
         <input type="submit" value="Classify" class="btn btn-success" data-toggle="modal" data-target="#ownModal">
     </form>
 
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <h3>Files</h3>
+    <h3 style="margin: 1em 0 1em;">Files</h3>
     <ownTags:directory tree="${ownFile}" />
 </div>
 </body>
