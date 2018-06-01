@@ -74,9 +74,10 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <%--<div class="modal-header"></div>--%>
-                <div class="modal-body">
+                <div class="modal-body text-center">
                     <img src="../img/12-64.png" class="rotating" id="spinner"/><br>
-                    <span>Applying your rules... Please wait</span>
+                    <span>Applying your rules...</span><br>
+                    <span>Please wait</span>
                 </div>
                 <%--<div class="modal-footer"></div>--%>
             </div>
