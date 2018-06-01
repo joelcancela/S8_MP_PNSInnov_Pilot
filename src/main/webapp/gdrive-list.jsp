@@ -36,7 +36,8 @@
 </div>
 <div class="container">
     <form action="drools" method="post" style="margin: 0px;">
-        <input type="submit" value="Classify" class="btn btn-success" data-toggle="modal" data-target="#ownModal">
+        <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal"
+               data-target="#ownModal">
     </form>
 
     <div class="modal fade" id="ownModal" tabindex="-1" role="dialog" aria-labelledby="ownModalLabel">
@@ -44,7 +45,8 @@
             <div class="modal-content">
                 <%--<div class="modal-header"></div>--%>
                 <div class="modal-body">
-                    <img src="../img/12-64.png" class="rotating" id="spinner"/>
+                    <img src="../img/12-64.png" class="rotating" id="spinner"/><br>
+                    <span>Applying your rules... Please wait</span>
                 </div>
                 <%--<div class="modal-footer"></div>--%>
             </div>
