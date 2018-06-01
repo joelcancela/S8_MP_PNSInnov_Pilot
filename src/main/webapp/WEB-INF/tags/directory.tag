@@ -17,25 +17,32 @@
     <c:choose>
         <c:when test="${tree.getFile().getName() == \"Drive Root\"}">
             <span class="fileName"><i class="fas fa-server"></i><a target="_blank"
-                    href="<c:out value="${tree.file.getWebViewLink()}"/>"> <c:out
-                    value="${tree}"/></a></span>
+                    href="<c:out value="https://drive.google.com/drive/my-drive"/>">
+                <c:out value="${tree}"/></a></span>
         </c:when>
         <c:otherwise>
             <span><a target="_blank" href="<c:out value="${tree.file.getWebViewLink()}"/>"><c:out value="${tree}"/></a></span>
         </c:otherwise>
     </c:choose>
     <c:if test="${!tree.getFolders().isEmpty() || !tree.getFiles().isEmpty()}">
-        <i class="icon-collapse fas fa-plus" onclick="modifyIcon(this);" data-toggle="collapse"
-           data-target="#${tree.file.getId()}" aria-expanded="false" aria-controls="${tree.file.getId()}"></i>
-        <ul class="fa-ul collapse" id="${tree.file.getId()}">
+        <c:choose>
+            <c:when test="${tree.getFile().getName() != \"Drive Root\"}">
+                <i class="icon-collapse fas fa-plus" onclick="modifyIcon(this);" data-toggle="collapse"
+                   data-target="#${tree.file.getId()}" aria-expanded="false" aria-controls="${tree.file.getId()}"></i>
+                <ul class="fa-ul collapse" id="${tree.file.getId()}">
+            </c:when>
+            <c:otherwise>
+                <ul class="fa-ul" id="${tree.file.getId()}">
+            </c:otherwise>
+        </c:choose>
             <c:forEach items="${tree.getFolders()}" var="folder">
-                <li><span class="fa-li"><i class="fas fa-folder-open"></i></span><ownTags:directory tree="${folder}"/>
+                <li><span class="fa-li"><i class="fas fa-folder-open text-warning"></i></span><ownTags:directory tree="${folder}"/>
                 </li>
             </c:forEach>
             <c:forEach items="${tree.getFiles()}" var="file">
                 <li>
                 <span class="fa-li">
-                    <i class="fas fa-file"></i>
+                    <i class="fas fa-file text-success"></i>
                 </span>
                     <ownTags:directory tree="${file}"/>
                     <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
