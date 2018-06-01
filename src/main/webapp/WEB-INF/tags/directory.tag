@@ -15,7 +15,7 @@
 </script>
 <c:if test="${!empty tree}">
     <c:choose>
-        <c:when test="${tree.getFile().getName() == \"Drive Root\"}">
+        <c:when test="${tree.getFile().getName().equals(\"Drive Root\")}">
             <span class="fileName"><i class="fas fa-server"></i><a target="_blank"
                     href="<c:out value="https://drive.google.com/drive/my-drive"/>">
                 <c:out value="${tree}"/></a></span>
@@ -26,7 +26,7 @@
     </c:choose>
     <c:if test="${!tree.getFolders().isEmpty() || !tree.getFiles().isEmpty()}">
         <c:choose>
-            <c:when test="${tree.getFile().getName() != \"Drive Root\"}">
+            <c:when test="${! tree.getFile().getName().equals(\"Drive Root\")}">
                 <i class="icon-collapse fas fa-plus" onclick="modifyIcon(this);" data-toggle="collapse"
                    data-target="#${tree.file.getId()}" aria-expanded="false" aria-controls="${tree.file.getId()}"></i>
                 <ul class="fa-ul collapse" id="${tree.file.getId()}">
