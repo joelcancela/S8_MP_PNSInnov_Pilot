@@ -51,7 +51,7 @@
 
                     <c:choose>
                         <c:when test="${file.file.getName().endsWith(\"-crypted\")}">
-                            <a target="_blank" class="file" href="filedecryption?encrypted=<c:out value="${file.file.getName()}"/>">
+                            <a target="_blank" class="file" href="filedecryption?encryptedFileId=<c:out value="${file.file.getId()}"/>">
                                 <i class="fas fa-lock-open"></i>
                             </a>
                         </c:when>
