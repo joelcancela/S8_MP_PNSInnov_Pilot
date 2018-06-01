@@ -26,16 +26,23 @@ then
     $file.moveFile("SVG");
 end
 
-rule "Extension file" salience 2
+rule "Extension file" salience 3
 when
     $file:FileInfo(extension == "pdf")
 then
     $file.moveFile("PDF");
 end
 
-rule "mimeTypeFile" salience 1
+rule "mimeTypeFile" salience 2
 when
     $file:FileInfo(mimeType == "application/vnd.google-apps.document")
 then
     $file.moveFile("application/vnd.google-apps.document");
+end
+
+rule "default" salience 1
+when
+    $file:FileInfo()
+then
+    $file.moveFile("_NoRuleApplied");
 end

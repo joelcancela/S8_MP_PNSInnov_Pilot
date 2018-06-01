@@ -101,7 +101,7 @@ public class FileInfo {
         }
         // Move the file to the new folder
         try {
-            logger.log(Level.INFO, "Move file " + this.file.getName() + " to " + fileMetaData.getName());
+            logger.log(Level.INFO, "Move file " + this.file.getName() + " to " + folderName);
             file = Login.googleDrive.drive.files().update(this.file.getId(), null)
                     .setAddParents(fileMetaData.getId())
                     .setRemoveParents(previousParents.toString())
