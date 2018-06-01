@@ -21,7 +21,13 @@
                 <c:out value="${tree}"/></a></span>
         </c:when>
         <c:otherwise>
+            <c:if test="${tree.file.getTrashed() == 'true'}">
+                <s>
+            </c:if>
             <span><a target="_blank" href="<c:out value="${tree.file.getWebViewLink()}"/>"><c:out value="${tree}"/></a></span>
+            <c:if test="${tree.file.getTrashed() == 'true'}">
+                </s>
+            </c:if>
         </c:otherwise>
     </c:choose>
     <c:if test="${!tree.getFolders().isEmpty() || !tree.getFiles().isEmpty()}">
@@ -45,25 +51,26 @@
                     <i class="fas fa-file text-success"></i>
                 </span>
                     <ownTags:directory tree="${file}"/>
-                    <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
-                        <i class="fas fa-download"></i>
-                    </a>
+                    <c:if test="${file.file.getTrashed() == 'false'}">
+                        <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
+                            <i class="fas fa-download"></i>
+                        </a>
 
-                    <c:choose>
-                        <c:when test="${file.file.getName().endsWith(\"-crypted\")}">
-                            <a target="_blank" class="file" href="filedecryption?encryptedFileId=<c:out value="${file.file.getId()}"/>">
-                                <i class="fas fa-lock-open"></i>
-                            </a>
-                        </c:when>
-                        <c:otherwise>
-                            <a target="_blank" class="file" href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>">
-                                <i class="fas fa-lock"></i>
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
-
+                        <c:choose>
+                            <c:when test="${file.file.getName().endsWith(\"-crypted\")}">
+                                <a target="_blank" class="file" href="filedecryption?encryptedFileId=<c:out value="${file.file.getId()}"/>">
+                                    <i class="fas fa-lock-open"></i>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a target="_blank" class="file" href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>">
+                                    <i class="fas fa-lock"></i>
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
                 </li>
             </c:forEach>
-        </ul>
+            </ul>
     </c:if>
 </c:if>
