@@ -4,19 +4,11 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.FileSystems;
 
-rule "Folder" salience 6
-when
-    $file:FileInfo(mimeType == "application/vnd.google-apps.folder")
-then
-    System.out.println(" Folder detected!");
-    $file.printParent();
-end
 
 rule "Google spreadsheet" salience 5
 when
     $file:FileInfo(mimeType == "application/vnd.google-apps.spreadsheet")
 then
-    System.out.println(" Spreadsheet detected!");
     $file.moveFile("application/vnd.google-apps.spreadsheet");
 end
 
@@ -24,7 +16,6 @@ rule "Extension png file" salience 4
 when
     $file:FileInfo(extension == "png")
 then
-    System.out.println("Extension png rule checked !");
     $file.moveFile("PNG");
 end
 
@@ -32,22 +23,26 @@ rule "Extension svg file" salience 3
 when
     $file:FileInfo(extension == "svg")
 then
-    System.out.println("Extension svg rule checked !");
     $file.moveFile("SVG");
 end
 
-rule "Extension file" salience 2
+rule "Extension file" salience 3
 when
     $file:FileInfo(extension == "pdf")
 then
-    System.out.println("Extension pdf rule checked !");
     $file.moveFile("PDF");
 end
 
-rule "mimeTypeFile" salience 1
+rule "mimeTypeFile" salience 2
 when
     $file:FileInfo(mimeType == "application/vnd.google-apps.document")
 then
-    System.out.println("MIME Type rule checked !");
     $file.moveFile("application/vnd.google-apps.document");
+end
+
+rule "default" salience 1
+when
+    $file:FileInfo()
+then
+    $file.moveFile("_NoRuleApplied");
 end

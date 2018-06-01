@@ -21,7 +21,6 @@ public class ProxyGoogleDrive {
         List<FileInfo> fileInfos = new ArrayList<>();
 
         for (File file : files) {
-            System.out.println("APPLY RULE ON " + file.getName());
             FileInfo fileInfo = new FileInfo();
             fileInfo.setExtension(file.getFileExtension());
             fileInfo.setMimeType(file.getMimeType());
@@ -36,7 +35,7 @@ public class ProxyGoogleDrive {
         logger.log(Level.INFO,"RULES TRIGGERED");
 
         for (FileInfo file : fileInfos) {
-            logger.log(Level.INFO,"Tested file : "+file.getNameFile());
+            logger.log(Level.INFO, "### Applying rules on the file " + file.getNameFile() + " ###");
             testFile(kContainer, file);
         }
 
@@ -44,9 +43,8 @@ public class ProxyGoogleDrive {
 
     private void testFile(KieContainer kContainer, FileInfo fileInfo){
         KieSession kSession = kContainer.newKieSession("ksession-file-rules");
-        fileInfo.printFile();
         kSession.insert(fileInfo);
-        kSession.fireAllRules();
+        kSession.fireAllRules(1);
         kSession.dispose();
     }
 }
