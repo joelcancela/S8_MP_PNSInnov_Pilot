@@ -29,3 +29,11 @@ h3 {
 span.fileName {
     margin-right: 2em;
 }
+
+.fa-li {
+    margin-bottom: 2em;
+}
+
+ul.borderless > li {
+    border-top: 0 none;
+}
