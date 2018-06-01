@@ -85,7 +85,7 @@ public class GDrive {
     public List<com.google.api.services.drive.model.File> getAutomaticFilesList() {
         List<com.google.api.services.drive.model.File> automaticFiles = new ArrayList<>();
         try {
-            List<OwnFile> found = Login.googleDrive.classifyFiles().getFolders().stream().filter(f -> f.file.getName().equals("automatic")).collect(Collectors.toList());
+            List<OwnFile> found = Login.googleDrive.classifyFiles().getFolders().stream().filter(f -> f.file.getName().equals("_Automatic")).collect(Collectors.toList());
             if (!found.isEmpty()){
                 addAllFiles(found.get(0), automaticFiles);
             }

@@ -41,12 +41,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Google Drive</a>
+            <a class="navbar-brand" href="/PrivateMemo">Google Drive</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="generateKey">Get encryption key</a></li>
                 <li><a href="#">Define rules</a></li>
                 <%--${pageContext.request.contextPath}/rules-creation.jsp--%>
             </ul>
@@ -65,6 +66,13 @@
         <strong>Error !</strong> <c:out value="${error}"/>.
     </div>
 </c:if>
+
+<c:if test="${key != null}">
+    <div class="alert alert-info">
+        <strong>Info !</strong> Your encryption key is : <c:out value="${key}"/>
+    </div>
+</c:if>
+
 <div class="container">
     <form action="drools" method="post" style="margin: 0px;">
         <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal" data-target="#ownModal">

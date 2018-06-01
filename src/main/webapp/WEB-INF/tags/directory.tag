@@ -15,21 +15,34 @@
 </script>
 <c:if test="${!empty tree}">
     <c:choose>
-        <c:when test="${tree.getFile().getName() == \"Drive Root\"}">
+        <c:when test="${tree.getFile().getName().equals(\"Drive Root\")}">
             <span class="fileName"><i class="fas fa-server"></i><a target="_blank"
                     href="<c:out value="https://drive.google.com/drive/my-drive"/>">
                 <c:out value="${tree}"/></a></span>
         </c:when>
         <c:otherwise>
+            <c:if test="${tree.file.getTrashed() == 'true'}">
+                <s>
+            </c:if>
             <span><a target="_blank" href="<c:out value="${tree.file.getWebViewLink()}"/>"><c:out value="${tree}"/></a></span>
+            <c:if test="${tree.file.getTrashed() == 'true'}">
+                </s>
+            </c:if>
         </c:otherwise>
     </c:choose>
     <c:if test="${!tree.getFolders().isEmpty() || !tree.getFiles().isEmpty()}">
         <c:choose>
-            <c:when test="${tree.getFile().getName() != \"Drive Root\"}">
-                <i class="icon-collapse fas fa-plus" onclick="modifyIcon(this);" data-toggle="collapse"
-                   data-target="#${tree.file.getId()}" aria-expanded="false" aria-controls="${tree.file.getId()}"></i>
-                <ul class="fa-ul collapse" id="${tree.file.getId()}">
+            <c:when test="${!tree.getFile().getName().equals(\"Drive Root\")}">
+                <c:choose>
+                    <c:when test="${tree.file.getTrashed() == 'true'}">
+                        <ul class="fa-ul collapse" id="${tree.file.getId()}">
+                    </c:when>
+                    <c:otherwise>
+                        <i class="icon-collapse fas fa-plus" onclick="modifyIcon(this);" data-toggle="collapse"
+                           data-target="#${tree.file.getId()}" aria-expanded="false" aria-controls="${tree.file.getId()}"></i>
+                        <ul class="fa-ul collapse" id="${tree.file.getId()}">
+                    </c:otherwise>
+                </c:choose>
             </c:when>
             <c:otherwise>
                 <ul class="fa-ul" id="${tree.file.getId()}">
@@ -45,25 +58,26 @@
                     <i class="fas fa-file text-success"></i>
                 </span>
                     <ownTags:directory tree="${file}"/>
-                    <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
-                        <i class="fas fa-download"></i>
-                    </a>
+                    <c:if test="${file.file.getTrashed() == 'false'}">
+                        <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
+                            <i class="fas fa-download"></i>
+                        </a>
 
-                    <c:choose>
-                        <c:when test="${file.file.getName().endsWith(\"-crypted\")}">
-                            <a target="_blank" class="file" href="filedecryption?encrypted=<c:out value="${file.file.getName()}"/>">
-                                <i class="fas fa-lock-open"></i>
-                            </a>
-                        </c:when>
-                        <c:otherwise>
-                            <a target="_blank" class="file" href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>">
-                                <i class="fas fa-lock"></i>
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
-
+                        <c:choose>
+                            <c:when test="${file.file.getName().endsWith(\"-crypted\")}">
+                                <a target="_blank" class="file" href="filedecryption?encryptedFileId=<c:out value="${file.file.getId()}"/>">
+                                    <i class="fas fa-lock-open"></i>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a target="_blank" class="file" href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>">
+                                    <i class="fas fa-lock"></i>
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
                 </li>
             </c:forEach>
-        </ul>
+            </ul>
     </c:if>
 </c:if>
