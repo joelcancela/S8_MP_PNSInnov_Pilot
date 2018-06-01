@@ -41,7 +41,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Google Drive</a>
+            <a class="navbar-brand" href="/PrivateMemo">Google Drive</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->

@@ -44,7 +44,7 @@ public class ProxyGoogleDrive {
     private void testFile(KieContainer kContainer, FileInfo fileInfo){
         KieSession kSession = kContainer.newKieSession("ksession-file-rules");
         kSession.insert(fileInfo);
-        kSession.fireAllRules();
+        kSession.fireAllRules(1);
         kSession.dispose();
     }
 }
