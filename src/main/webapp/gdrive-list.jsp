@@ -34,6 +34,18 @@
 <div class="container">
     <h2 style="margin-bottom: 1em;">Google Drive</h2>
 </div>
+
+<c:if test="${success != null}">
+    <div class="alert alert-success">
+        <strong>Success !</strong> <c:out value="${success}"/>.
+    </div>
+</c:if>
+
+<c:if test="${error != null}">
+    <div class="alert alert-danger">
+        <strong>Error !</strong> <c:out value="${error}"/>.
+    </div>
+</c:if>
 <div class="container">
     <form action="drools" method="post" style="margin: 0px;">
         <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal"

@@ -11,16 +11,22 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
+
+import static unice.polytech.si4.pnsinnov.teamm.api.Login.googleDrive;
 
 /**
  * Created by Nassim B on 5/28/18.
@@ -40,10 +46,9 @@ public class FileEncryption {
 	 * @return String that will be returned as a text/plain response.
 	 */
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getIt() {
+	public void getIt(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 
-		if(fileid.isEmpty() || fileid == null) return "A fileid must be provided";
+		if(fileid.isEmpty() || fileid == null) return ;
 
 		String downloadedPath = null;
 		try {
@@ -90,12 +95,20 @@ public class FileEncryption {
 			Login.googleDrive.uploadFile(false, outFile);
 
 			//return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes());
-			return "File crypted and named : " + file.getName() + "-crypted";
+			//return "File crypted and named : " + file.getName() + "-crypted";
+			request.setAttribute("success", "the file " + file.getName() + " has crypted and uploaded as : " + file.getName() + "-crypted");
+
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
 			logger.log(Level.ERROR, e.getMessage());
+			request.setAttribute("error", "An error occured while crypting the file " + file.getName());
 		}
 
-		return stringBuilder.toString();
+		try {
+			request.setAttribute("ownFile", googleDrive.classifyFiles());
+			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+		} catch (IOException | ServletException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
