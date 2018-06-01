@@ -11,10 +11,14 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +27,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+
+import static unice.polytech.si4.pnsinnov.teamm.api.Login.googleDrive;
 
 /**
  * Created by Nassim B on 5/28/18.
@@ -42,10 +48,17 @@ public class FileDecryption {
 	 * @return String that will be returned as a text/plain response.
 	 */
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getIt() {
+	public void getIt(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 
-		if(encrypted.isEmpty() || encrypted == null) return "An encrypted file must be provided";
+		if(encrypted.isEmpty() || encrypted == null) {
+			request.setAttribute("error", "A target file to decrypt must be provided");
+			try {
+				request.setAttribute("ownFile", googleDrive.classifyFiles());
+				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+			} catch (IOException | ServletException e) {
+				e.printStackTrace();
+			}
+		}
 
 		try {
 			Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
@@ -73,13 +86,19 @@ public class FileDecryption {
 			Login.googleDrive.uploadFile(false, outFile);
 
 
-			return "File decrypted and named " + inputFile.getName() + "-decrypted";
+			request.setAttribute("success", "the file " + inputFile.getName() + " has been decrypted and uploaded as : " + inputFile.getName() + "-decrypted");
 			//return new String (cipher.doFinal(Base64.decodeBase64(encrypted)));
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException |IOException e) {
 			logger.log(Level.ERROR, e.getMessage());
+			request.setAttribute("error", "An error occured while decrypting the file " + encrypted);
 		}
 
-		return "Encrypted";
+		try {
+			request.setAttribute("ownFile", googleDrive.classifyFiles());
+			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+		} catch (IOException | ServletException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
