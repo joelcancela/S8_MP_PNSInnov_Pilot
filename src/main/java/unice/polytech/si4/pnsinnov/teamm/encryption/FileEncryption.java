@@ -3,6 +3,9 @@ package unice.polytech.si4.pnsinnov.teamm.encryption;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -39,12 +42,16 @@ public class FileEncryption {
 	 */
 	@GET
 	public void getIt(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+
+		if (session == null) {
+			throw new RuntimeException("You must be connected to access this feature"); //TODO : Handle this case properly
+		}
 
 		if(fileid.isEmpty() || fileid == null) {
 			request.setAttribute("error", "A file id must be provided");
 			try {
-				//FIXME : Multiple User
-				//request.setAttribute("ownFile", googleDrive.classifyFiles());
+				request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (IOException | ServletException e) {
 				e.printStackTrace();
@@ -52,13 +59,11 @@ public class FileEncryption {
 		}
 
 		String downloadedPath = null;
-		//FIXME : Multiple User
-		/*try {
-			//downloadedPath = Login.googleDrive.downloadFile(false, fileid, null); //TODO : Currently exportedMime is
-			// mocked in method, must be provided by gui
+		try {
+			downloadedPath = GDrive.getGDrive().downloadFile(session,false, fileid, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 
 		logger.log(Level.INFO, "File downloaded to " + downloadedPath);
 		File file = new File(downloadedPath);
@@ -73,7 +78,6 @@ public class FileEncryption {
 		} catch (FileNotFoundException e) {
 			logger.log(Level.ERROR, e.getMessage());
 			logger.log(Level.INFO,"##### JPNE #####");
-			//logger.log(Level.INFO,fileurl);
 		}
 
 
@@ -95,8 +99,8 @@ public class FileEncryption {
 			inputStream.close();
 			outputStream.close();
 
-			//FIXME : Multiple User
-			//Login.googleDrive.uploadFile(false, outFile);
+
+			GDrive.getGDrive().uploadFile(session,false, outFile);
 
 			//return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes());
 			//return "File crypted and named : " + file.getName() + "-crypted";
@@ -108,8 +112,7 @@ public class FileEncryption {
 		}
 
 		try {
-			//FIXME : Multiple User
-			//request.setAttribute("ownFile", googleDrive.classifyFiles());
+			request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
 			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 		} catch (IOException | ServletException e) {
 			e.printStackTrace();

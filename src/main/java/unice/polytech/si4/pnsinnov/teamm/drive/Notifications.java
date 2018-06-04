@@ -30,7 +30,7 @@ public class Notifications {
 		String userID = rh.getFirst("x-goog-channel-id");
 		String headersChange = rh.getFirst("x-goog-resource-state");
 		//FIXME : Multiple User
-		if(Login.getDriveSessions(userID) != null){//FIXME: multiples sessions voir GDrive:75
+		if(Login.getDriveSessions(userID) != null){
 			logger.log(Level.INFO, "Changes received for ["+userID+"] headerChange:"+headersChange);
 			try {
 				GDrive.getGDrive().getChanges(Login.getDriveSessions(userID));
