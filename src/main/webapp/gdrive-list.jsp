@@ -35,7 +35,8 @@
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -47,8 +48,11 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="generateKey">Get encryption key</a></li>
-                <li><a href="${pageContext.request.contextPath}/rules-creation.jsp">Define rules</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#importModal"><i class="fas fa-upload"></i> Import file</a>
+                </li>
+                <li><a href="generateKey"><i class="fas fa-lock"></i> Get encryption key</a></li>
+                <li><a href="${pageContext.request.contextPath}/rules-creation.jsp"><i class="fas fa-edit"></i> Define
+                    rules</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -74,7 +78,8 @@
 
 <div class="container">
     <form action="drools" method="post" style="margin: 0px;">
-        <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal" data-target="#ownModal">
+        <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal"
+               data-target="#ownModal">
     </form>
 
     <div class="modal fade" id="ownModal" tabindex="-1" role="dialog" aria-labelledby="ownModalLabel">
@@ -91,8 +96,31 @@
         </div>
     </div>
 
+    <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header"><h4>Import file</h4></div>
+                <div class="modal-body">
+                    <form>
+                        <div>
+                            <label for="inputFile">File input</label>
+                            <input type="file" id="inputFile">
+                        </div>
+                        <div id="encryptDiv">
+                            <input type="checkbox" id="encrypt">
+                            <span>Encrypt file</span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <h3 style="margin: 1em 0 1em;">Files</h3>
-    <ownTags:directory tree="${ownFile}" />
+    <ownTags:directory tree="${ownFile}"/>
 </div>
 </body>
 <!-- jQuery -->

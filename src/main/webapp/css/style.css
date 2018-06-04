@@ -33,3 +33,12 @@ span.fileName {
 ul.borderless > li {
     border-top: 0 none;
 }
+
+#inputFile {
+    padding: 0;
+}
+
+#encryptDiv {
+    padding-top: 30px;
+}
+

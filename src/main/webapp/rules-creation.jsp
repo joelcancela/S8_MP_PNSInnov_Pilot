@@ -56,6 +56,13 @@
             </div>
         </div>
 
+        <div class="panel panel-default form-group" id="name-panel">
+            <div class="input-group">
+                <span class="input-group-addon">Rule name :</span>
+                <input type="text" class="form-control" id="name" aria-describedby="basic-addon3">
+            </div>
+        </div>
+
         <div class="panel panel-default form-group" id="extension-panel">
             <div class="input-group">
                 <span class="input-group-addon">Extension to filter :</span>
