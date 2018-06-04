@@ -59,7 +59,7 @@
         <div class="panel panel-default form-group" id="name-panel">
             <div class="input-group">
                 <span class="input-group-addon">Rule name :</span>
-                <input type="text" class="form-control" id="name" aria-describedby="basic-addon3">
+                <input type="text" class="form-control" name="ruleName" id="name" aria-describedby="basic-addon3">
             </div>
         </div>
 
@@ -75,10 +75,14 @@
                 Choose a MIME type :
             </div>
             <div class="panel-body">
-                <div class="list-group">
-                    <button type="button" class="list-group-item btn btn-light">text/plain</button>
-                    <button type="button" class="list-group-item btn btn-light">application/pdf</button>
-                    <button type="button" class="list-group-item btn btn-light">image/gif</button>
+                <div class="radio">
+                    <label><input type="radio" name="mimeTypeResult" value="text/plain">text/plain</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="mimeTypeResult" value="application/pdf">application/pdf</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="mimeTypeResult" value="image/gif">image/gif</label>
                 </div>
             </div>
         </div>
