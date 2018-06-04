@@ -43,7 +43,7 @@ public class FileEncryption {
 	@GET
 	public void getIt(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 
-		if(fileid.isEmpty() || fileid == null) {
+		if(fileid == null || fileid.isEmpty()) {
 			request.setAttribute("error", "A file id must be provided");
 			try {
 				request.setAttribute("ownFile", googleDrive.classifyFiles());

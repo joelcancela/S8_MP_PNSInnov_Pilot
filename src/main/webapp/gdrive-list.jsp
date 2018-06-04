@@ -99,22 +99,22 @@
     <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
-                <div class="modal-header"><h4>Import file</h4></div>
-                <div class="modal-body">
-                    <form>
+                <form action="import" method="post" enctype="multipart/form-data">
+                    <div class="modal-header"><h4>Import file</h4></div>
+                    <div class="modal-body">
                         <div>
                             <label for="inputFile">File input</label>
-                            <input type="file" id="inputFile">
+                            <input type="file" name="inputFile" id="inputFile">
                         </div>
                         <div id="encryptDiv">
-                            <input type="checkbox" id="encrypt">
+                            <input type="checkbox" name="encrypt" id="encrypt">
                             <span>Encrypt file</span>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-info">Import</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Import</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
