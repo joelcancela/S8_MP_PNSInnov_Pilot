@@ -1,5 +1,4 @@
 <%@ page import="unice.polytech.si4.pnsinnov.teamm.drools.FileClassifier" %>
-<%@ page import="java.util.Set" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>

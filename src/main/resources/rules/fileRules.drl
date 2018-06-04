@@ -32,10 +32,3 @@ when
 then
     $file.moveFile("_NoRuleApplied");
 end
-
-rule "testRule"
-when
-    $file:FileInfo(mimeType == "text/plain")
-then
-    $file.moveFile("bonjour");
-end
