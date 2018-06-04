@@ -1,3 +1,6 @@
+<%@ page import="unice.polytech.si4.pnsinnov.teamm.drools.FileClassifier" %>
+<%@ page import="java.util.Set" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>
 
@@ -90,15 +93,11 @@
                 Choose a MIME type :
             </div>
             <div class="panel-body">
-                <div class="radio">
-                    <label><input type="radio" name="mimeTypeResult" value="text/plain">text/plain</label>
-                </div>
-                <div class="radio">
-                    <label><input type="radio" name="mimeTypeResult" value="application/pdf">application/pdf</label>
-                </div>
-                <div class="radio">
-                    <label><input type="radio" name="mimeTypeResult" value="image/gif">image/gif</label>
-                </div>
+                <c:forEach items="<%=new FileClassifier().getMimeTypes()%>" var="mimeType">
+                    <div class="radio">
+                        <label><input type="radio" name="mimeTypeResult" value="${mimeType}">${mimeType}</label>
+                    </div>
+                </c:forEach>
             </div>
         </div>
 
