@@ -6,9 +6,7 @@ import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -63,6 +61,13 @@ public class Login {
 			}
 		}
 		return Response.status(200).build();
+	}
+
+	@POST
+	public void authorizeLogIn(@FormParam("username") String username,
+							   @FormParam("password") String password) {
+		logger.log(Level.INFO, username);
+		logger.log(Level.INFO, password);
 	}
 
 
