@@ -18,11 +18,12 @@ public class DroolsClassify {
     @POST
     public void classifyFiles(@Context HttpServletRequest request,
                               @Context HttpServletResponse response) throws IOException, ServletException {
-        List<File> files = Login.googleDrive.getAutomaticFilesList();
+        //FIXME : Multiple User
+        /*List<File> files = Login.googleDrive.getAutomaticFilesList();
         System.out.println("PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
         new ProxyGoogleDrive().applyRules(files);
         request.setAttribute("list", files);
         request.setAttribute("ownFile", Login.googleDrive.classifyFiles());
-        request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+        request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);*/
     }
 }

@@ -65,8 +65,8 @@ public class FileInfo {
         } else {
             throw new RuntimeException("YA UN PROBLEM MAMENE with folder named : " + folderName);
         }
-
-        try {
+        //FIXME : Multiple User
+        /*try {
             FileList result = Login.googleDrive.drive.files().list()
                     .setQ("mimeType='application/vnd.google-apps.folder'")
                     .execute();
@@ -79,30 +79,32 @@ public class FileInfo {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
         if (!folderExist) {
             fileMetaData = new File();
             fileMetaData.setName(folderName);
             fileMetaData.setMimeType("application/vnd.google-apps.folder");
-            try {
+            //FIXME : Multiple User
+            /*try {
                 fileMetaData = Login.googleDrive.drive.files().create(fileMetaData).setFields("id").execute();
                 logger.log(Level.INFO, "Folder " + folderName + " created");
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
 
 
         // Retrieve the existing parents to remove
 
         File fileParents = null;
-        try {
+        //FIXME : Multiple User
+        /*try {
             fileParents = Login.googleDrive.drive.files().get(this.file.getId()).setFields("parents").execute();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         StringBuilder previousParents = new StringBuilder();
         if (fileParents != null) {
@@ -115,7 +117,7 @@ public class FileInfo {
             }
         }
         // Move the file to the new folder
-        try {
+        /*try {
             logger.log(Level.INFO, "Move file " + this.file.getName() + " to " + folderName);
             file = Login.googleDrive.drive.files().update(this.file.getId(), null)
                     .setAddParents(fileMetaData.getId())
@@ -124,7 +126,7 @@ public class FileInfo {
                     .execute();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public boolean isAcceptedMimeType() {

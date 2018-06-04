@@ -1,6 +1,5 @@
 package unice.polytech.si4.pnsinnov.teamm.drive;
 
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -15,7 +14,6 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.ChangeList;
 import com.google.api.services.drive.model.Channel;
-import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.api.OwnFile;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
@@ -35,42 +33,42 @@ import java.util.stream.Collectors;
  * @author Joël CANCELA VAZ
  */
 public class GDrive {
-	private final Logger logger = Logger.getLogger(GDrive.class.getName());
+	private final static Logger logger = Logger.getLogger(GDrive.class.getName());
 	private final File DATA_STORE_DIR = new File("target/store");
-	private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-	private final String APPLICATION_NAME = "PrivateMemo";
 	private FileDataStoreFactory dataStoreFactory;
-	private HttpTransport httpTransport;
-	public Drive drive;
-	private Credential credential;
-	private String savedStartPageToken;
 	private HashMap<String, AbstractMap.SimpleEntry> exportedMimeMap;
 	private List<String> gdriveMime;
+	private static GDrive gDrive;
+	private GoogleAuthorizationCodeFlow flow;
 
-	public void initialize() {
-		credential = Login.gDriveSession.credential;
-		drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
-				APPLICATION_NAME).build();
-		try {
-			savedStartPageToken = drive.changes()
-					.getStartPageToken().execute().getStartPageToken();
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage());
+	public static GDrive getGDrive() {
+		if (GDrive.gDrive == null) {
+			try {
+				GDrive.gDrive = new GDrive();
+			} catch (IOException | GeneralSecurityException e) {
+				e.printStackTrace();
+				logger.log(Level.SEVERE, "Unable to instantiate GDrive");
+			}
 		}
+		return gDrive;
 	}
 
-	public GDrive() throws IOException, GeneralSecurityException {
-		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+	public GoogleAuthorizationCodeFlow getFlow() {
+		return flow;
+	}
+
+	private GDrive() throws IOException, GeneralSecurityException {
+		HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+		JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 		dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
 		// load client secrets
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
 				new InputStreamReader(GDrive.class.getResourceAsStream("/client_secrets.json")));
 		// set up authorization code flow
-		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+		flow = new GoogleAuthorizationCodeFlow.Builder(
 				httpTransport, JSON_FACTORY, clientSecrets,
 				Collections.singleton(DriveScopes.DRIVE)).setDataStoreFactory(dataStoreFactory)
 				.build();
-		Login.gDriveSession.setFlow(flow);
 
 
 		gdriveMime = new ArrayList<>();
@@ -89,8 +87,8 @@ public class GDrive {
 		exportedMimeMap.put("application/vnd.google-apps.document", document);
 	}
 
-	public List<com.google.api.services.drive.model.File> getFilesList() throws IOException {
-		Drive.Files.List request = drive.files().list().setFields("nextPageToken, files");
+	public List<com.google.api.services.drive.model.File> getFilesList(GDriveSession session) throws IOException {
+		Drive.Files.List request = session.getDrive().files().list().setFields("nextPageToken, files");
 		List<com.google.api.services.drive.model.File> files = new ArrayList<>(request.execute().getFiles());
 		if (files.isEmpty()) {
 			logger.log(Level.INFO, "No files found.");
@@ -100,7 +98,7 @@ public class GDrive {
 		return files;
 	}
 
-	public List<com.google.api.services.drive.model.File> getAutomaticFilesList() {
+	/*public List<com.google.api.services.drive.model.File> getAutomaticFilesList() {
 		List<com.google.api.services.drive.model.File> automaticFiles = new ArrayList<>();
 		try {
 			List<OwnFile> found = Login.googleDrive.classifyFiles().getFolders().stream().filter(f -> f.file.getName().equals("_Automatic")).collect(Collectors.toList());
@@ -111,7 +109,7 @@ public class GDrive {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
 		return automaticFiles;
-	}
+	}*/
 
 	public void addAllFiles(OwnFile root, List<com.google.api.services.drive.model.File> toAdd) {
 		toAdd.addAll(root.getFiles().stream().map(f -> f.file).collect(Collectors.toList()));
@@ -120,8 +118,8 @@ public class GDrive {
 		}
 	}
 
-	public Channel subscribeToChanges() {//TODO: watch mutliples sessions
-		Channel notifications = watchChange(drive, "skynet-id-00", ConfigurationLoader.getInstance().getHost() + "/PrivateMemo/api/notifications");
+	public Channel subscribeToChanges(GDriveSession session) {//TODO: watch mutliples sessions
+		Channel notifications = watchChange(session.getDrive(), session.userID + "-watches", ConfigurationLoader.getInstance().getHost() + "/PrivateMemo/api/notifications&userId=" + session.userID);
 		logger.log(Level.INFO, "Watching for changes on Google Drive");
 		return notifications;
 	}
@@ -140,14 +138,14 @@ public class GDrive {
 		return null;
 	}
 
-	public void unsubscribeChannel(Channel channel) throws IOException {
-		drive.channels().stop(channel);
+	public void unsubscribeChannel(GDriveSession session, Channel channel) throws IOException {
+		session.getDrive().channels().stop(channel);
 	}
 
-	public void getChanges() throws IOException {
-		String pageToken = savedStartPageToken;
+	public void getChanges(GDriveSession session) throws IOException {
+		String pageToken = session.savedStartPageToken;
 		while (pageToken != null) {
-			ChangeList changes = drive.changes().list(pageToken)
+			ChangeList changes = session.getDrive().changes().list(pageToken)
 					.execute();
 			for (Change change : changes.getChanges()) {
 				if (change.getFile() == null) {
@@ -172,7 +170,7 @@ public class GDrive {
 			}
 			if (changes.getNewStartPageToken() != null) {
 				// Last page, save this token for the next polling interval
-				savedStartPageToken = changes.getNewStartPageToken();
+				session.savedStartPageToken = changes.getNewStartPageToken();
 			}
 			pageToken = changes.getNextPageToken();
 		}
@@ -182,19 +180,19 @@ public class GDrive {
 	 * TODO: To try and test
 	 * Uploads a file using either resumable or direct media upload.
 	 */
-	public com.google.api.services.drive.model.File uploadFile(boolean useDirectUpload, File file) throws IOException {
+	public com.google.api.services.drive.model.File uploadFile(GDriveSession session, boolean useDirectUpload, File file) throws IOException {
 		com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
 		fileMetadata.setName(file.getName());
 		logger.log(Level.INFO, "Uploading a file " + file.getName() + " typed " + Files.probeContentType(Paths.get(file.getPath())));
 		FileContent mediaContent = new FileContent(Files.probeContentType(Paths.get(file.getPath())), file);
-		Drive.Files.Create insert = drive.files().create(fileMetadata, mediaContent);
+		Drive.Files.Create insert = session.getDrive().files().create(fileMetadata, mediaContent);
 		MediaHttpUploader uploader = insert.getMediaHttpUploader();
 		uploader.setDirectUploadEnabled(useDirectUpload);
 		return insert.execute();
 	}
 
-	public String getFileName(String fileid) throws IOException {
-		com.google.api.services.drive.model.File file = Login.googleDrive.drive.files().get(fileid).execute();
+	public String getFileName(GDriveSession session, String fileid) throws IOException {
+		com.google.api.services.drive.model.File file = session.getDrive().files().get(fileid).execute();
 		if(exportedMimeMap.containsKey(file.getMimeType())){
 			return file.getName()+exportedMimeMap.get(file.getMimeType()).getValue();
 		}else{
@@ -203,22 +201,22 @@ public class GDrive {
 	}
 
 
-	public InputStream downloadFileDirect(String fileid) throws IOException {
-		com.google.api.services.drive.model.File file = Login.googleDrive.drive.files().get(fileid).execute();
+	public InputStream downloadFileDirect(GDriveSession session, String fileid) throws IOException {
+		com.google.api.services.drive.model.File file = session.getDrive().files().get(fileid).execute();
 		String mimetype = file.getMimeType();
 		if (gdriveMime.contains(mimetype)) {
-			return Login.googleDrive.drive.files().export(fileid, exportedMimeMap.get(mimetype).getKey().toString())
+			return session.getDrive().files().export(fileid, exportedMimeMap.get(mimetype).getKey().toString())
 					.executeMediaAsInputStream();
 		} else {
-			return Login.googleDrive.drive.files().get(fileid).executeMediaAsInputStream();
+			return session.getDrive().files().get(fileid).executeMediaAsInputStream();
 		}
 	}
 
 	/**
 	 * Downloads a file using either resumable or direct media download.
 	 */
-	public String downloadFile(boolean useDirectDownload, String fileid, String exportedMime) throws IOException {
-		com.google.api.services.drive.model.File file = Login.googleDrive.drive.files().get(fileid).execute();
+	public String downloadFile(GDriveSession session, boolean useDirectDownload, String fileid, String exportedMime) throws IOException {
+		com.google.api.services.drive.model.File file = session.getDrive().files().get(fileid).execute();
 		String fileName = file.getName();
 		String mimetype = file.getMimeType();
 
@@ -242,16 +240,16 @@ public class GDrive {
 
 
 		if (gdriveMime.contains(mimetype)) {
-			Login.googleDrive.drive.files().export(fileid, exportedMime).executeMediaAndDownloadTo(out);
+			session.getDrive().files().export(fileid, exportedMime).executeMediaAndDownloadTo(out);
 		} else {
-			Login.googleDrive.drive.files().get(fileid).executeMediaAndDownloadTo(out);
+			session.getDrive().files().get(fileid).executeMediaAndDownloadTo(out);
 		}
 		return output.getPath();
 	}
 
 
-	public OwnFile classifyFiles() throws IOException {
-		String rootId = drive.files().get("root").setFields("id").execute().getId();
+	public OwnFile classifyFiles(GDriveSession session) throws IOException {
+		String rootId = session.getDrive().files().get("root").setFields("id").execute().getId();
 		com.google.api.services.drive.model.File rootFile = new com.google.api.services.drive.model.File();
 		rootFile.setParents(new ArrayList<>());
 		rootFile.setId(rootId);
@@ -261,7 +259,7 @@ public class GDrive {
 
 		OwnFile root = new OwnFile(rootFile, true);
 		folders.add(root);
-		List<com.google.api.services.drive.model.File> filesDrive = getFilesList();
+		List<com.google.api.services.drive.model.File> filesDrive = getFilesList(session);
 		for (com.google.api.services.drive.model.File file : filesDrive) {
 			if (file.getParents() != null) {
 				if (file.getMimeType().equals("application/vnd.google-apps.folder")) {

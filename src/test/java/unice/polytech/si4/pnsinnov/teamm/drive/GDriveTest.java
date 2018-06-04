@@ -14,18 +14,11 @@ public class GDriveTest {
 
     @Before
     public void setUp() throws Exception {
-        gDrive = new GDrive();
-        gDrive.initialize();
-        gDrive.subscribeToChanges();
+
     }
 
     @Test
     public void classifyFiles() {
-        try {
-            OwnFile ownFile = gDrive.classifyFiles();
-            System.out.println(ownFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 }

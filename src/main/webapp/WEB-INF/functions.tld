@@ -10,9 +10,9 @@
     <short-name>functions</short-name>
     <uri>http://privatememo.bounouas.com/functions</uri>
 
-    <function>
+    <!--<function>
         <name>isAlreadyLoggedIn</name>
         <function-class>unice.polytech.si4.pnsinnov.teamm.api.Login</function-class>
         <function-signature>boolean isAlreadyLoggedIn()</function-signature>
-    </function>
+    </function>-->
 </taglib>

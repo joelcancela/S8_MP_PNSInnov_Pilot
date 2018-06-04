@@ -31,12 +31,13 @@ public class Downloader {
 		}
 		InputStream out = null;
 		String filename = null;
-		try {
+		//FIXME : Multiple User
+		/*try {
 			filename = Login.googleDrive.getFileName(fileid);
-			out = Login.googleDrive.downloadFileDirect(fileid);
+			//out = Login.googleDrive.downloadFileDirect(fileid);
 		} catch (IOException e) {
 			logger.log(Level.ERROR, e.getMessage());
-		}
+		}*/
 
 		return Response.ok(out).header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
 				.build();

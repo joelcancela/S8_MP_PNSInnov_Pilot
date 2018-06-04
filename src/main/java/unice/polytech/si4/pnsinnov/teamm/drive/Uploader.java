@@ -36,12 +36,14 @@ public class Uploader {
 		} catch (FileNotFoundException e) {
 			logger.log(Level.ERROR, e.getMessage());
 		}
-		try {
+		//FIXME : Multiple User
+		/*try {
 			logger.log(Level.INFO, "Try to upload file : " + file);
-			Login.googleDrive.uploadFile(false, file);
+			//Login.googleDrive.uploadFile(false, file);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
+
 		return stringBuilder.toString();
 	}
 }
