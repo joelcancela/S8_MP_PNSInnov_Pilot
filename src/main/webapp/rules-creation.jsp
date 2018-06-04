@@ -40,7 +40,7 @@
 
 <div class="container">
 
-    <form>
+    <form action="api/CreateRule" method="post">
 
         <div class="panel panel-default form-group">
             <div class="btn-group btn-group-toggle btn-group-justified" data-toggle="buttons">
@@ -90,7 +90,8 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-default">Submit</button>
+        <input type="text" id="bonjj"/>
+        <input type="submit" value="Submit" class="btn btn-default"/>
 
     </form>
 
