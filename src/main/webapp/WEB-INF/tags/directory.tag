@@ -32,10 +32,17 @@
     </c:choose>
     <c:if test="${!tree.getFolders().isEmpty() || !tree.getFiles().isEmpty()}">
         <c:choose>
-            <c:when test="${! tree.getFile().getName().equals(\"Drive Root\")}">
-                <i class="icon-collapse fas fa-plus" onclick="modifyIcon(this);" data-toggle="collapse"
-                   data-target="#${tree.file.getId()}" aria-expanded="false" aria-controls="${tree.file.getId()}"></i>
-                <ul class="fa-ul collapse" id="${tree.file.getId()}">
+            <c:when test="${!tree.getFile().getName().equals(\"Drive Root\")}">
+                <c:choose>
+                    <c:when test="${tree.file.getTrashed() == 'true'}">
+                        <ul class="fa-ul collapse" id="${tree.file.getId()}">
+                    </c:when>
+                    <c:otherwise>
+                        <i class="icon-collapse fas fa-plus" onclick="modifyIcon(this);" data-toggle="collapse"
+                           data-target="#${tree.file.getId()}" aria-expanded="false" aria-controls="${tree.file.getId()}"></i>
+                        <ul class="fa-ul collapse" id="${tree.file.getId()}">
+                    </c:otherwise>
+                </c:choose>
             </c:when>
             <c:otherwise>
                 <ul class="fa-ul" id="${tree.file.getId()}">

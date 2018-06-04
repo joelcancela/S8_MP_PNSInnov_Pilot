@@ -117,7 +117,7 @@ public class GDrive {
         try {
             return service.changes().watch(service.changes().getStartPageToken().execute().getStartPageToken(), channel).execute();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, e.getMessage());
+            logger.log(Level.SEVERE, "Auto-tidying won't be available as you are running the server on localhost");
         }
         return null;
     }
