@@ -45,13 +45,13 @@
         <div class="panel panel-default form-group">
             <div class="btn-group btn-group-toggle btn-group-justified" data-toggle="buttons">
                 <label class="btn btn-info active" id="extensionLabel" onclick="displayDiv('extensionLabel')">
-                    <input type="radio" name="options" id="extensionButton" autocomplete="off" checked> Extension
+                    <input type="radio" name="options" id="extensionButton" value="extensionButton" autocomplete="off" checked> Extension
                 </label>
                 <label class="btn btn-info" id="mimeLabel" onclick="displayDiv('mimeLabel')">
-                    <input type="radio" name="options" id="mimeButton" autocomplete="off"> MIME type
+                    <input type="radio" name="options" id="mimeButton" value="mimeButton" autocomplete="off"> MIME type
                 </label>
                 <label class="btn btn-info" id="patternLabel" onclick="displayDiv('patternLabel')">
-                    <input type="radio" name="options" id="patternButton" autocomplete="off"> Pattern
+                    <input type="radio" name="options" id="patternButton" value="patternButton" autocomplete="off"> Pattern
                 </label>
             </div>
         </div>
@@ -59,7 +59,7 @@
         <div class="panel panel-default form-group" id="extension-panel">
             <div class="input-group">
                 <span class="input-group-addon">Extension to filter :</span>
-                <input type="text" class="form-control" id="extension" aria-describedby="basic-addon3">
+                <input type="text" class="form-control" name="extension" id="extension" aria-describedby="basic-addon3">
             </div>
         </div>
 
@@ -79,20 +79,18 @@
         <div class="panel panel-default form-group" id="pattern-panel" hidden>
             <div class="input-group">
                 <span class="input-group-addon">Regular expression :</span>
-                <input type="text" class="form-control" id="regex" aria-describedby="basic-addon3">
+                <input type="text" class="form-control" name="regex" id="regex" aria-describedby="basic-addon3">
             </div>
         </div>
 
         <div class="panel panel-default form-group" id="directory-panel">
             <div class="input-group">
                 <span class="input-group-addon">Directory path :</span>
-                <input type="text" class="form-control" id="destination-dir" aria-describedby="basic-addon3">
+                <input type="text" class="form-control" name="destination-dir" id="destination-dir" aria-describedby="basic-addon3">
             </div>
         </div>
 
-        <input type="text" id="bonjj"/>
-        <input type="submit" value="Submit" class="btn btn-default"/>
-
+        <input type="submit" class="btn">
     </form>
 
 </div>
