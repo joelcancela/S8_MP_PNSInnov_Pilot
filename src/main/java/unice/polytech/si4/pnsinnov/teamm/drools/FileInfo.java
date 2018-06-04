@@ -16,6 +16,8 @@ public class FileInfo {
     private String mimeType;
     private String nameFile;
     private static final Logger logger = LogManager.getLogger(FileInfo.class);
+    private boolean acceptedMimeType;
+    private boolean acceptedExtensions;
 
     public FileInfo() {
     }
@@ -51,6 +53,19 @@ public class FileInfo {
     public void moveFile(String folderName) {
         boolean folderExist = false;
         File fileMetaData = null;
+
+        FileClassifier fileClassifier = new FileClassifier();
+
+        if (folderName.equals("mimetype")) {
+            folderName = fileClassifier.getFolderNameMimeType(this.getMimeType());
+        } else if (folderName.equals("extension")) {
+            folderName = fileClassifier.getFolderNameExtension(this.getExtension());
+        } else if (folderName.equals("_NoRuleApplied")) {
+            folderName = "_NoRuleApplied";
+        } else {
+            throw new RuntimeException("YA UN PROBLEM MAMENE with folder named : " + folderName);
+        }
+
         try {
             FileList result = Login.googleDrive.drive.files().list()
                     .setQ("mimeType='application/vnd.google-apps.folder'")
@@ -110,6 +125,22 @@ public class FileInfo {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isAcceptedMimeType() {
+        return acceptedMimeType;
+    }
+
+    public void setAcceptedMimeType(boolean acceptedMimeType) {
+        this.acceptedMimeType = acceptedMimeType;
+    }
+
+    public boolean isAcceptedExtensions() {
+        return acceptedExtensions;
+    }
+
+    public void setAcceptedExtensions(boolean acceptedExtensions) {
+        this.acceptedExtensions = acceptedExtensions;
     }
 }
 

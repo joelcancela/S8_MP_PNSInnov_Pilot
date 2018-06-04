@@ -19,12 +19,17 @@ public class ProxyGoogleDrive {
 
     public void applyRules(List<File> files) {
         List<FileInfo> fileInfos = new ArrayList<>();
+        FileClassifier fileClassifier = new FileClassifier();
 
         for (File file : files) {
             FileInfo fileInfo = new FileInfo();
             fileInfo.setExtension(file.getFileExtension());
             fileInfo.setMimeType(file.getMimeType());
             fileInfo.setNameFile(file.getName());
+            fileInfo.setAcceptedExtensions(fileClassifier.isAcceptedExtension(file.getFileExtension()));
+            logger.log(Level.INFO, file.getName() + " is extensions accepted : " + fileInfo.isAcceptedExtensions());
+            fileInfo.setAcceptedMimeType(fileClassifier.isAcceptedMimeType(file.getMimeType()));
+            logger.log(Level.INFO, file.getName() + " is mimetype accepted : " + fileInfo.isAcceptedMimeType());
             fileInfos.add(fileInfo);
             fileInfo.setFile(file);
         }

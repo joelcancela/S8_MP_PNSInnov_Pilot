@@ -1,44 +1,24 @@
 package rules;
 import unice.polytech.si4.pnsinnov.teamm.drools.FileInfo
 import java.nio.file.Files
+import unice.polytech.si4.pnsinnov.teamm.drools.FileClassifier
 import java.nio.file.Path
 import java.nio.file.FileSystems;
 
-
-rule "Google spreadsheet" salience 5
+rule "mimeTypeFile" salience 3
 when
-    $file:FileInfo(mimeType == "application/vnd.google-apps.spreadsheet")
+    $file:FileInfo(acceptedMimeType)
 then
-    $file.moveFile("application/vnd.google-apps.spreadsheet");
+    $file.moveFile("mimetype");
 end
 
-rule "Extension png file" salience 4
+rule "extensionFile" salience 2
 when
-    $file:FileInfo(extension == "png")
+    $file:FileInfo(acceptedExtensions)
 then
-    $file.moveFile("PNG");
+    $file.moveFile("extension");
 end
 
-rule "Extension svg file" salience 3
-when
-    $file:FileInfo(extension == "svg")
-then
-    $file.moveFile("SVG");
-end
-
-rule "Extension file" salience 3
-when
-    $file:FileInfo(extension == "pdf")
-then
-    $file.moveFile("PDF");
-end
-
-rule "mimeTypeFile" salience 2
-when
-    $file:FileInfo(mimeType == "application/vnd.google-apps.document")
-then
-    $file.moveFile("application/vnd.google-apps.document");
-end
 
 rule "default" salience 1
 when
