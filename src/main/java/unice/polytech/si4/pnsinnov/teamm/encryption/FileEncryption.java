@@ -1,6 +1,5 @@
 package unice.polytech.si4.pnsinnov.teamm.encryption;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,18 +9,14 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import java.io.*;
-import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -60,7 +55,8 @@ public class FileEncryption {
 
 		String downloadedPath = null;
 		try {
-			downloadedPath = Login.googleDrive.downloadFile(false, fileid, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
+			downloadedPath = Login.googleDrive.downloadFile(false, fileid, null); //TODO : Currently exportedMime is
+			// mocked in method, must be provided by gui
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

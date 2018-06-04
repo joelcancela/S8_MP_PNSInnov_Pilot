@@ -59,7 +59,8 @@ public class FileDecryption {
 
 		String downloadedPath = null;
 		try {
-			downloadedPath = Login.googleDrive.downloadFile(false, encryptedFileId, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
+			downloadedPath = Login.googleDrive.downloadFile(false, encryptedFileId, null); //TODO : Currently
+			// exportedMime is mocked in method, must be provided by gui
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
