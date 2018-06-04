@@ -22,6 +22,17 @@
 </head>
 <body>
 
+<script>
+    function createRuleSuccessfully(){
+        var $div2 = $("#successCreateRule");
+        if ($div2.is(":visible")) { return; }
+        $div2.show();
+        setTimeout(function() {
+            $div2.hide();
+        }, 3000);
+    }
+</script>
+
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -37,6 +48,10 @@
         </div>
     </div>
 </nav>
+
+<div class="alert alert-success" id="successCreateRule" hidden>
+    <strong>Success !</strong> Your rule has been successfully created.
+</div>
 
 <div class="container">
 
@@ -101,7 +116,7 @@
             </div>
         </div>
 
-        <input type="submit" class="btn">
+        <input type="submit" class="btn" onclick="createRuleSuccessfully()">
     </form>
 
 </div>
