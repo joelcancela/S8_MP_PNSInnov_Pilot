@@ -98,10 +98,10 @@ public class GDrive {
 		return files;
 	}
 
-	/*public List<com.google.api.services.drive.model.File> getAutomaticFilesList() {
+	public List<com.google.api.services.drive.model.File> getAutomaticFilesList(GDriveSession session) {
 		List<com.google.api.services.drive.model.File> automaticFiles = new ArrayList<>();
 		try {
-			List<OwnFile> found = Login.googleDrive.classifyFiles().getFolders().stream().filter(f -> f.file.getName().equals("_Automatic")).collect(Collectors.toList());
+			List<OwnFile> found = this.classifyFiles(session).getFolders().stream().filter(f -> f.file.getName().equals("_Automatic")).collect(Collectors.toList());
 			if (!found.isEmpty()) {
 				addAllFiles(found.get(0), automaticFiles);
 			}
@@ -109,7 +109,7 @@ public class GDrive {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
 		return automaticFiles;
-	}*/
+	}
 
 	public void addAllFiles(OwnFile root, List<com.google.api.services.drive.model.File> toAdd) {
 		toAdd.addAll(root.getFiles().stream().map(f -> f.file).collect(Collectors.toList()));

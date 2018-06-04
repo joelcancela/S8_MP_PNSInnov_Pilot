@@ -4,7 +4,6 @@ import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -22,16 +21,9 @@ public class ListingPage {
 	private static final Logger logger = Logger.getLogger(ListingPage.class.getName());
 	@GET
 	public void getPage(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		String userID = null;
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
-		Cookie cookies[] = request.getCookies();
-		for (Cookie c : cookies) {
-			logger.log(Level.INFO, "FOUND COOKIE : " + c.getName() + " Valued : " + c.getValue());
-			if (c.getName().equals("userID")) userID = c.getValue();
-		}
-
-		if (userID != null) {
-			GDriveSession session = Login.getDriveSessions(userID);
+		if (session != null) {
 			try {
 				request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);

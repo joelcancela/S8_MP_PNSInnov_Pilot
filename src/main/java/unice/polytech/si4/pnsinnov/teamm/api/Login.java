@@ -64,4 +64,17 @@ public class Login {
 			throw new RuntimeException("User ID " + userID + " not found, hashmap size : " + driveSessions.size()  + " containing : " + uiknown);
 		}
 	}
+
+	private static String retrieverUserIDFromCookie(HttpServletRequest request) {
+		Cookie cookies[] = request.getCookies();
+		for (Cookie c : cookies) {
+			logger.log(Level.INFO, "FOUND COOKIE : " + c.getName() + " Valued : " + c.getValue());
+			if (c.getName().equals("userID")) return c.getValue();
+		}
+		return null;
+	}
+
+	public static GDriveSession retrieveDriveSessionFromCookie(HttpServletRequest request) {
+		return Login.getDriveSessions(Login.retrieverUserIDFromCookie(request));
+	}
 }

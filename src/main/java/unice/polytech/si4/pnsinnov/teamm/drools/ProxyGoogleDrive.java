@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,13 @@ public class ProxyGoogleDrive {
     public ProxyGoogleDrive() {
     }
 
-    public void applyRules(List<File> files) {
+    public void applyRules(List<File> files, GDriveSession session) {
         List<FileInfo> fileInfos = new ArrayList<>();
         FileClassifier fileClassifier = new FileClassifier();
 
         for (File file : files) {
             FileInfo fileInfo = new FileInfo();
+            fileInfo.setSession(session);
             fileInfo.setExtension(file.getFileExtension());
             fileInfo.setMimeType(file.getMimeType());
             fileInfo.setNameFile(file.getName());
