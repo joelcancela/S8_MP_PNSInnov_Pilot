@@ -47,8 +47,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Define rules</a></li>
-                <%--${pageContext.request.contextPath}/rules-creation.jsp--%>
+                <li><a href="${pageContext.request.contextPath}/rules-creation.jsp">Define rules</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
