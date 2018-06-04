@@ -12,7 +12,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import java.io.IOException;
 
 
 /**
@@ -28,13 +27,8 @@ public class Notifications {
 		MultivaluedMap<String, String> rh = headers.getRequestHeaders();
 		String userID = rh.getFirst("x-goog-channel-id");
 		String headersChange = rh.getFirst("x-goog-resource-state");
-		if(userID.equals(Login.userid)){//FIXME: multiples sessions voir GDrive:75
+		if(Login.storageSessions.containsKey(userID)){//FIXME: multiples sessions voir GDrive:75
 			logger.log(Level.INFO, "Changes received for ["+userID+"] headerChange:"+headersChange);
-			try {
-				Login.googleDrive.getChanges();
-			} catch (IOException e) {
-				logger.log(Level.ERROR, e.getMessage());
-			}
 		}
 	}
 }
