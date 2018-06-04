@@ -17,12 +17,12 @@ public class ProxyGoogleDrive {
     public ProxyGoogleDrive() {
     }
 
-    public void applyRules(List<File> files) {
+    public void applyRules(List<File> files, String userID) {
         List<FileInfo> fileInfos = new ArrayList<>();
         FileClassifier fileClassifier = new FileClassifier();
 
         for (File file : files) {
-            FileInfo fileInfo = new FileInfo();
+            FileInfo fileInfo = new FileInfo(userID);
             fileInfo.setExtension(file.getFileExtension());
             fileInfo.setMimeType(file.getMimeType());
             fileInfo.setNameFile(file.getName());

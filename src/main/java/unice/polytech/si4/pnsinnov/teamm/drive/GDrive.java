@@ -26,6 +26,7 @@ public class GDrive {
 
 	private HashMap<String, AbstractMap.SimpleEntry> exportedMimeMap;
 	private List<String> gdriveMime;
+
 	private Drive drive;
 
 
@@ -79,6 +80,9 @@ public class GDrive {
 		}
 	}
 
+	public Drive getDrive() {
+		return drive;
+	}
 
 	/**
 	 * TODO: To try and test

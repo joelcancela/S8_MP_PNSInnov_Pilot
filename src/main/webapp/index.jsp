@@ -43,9 +43,6 @@
             <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
                     class="fab fa-google-drive"></i>
                 Connect to Google Drive</a>
-            <c:if test="${f:isAlreadyLoggedIn()}">
-                <br><span>Already connected</span>
-            </c:if>
         </div>
         <div class="col-sm-4">
             <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>

@@ -47,6 +47,26 @@ public class GDriveSession extends StorageSession {
 
 	public GDriveSession(String userID) {
 		this.userID = userID;
+
+		try {
+			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+		} catch (GeneralSecurityException | IOException e) {
+			logger.log(Level.SEVERE,"Error occured while establishing http transport");
+		}
+
+		try {
+			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+			GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+					new InputStreamReader(GDrive.class.getResourceAsStream("/client_secrets.json")));
+
+			if (GDriveSession.flow == null) {
+				flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets,
+						Collections.singleton(DriveScopes.DRIVE)).setDataStoreFactory(dataStoreFactory)
+						.build();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public GoogleAuthorizationCodeRequestUrl getAuthRequest() {
@@ -84,19 +104,6 @@ public class GDriveSession extends StorageSession {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
 
-		try {
-			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-			GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-					new InputStreamReader(GDrive.class.getResourceAsStream("/client_secrets.json")));
-
-			if (GDriveSession.flow == null) {
-				flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets,
-						Collections.singleton(DriveScopes.DRIVE)).setDataStoreFactory(dataStoreFactory)
-						.build();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		this.gdrive = new GDrive(drive);
 	}
 

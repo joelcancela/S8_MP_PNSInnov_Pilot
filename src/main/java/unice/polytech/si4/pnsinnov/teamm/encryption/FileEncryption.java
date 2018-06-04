@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -20,8 +21,6 @@ import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
-
-import static unice.polytech.si4.pnsinnov.teamm.api.Login.googleDrive;
 
 /**
  * Created by Nassim B on 5/28/18.
@@ -41,12 +40,12 @@ public class FileEncryption {
 	 * @return String that will be returned as a text/plain response.
 	 */
 	@GET
-	public void getIt(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+	public void getIt(@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("userId") String userID) {
 
 		if(fileid.isEmpty() || fileid == null) {
 			request.setAttribute("error", "A file id must be provided");
 			try {
-				request.setAttribute("ownFile", googleDrive.classifyFiles());
+				request.setAttribute("ownFile", ((GDriveSession)Login.storageSessions.get(userID)).getDrive().classifyFiles());
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (IOException | ServletException e) {
 				e.printStackTrace();
@@ -55,7 +54,7 @@ public class FileEncryption {
 
 		String downloadedPath = null;
 		try {
-			downloadedPath = Login.googleDrive.downloadFile(false, fileid, null); //TODO : Currently exportedMime is
+			downloadedPath = ((GDriveSession)Login.storageSessions.get(userID)).getDrive().downloadFile(false, fileid, null); //TODO : Currently exportedMime is
 			// mocked in method, must be provided by gui
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -96,7 +95,7 @@ public class FileEncryption {
 			inputStream.close();
 			outputStream.close();
 
-			Login.googleDrive.uploadFile(false, outFile);
+			((GDriveSession)Login.storageSessions.get(userID)).getDrive().uploadFile(false, outFile);
 
 			//return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes());
 			//return "File crypted and named : " + file.getName() + "-crypted";
@@ -108,7 +107,7 @@ public class FileEncryption {
 		}
 
 		try {
-			request.setAttribute("ownFile", googleDrive.classifyFiles());
+			request.setAttribute("ownFile", ((GDriveSession)Login.storageSessions.get(userID)).getDrive().classifyFiles());
 			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 		} catch (IOException | ServletException e) {
 			e.printStackTrace();

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -24,8 +25,6 @@ import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-import static unice.polytech.si4.pnsinnov.teamm.api.Login.googleDrive;
-
 /**
  * Created by Nassim B on 5/28/18.
  */
@@ -44,12 +43,12 @@ public class FileDecryption {
 	 * @return String that will be returned as a text/plain response.
 	 */
 	@GET
-	public void getIt(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+	public void getIt(@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("userId") String userID) {
 
 		if(encryptedFileId.isEmpty() || encryptedFileId == null) {
 			request.setAttribute("error", "A target file to decrypt must be provided");
 			try {
-				request.setAttribute("ownFile", googleDrive.classifyFiles());
+				request.setAttribute("ownFile", ((GDriveSession)Login.storageSessions.get(userID)).getDrive().classifyFiles());
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (IOException | ServletException e) {
 				e.printStackTrace();
@@ -59,7 +58,7 @@ public class FileDecryption {
 
 		String downloadedPath = null;
 		try {
-			downloadedPath = Login.googleDrive.downloadFile(false, encryptedFileId, null); //TODO : Currently
+			downloadedPath = ((GDriveSession)Login.storageSessions.get(userID)).getDrive().downloadFile(false, encryptedFileId, null);
 			// exportedMime is mocked in method, must be provided by gui
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -89,7 +88,7 @@ public class FileDecryption {
 			inputStream.close();
 			outputStream.close();
 
-			Login.googleDrive.uploadFile(false, outFile);
+			((GDriveSession)Login.storageSessions.get(userID)).getDrive().uploadFile(false, outFile);
 
 
 			request.setAttribute("success", "the file " + inputFile.getName() + " has been decrypted and uploaded as : " + inputFile.getName() + "-decrypted");
@@ -100,7 +99,7 @@ public class FileDecryption {
 		}
 
 		try {
-			request.setAttribute("ownFile", googleDrive.classifyFiles());
+			request.setAttribute("ownFile", ((GDriveSession)Login.storageSessions.get(userID)).getDrive().classifyFiles());
 			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 		} catch (IOException | ServletException e) {
 			e.printStackTrace();

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.util.List;
@@ -19,10 +20,10 @@ public class DroolsClassify {
     @POST
     public void classifyFiles(@Context HttpServletRequest request,
                               @Context HttpServletResponse response,
-                              String userID) throws IOException, ServletException {
+                              @QueryParam("userId") String userID) throws IOException, ServletException {
         List<File> files = ((GDriveSession)Login.storageSessions.get(userID)).getDrive().getAutomaticFilesList();
         System.out.println("PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
-        new ProxyGoogleDrive().applyRules(files);
+        new ProxyGoogleDrive().applyRules(files, userID);
         request.setAttribute("list", files);
         request.setAttribute("ownFile", ((GDriveSession)Login.storageSessions.get(userID)).getDrive().classifyFiles());
         request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);

@@ -8,6 +8,7 @@ import unice.polytech.si4.pnsinnov.teamm.encryption.FileEncryption;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class Uploader {
 	private static final Logger logger = LogManager.getLogger(Uploader.class);
 
 	@GET
-	public String get() {
+	public String get(@QueryParam("userId") String userID) {
 		String fileurl = FileEncryption.class.getResource("/tocrypt.txt").getFile();
 		File file = new File(fileurl);
 		StringBuilder stringBuilder = new StringBuilder();
@@ -38,7 +39,7 @@ public class Uploader {
 		}
 		try {
 			logger.log(Level.INFO, "Try to upload file : " + file);
-			Login.googleDrive.uploadFile(false, file);
+			((GDriveSession)Login.storageSessions.get(userID)).getDrive().uploadFile(false, file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

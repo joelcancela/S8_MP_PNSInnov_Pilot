@@ -1,6 +1,7 @@
 package unice.polytech.si4.pnsinnov.teamm.drive;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import unice.polytech.si4.pnsinnov.teamm.api.OwnFile;
 
@@ -14,11 +15,12 @@ public class GDriveTest {
 
     @Before
     public void setUp() throws Exception {
-        gDrive = new GDrive();
-        gDrive.initialize();
-        gDrive.subscribeToChanges();
+       // gDrive = new GDrive();
+       // gDrive.initialize();
+       // gDrive.subscribeToChanges();
     }
 
+    @Ignore
     @Test
     public void classifyFiles() {
         try {

@@ -24,7 +24,7 @@ public class Downloader {
 
 	@GET
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response get(@QueryParam("fileid") String fileid) {
+	public Response get(@QueryParam("fileid") String fileid, @QueryParam("userId") String userID) {
 		if (fileid == null) {
 			logger.log(Level.ERROR, "A file id must be provided");
 			return Response.status(404).build();
@@ -32,8 +32,8 @@ public class Downloader {
 		InputStream out = null;
 		String filename = null;
 		try {
-			filename = Login.googleDrive.getFileName(fileid);
-			out = Login.googleDrive.downloadFileDirect(fileid);
+			filename = ((GDriveSession)Login.storageSessions.get(userID)).getDrive().getFileName(fileid);
+			out = ((GDriveSession)Login.storageSessions.get(userID)).getDrive().downloadFileDirect(fileid);
 		} catch (IOException e) {
 			logger.log(Level.ERROR, e.getMessage());
 		}
