@@ -61,7 +61,7 @@ public class Login {
 			try {
 				response.sendRedirect("drive-list");
 			} catch (IOException e) {
-				e.printStackTrace();
+				e.printStackTrace(); //TODO : Handle this case properly
 				logger.log(Level.SEVERE, "Error while redirecting to drive-list");
 			}
 		}
@@ -89,15 +89,8 @@ public class Login {
 		return null;
 	}
 
-	public static GDriveSession retrieveDriveSessionFromCookie(HttpServletRequest request, HttpServletResponse response) {
+	public static GDriveSession retrieveDriveSessionFromCookie(HttpServletRequest request) {
 		GDriveSession session = Login.getDriveSessions(Login.retrieverUserIDFromCookie(request));
-		if (session == null) {
-			try {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		return session;
 	}
 }

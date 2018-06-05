@@ -31,22 +31,23 @@ public class Downloader {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		if (session == null) {
-			throw new RuntimeException("You must be connected to access this feature"); //TODO : Handle this case properly
-		}
-		if (fileid == null) {
-			logger.log(Level.ERROR, "A file id must be provided");
-			return Response.status(404).build();
-		}
-		InputStream out = null;
-		String filename = null;
-		try {
-			filename = GDrive.getGDrive().getFileName(session, fileid);
-			out = GDrive.getGDrive().downloadFileDirect(session, fileid);
-		} catch (IOException e) {
-			logger.log(Level.ERROR, e.getMessage());
-		}
+			return Response.status(403).build();
+		} else {
+			if (fileid == null) {
+				logger.log(Level.ERROR, "A file id must be provided");
+				return Response.status(404).build();
+			}
+			InputStream out = null;
+			String filename = null;
+			try {
+				filename = GDrive.getGDrive().getFileName(session, fileid);
+				out = GDrive.getGDrive().downloadFileDirect(session, fileid);
+			} catch (IOException e) {
+				logger.log(Level.ERROR, e.getMessage());
+			}
 
-		return Response.ok(out).header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
-				.build();
+			return Response.ok(out).header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+					.build();
+		}
 	}
 }

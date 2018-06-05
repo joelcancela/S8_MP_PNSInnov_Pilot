@@ -21,14 +21,14 @@ public class ListingPage {
 	private static final Logger logger = Logger.getLogger(ListingPage.class.getName());
 	@GET
 	public void getPage(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		GDriveSession session = Login.retrieveDriveSessionFromCookie(request, response);
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		if (session == null) {
-			/*try {
+			try {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}*/
+			}
 		} else {
 			try {
 				logger.log(Level.INFO, "session is : " + session);
