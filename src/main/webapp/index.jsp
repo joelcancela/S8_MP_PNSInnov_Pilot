@@ -1,3 +1,4 @@
+<%@ page import="unice.polytech.si4.pnsinnov.teamm.api.Login" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="f" uri="http://privatememo.bounouas.com/functions" %>
 
@@ -63,7 +64,19 @@
                 Connect to One Drive</a>
         </div>
     </div>
+
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-success">Users available : </li>
+        <%
+            for (String user : Login.getAvailableUsers()) {
+        %>
+        <li class="list-group-item"><%=user%></li>
+        <%
+            }
+        %>
+    </ul>
 </div>
+
 </body>
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
