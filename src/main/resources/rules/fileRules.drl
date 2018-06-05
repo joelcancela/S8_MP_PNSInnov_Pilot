@@ -19,16 +19,9 @@ then
     $file.moveFile("extension");
 end
 
-rule "default" salience 1
+rule "default" salience -1000
 when
     $file:FileInfo()
-then
-    $file.moveFile("_NoRuleApplied");
-end
-
-rule "test" salience 1
-when
-    $file:FileInfo(nameFile matches "")
 then
     $file.moveFile("_NoRuleApplied");
 end

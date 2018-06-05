@@ -67,10 +67,6 @@ public class FileInfo {
             folderName = fileClassifier.getFolderNameMimeType(this.getMimeType());
         } else if (folderName.equals("extension")) {
             folderName = fileClassifier.getFolderNameExtension(this.getExtension());
-        } else if (folderName.equals("_NoRuleApplied")) {
-            folderName = "_NoRuleApplied";
-        } else {
-            throw new RuntimeException("YA UN PROBLEM MAMENE with folder named : " + folderName);
         }
 
         try {
@@ -78,7 +74,7 @@ public class FileInfo {
                     .setQ("mimeType='application/vnd.google-apps.folder'")
                     .execute();
             for (File f : result.getFiles()) {
-                if (f.getName().equals(folderName)) {
+                if (f.getName().equals(folderName) && f.getTrashed() != null) {
                     fileMetaData = f;
                     logger.log(Level.INFO, "Folder " + folderName + " already exists");
                     folderExist = true;
