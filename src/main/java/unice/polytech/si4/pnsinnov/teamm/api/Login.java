@@ -3,7 +3,6 @@ package unice.polytech.si4.pnsinnov.teamm.api;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

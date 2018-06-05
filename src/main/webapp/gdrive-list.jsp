@@ -53,6 +53,8 @@
                 <li><a href="generateKey"><i class="fas fa-lock"></i> Get encryption key</a></li>
                 <li><a href="${pageContext.request.contextPath}/rules-creation.jsp"><i class="fas fa-edit"></i> Define
                     rules</a></li>
+                <li><a href="logout">
+                    <i class="fas fa-sign-out-alt"></i> Log out </a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
