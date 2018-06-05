@@ -4,6 +4,7 @@ import unice.polytech.si4.pnsinnov.teamm.drools.exceptions.UnhandledExtension;
 import unice.polytech.si4.pnsinnov.teamm.drools.exceptions.UnhandledMimeType;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by Nassim B on 6/4/18.
@@ -46,5 +47,9 @@ public class FileClassifier {
 		} else {
 			throw new UnhandledExtension();
 		}
+	}
+
+	public Set<String> getMimeTypes(){
+		return this.acceptedMimeTypes.keySet();
 	}
 }

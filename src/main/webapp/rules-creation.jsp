@@ -1,3 +1,5 @@
+<%@ page import="unice.polytech.si4.pnsinnov.teamm.drools.FileClassifier" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>
 
@@ -22,6 +24,17 @@
 </head>
 <body>
 
+<script>
+    function createRuleSuccessfully(){
+        var $div2 = $("#successCreateRule");
+        if ($div2.is(":visible")) { return; }
+        $div2.show();
+        setTimeout(function() {
+            $div2.hide();
+        }, 3000);
+    }
+</script>
+
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -37,6 +50,10 @@
         </div>
     </div>
 </nav>
+
+<div class="alert alert-success" id="successCreateRule" hidden>
+    <strong>Success !</strong> Your rule has been successfully created.
+</div>
 
 <div class="container">
 
@@ -59,7 +76,7 @@
         <div class="panel panel-default form-group" id="name-panel">
             <div class="input-group">
                 <span class="input-group-addon">Rule name :</span>
-                <input type="text" class="form-control" id="name" aria-describedby="basic-addon3">
+                <input type="text" class="form-control" name="ruleName" id="name" aria-describedby="basic-addon3">
             </div>
         </div>
 
@@ -75,11 +92,11 @@
                 Choose a MIME type :
             </div>
             <div class="panel-body">
-                <div class="list-group">
-                    <button type="button" class="list-group-item btn btn-light">text/plain</button>
-                    <button type="button" class="list-group-item btn btn-light">application/pdf</button>
-                    <button type="button" class="list-group-item btn btn-light">image/gif</button>
-                </div>
+                <c:forEach items="<%=new FileClassifier().getMimeTypes()%>" var="mimeType">
+                    <div class="radio">
+                        <label><input type="radio" name="mimeTypeResult" value="${mimeType}">${mimeType}</label>
+                    </div>
+                </c:forEach>
             </div>
         </div>
 
@@ -97,7 +114,7 @@
             </div>
         </div>
 
-        <input type="submit" class="btn">
+        <input type="submit" class="btn" onclick="createRuleSuccessfully()">
     </form>
 
 </div>

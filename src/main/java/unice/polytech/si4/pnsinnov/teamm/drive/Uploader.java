@@ -6,8 +6,11 @@ import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.encryption.FileEncryption;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +26,13 @@ public class Uploader {
 	private static final Logger logger = LogManager.getLogger(Uploader.class);
 
 	@GET
-	public String get() {
+	public String get(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+
+		if (session == null) {
+			throw new RuntimeException("You must be connected to access this feature"); //TODO : Handle this case properly
+		}
+
 		String fileurl = FileEncryption.class.getResource("/tocrypt.txt").getFile();
 		File file = new File(fileurl);
 		StringBuilder stringBuilder = new StringBuilder();
@@ -36,12 +45,14 @@ public class Uploader {
 		} catch (FileNotFoundException e) {
 			logger.log(Level.ERROR, e.getMessage());
 		}
+
 		try {
 			logger.log(Level.INFO, "Try to upload file : " + file);
-			Login.googleDrive.uploadFile(false, file);
+			GDrive.getGDrive().uploadFile(session,false, file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		return stringBuilder.toString();
 	}
 }

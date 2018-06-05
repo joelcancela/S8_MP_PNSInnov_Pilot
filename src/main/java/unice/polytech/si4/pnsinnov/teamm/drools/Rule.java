@@ -21,23 +21,23 @@ public class Rule {
 
     public String conditionAsDRL() throws IllegalStateException, IllegalArgumentException {
         StringBuilder drl = new StringBuilder();
-        drl.append("\nrule \"" + name + "\"\n");
+        drl.append("\n\nrule \"" + name + "\"\n");
         drl.append("when\n");
-        drl.append("    $file:FileInfo("+conditionParameter.parameterString+" == "+toCompare+")\n");
+        drl.append("    $file:FileInfo("+conditionParameter.parameterString+" == \""+toCompare+"\")\n");
         drl.append("then\n");
         drl.append("    $file.moveFile(\""+destinationFolder+"\");\n");
-        drl.append("end\n");
+        drl.append("end");
         return drl.toString();
     }
 
     public String conditionRegexAsDRL(){
         StringBuilder drl = new StringBuilder();
-        drl.append("\nrule \"" + name + "\"\n");
+        drl.append("\n\nrule \"" + name + "\"\n");
         drl.append("when\n");
         drl.append("    $file:FileInfo("+conditionParameter.parameterString+" matches \""+toCompare+"\")\n");
         drl.append("then\n");
         drl.append("    $file.moveFile(\""+destinationFolder+"\");\n");
-        drl.append("end\n");
+        drl.append("end");
         return drl.toString();
     }
 
