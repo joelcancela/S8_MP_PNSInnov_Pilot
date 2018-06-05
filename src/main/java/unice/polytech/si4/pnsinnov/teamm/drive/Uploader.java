@@ -30,29 +30,34 @@ public class Uploader {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		if (session == null) {
-			throw new RuntimeException("You must be connected to access this feature"); //TODO : Handle this case properly
-		}
-
-		String fileurl = FileEncryption.class.getResource("/tocrypt.txt").getFile();
-		File file = new File(fileurl);
-		StringBuilder stringBuilder = new StringBuilder();
-
-		try {
-			Scanner scanner = new Scanner(file);
-			while (scanner.hasNext()) {
-				stringBuilder.append(scanner.next());
+			try {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e) {
-			logger.log(Level.ERROR, e.getMessage());
-		}
+			return "";
+		} else {
+			String fileurl = FileEncryption.class.getResource("/tocrypt.txt").getFile();
+			File file = new File(fileurl);
+			StringBuilder stringBuilder = new StringBuilder();
 
-		try {
-			logger.log(Level.INFO, "Try to upload file : " + file);
-			GDrive.getGDrive().uploadFile(session,false, file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			try {
+				Scanner scanner = new Scanner(file);
+				while (scanner.hasNext()) {
+					stringBuilder.append(scanner.next());
+				}
+			} catch (FileNotFoundException e) {
+				logger.log(Level.ERROR, e.getMessage());
+			}
 
-		return stringBuilder.toString();
+			try {
+				logger.log(Level.INFO, "Try to upload file : " + file);
+				GDrive.getGDrive().uploadFile(session, false, file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return stringBuilder.toString();
+		}
 	}
 }

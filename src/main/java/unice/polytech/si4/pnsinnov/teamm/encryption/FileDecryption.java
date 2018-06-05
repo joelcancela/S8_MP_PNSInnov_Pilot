@@ -48,66 +48,70 @@ public class FileDecryption {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		if (session == null) {
-			throw new RuntimeException("You must be connected to access this feature"); //TODO : Handle this case properly
-		}
+			try {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			if (encryptedFileId.isEmpty() || encryptedFileId == null) {
+				request.setAttribute("error", "A target file to decrypt must be provided");
+				try {
+					request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
+					request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+				} catch (IOException | ServletException e) {
+					e.printStackTrace();
+				}
+			}
 
-		if(encryptedFileId.isEmpty() || encryptedFileId == null) {
-			request.setAttribute("error", "A target file to decrypt must be provided");
+
+			String downloadedPath = null;
+			try {
+				downloadedPath = GDrive.getGDrive().downloadFile(session, false, encryptedFileId, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			logger.log(Level.INFO, "File downloaded to " + downloadedPath);
+			File inputFile = new File(downloadedPath);
+
+			try {
+				Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
+				cipher.init(Cipher.DECRYPT_MODE, KeyGeneration.getKey());
+
+				java.nio.file.Path currentRelativePath = Paths.get("");
+				java.nio.file.Path destination = Paths.get(currentRelativePath.toAbsolutePath().toString() + "/downloads");
+
+				FileInputStream inputStream = new FileInputStream(inputFile);
+				byte[] inputBytes = new byte[(int) inputFile.length()];
+				inputStream.read(inputBytes);
+
+				byte[] outputBytes = cipher.doFinal(inputBytes);
+
+				logger.log(Level.INFO, "OUTPUT FILE : " + destination.toString() + "/" + inputFile.getName() + "-decrypted");
+				File outFile = new File(destination.toString() + "/" + inputFile.getName() + "-decrypted");
+				FileOutputStream outputStream = new FileOutputStream(outFile);
+				outputStream.write(outputBytes);
+
+				inputStream.close();
+				outputStream.close();
+
+				GDrive.getGDrive().uploadFile(session, false, outFile);
+
+
+				request.setAttribute("success", "the file " + inputFile.getName() + " has been decrypted and uploaded as : " + inputFile.getName() + "-decrypted");
+				//return new String (cipher.doFinal(Base64.decodeBase64(encryptedFileId)));
+			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
+				logger.log(Level.ERROR, e.getMessage());
+				request.setAttribute("error", "An error occured while decrypting the file " + inputFile.getName());
+			}
+
 			try {
 				request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (IOException | ServletException e) {
 				e.printStackTrace();
 			}
-		}
-
-
-		String downloadedPath = null;
-		try {
-			downloadedPath = GDrive.getGDrive().downloadFile(session,false, encryptedFileId, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		logger.log(Level.INFO, "File downloaded to " + downloadedPath);
-		File inputFile = new File(downloadedPath);
-
-		try {
-			Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
-			cipher.init(Cipher.DECRYPT_MODE, KeyGeneration.getKey());
-
-			java.nio.file.Path currentRelativePath = Paths.get("");
-			java.nio.file.Path destination = Paths.get(currentRelativePath.toAbsolutePath().toString() + "/downloads");
-
-			FileInputStream inputStream = new FileInputStream(inputFile);
-			byte[] inputBytes = new byte[(int) inputFile.length()];
-			inputStream.read(inputBytes);
-
-			byte[] outputBytes = cipher.doFinal(inputBytes);
-
-			logger.log(Level.INFO, "OUTPUT FILE : " + destination.toString() + "/" + inputFile.getName() + "-decrypted");
-			File outFile = new File(destination.toString() + "/" + inputFile.getName() + "-decrypted");
-			FileOutputStream outputStream = new FileOutputStream(outFile);
-			outputStream.write(outputBytes);
-
-			inputStream.close();
-			outputStream.close();
-
-			GDrive.getGDrive().uploadFile(session, false, outFile);
-
-
-			request.setAttribute("success", "the file " + inputFile.getName() + " has been decrypted and uploaded as : " + inputFile.getName() + "-decrypted");
-			//return new String (cipher.doFinal(Base64.decodeBase64(encryptedFileId)));
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException |IOException e) {
-			logger.log(Level.ERROR, e.getMessage());
-			request.setAttribute("error", "An error occured while decrypting the file " + inputFile.getName());
-		}
-
-		try {
-			request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
-			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
-		} catch (IOException | ServletException e) {
-			e.printStackTrace();
 		}
 	}
 

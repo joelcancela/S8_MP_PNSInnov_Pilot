@@ -20,9 +20,14 @@ public class DroolsClassify {
     @POST
     public void classifyFiles(@Context HttpServletRequest request,
                               @Context HttpServletResponse response) throws IOException, ServletException {
-        GDriveSession session = Login.retrieveDriveSessionFromCookie(request, response);
-
-        if (session != null) {
+        GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+        if (session == null) {
+            try {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
             List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
             System.out.println("PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
             new ProxyGoogleDrive().applyRules(files, session);

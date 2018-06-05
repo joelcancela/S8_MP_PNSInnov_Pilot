@@ -45,77 +45,81 @@ public class FileEncryption {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		if (session == null) {
-			throw new RuntimeException("You must be connected to access this feature"); //TODO : Handle this case properly
-		}
+			try {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			if (fileid.isEmpty() || fileid == null) {
+				request.setAttribute("error", "A file id must be provided");
+				try {
+					request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
+					request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+				} catch (IOException | ServletException e) {
+					e.printStackTrace();
+				}
+			}
 
-		if(fileid == null || fileid.isEmpty()) {
-			request.setAttribute("error", "A file id must be provided");
+			String downloadedPath = null;
+			try {
+				downloadedPath = GDrive.getGDrive().downloadFile(session, false, fileid, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			logger.log(Level.INFO, "File downloaded to " + downloadedPath);
+			File file = new File(downloadedPath);
+			StringBuilder stringBuilder = new StringBuilder();
+
+
+			try {
+				Scanner scanner = new Scanner(file);
+				while (scanner.hasNext()) {
+					stringBuilder.append(scanner.next());
+				}
+			} catch (FileNotFoundException e) {
+				logger.log(Level.ERROR, e.getMessage());
+				logger.log(Level.INFO, "##### JPNE #####");
+			}
+
+
+			try {
+				Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
+				cipher.init(Cipher.ENCRYPT_MODE, KeyGeneration.getKey());
+
+
+				FileInputStream inputStream = new FileInputStream(file);
+				byte[] inputBytes = new byte[(int) file.length()];
+				inputStream.read(inputBytes);
+
+				byte[] outputBytes = cipher.doFinal(inputBytes);
+
+				File outFile = new File(file.getPath() + "-crypted");
+				FileOutputStream outputStream = new FileOutputStream(outFile);
+				outputStream.write(outputBytes);
+
+				inputStream.close();
+				outputStream.close();
+
+
+				GDrive.getGDrive().uploadFile(session, false, outFile);
+
+				//return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes());
+				//return "File crypted and named : " + file.getName() + "-crypted";
+				request.setAttribute("success", "the file " + file.getName() + " has crypted and uploaded as : " + file.getName() + "-crypted");
+
+			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
+				logger.log(Level.ERROR, e.getMessage());
+				request.setAttribute("error", "An error occured while crypting the file " + file.getName());
+			}
+
 			try {
 				request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (IOException | ServletException e) {
 				e.printStackTrace();
 			}
-		}
-
-		String downloadedPath = null;
-		try {
-			downloadedPath = GDrive.getGDrive().downloadFile(session,false, fileid, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		logger.log(Level.INFO, "File downloaded to " + downloadedPath);
-		File file = new File(downloadedPath);
-		StringBuilder stringBuilder = new StringBuilder();
-
-
-		try {
-			Scanner scanner = new Scanner(file);
-			while (scanner.hasNext()) {
-				stringBuilder.append(scanner.next());
-			}
-		} catch (FileNotFoundException e) {
-			logger.log(Level.ERROR, e.getMessage());
-			logger.log(Level.INFO,"##### JPNE #####");
-		}
-
-
-		try {
-			Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
-			cipher.init(Cipher.ENCRYPT_MODE, KeyGeneration.getKey());
-
-
-			FileInputStream inputStream = new FileInputStream(file);
-			byte[] inputBytes = new byte[(int) file.length()];
-			inputStream.read(inputBytes);
-
-			byte[] outputBytes = cipher.doFinal(inputBytes);
-
-			File outFile = new File(file.getPath()+"-crypted");
-			FileOutputStream outputStream = new FileOutputStream(outFile);
-			outputStream.write(outputBytes);
-
-			inputStream.close();
-			outputStream.close();
-
-
-			GDrive.getGDrive().uploadFile(session,false, outFile);
-
-			//return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes());
-			//return "File crypted and named : " + file.getName() + "-crypted";
-			request.setAttribute("success", "the file " + file.getName() + " has crypted and uploaded as : " + file.getName() + "-crypted");
-
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
-			logger.log(Level.ERROR, e.getMessage());
-			request.setAttribute("error", "An error occured while crypting the file " + file.getName());
-		}
-
-		try {
-			request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
-			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
-		} catch (IOException | ServletException e) {
-			e.printStackTrace();
 		}
 	}
 

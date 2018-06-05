@@ -1,7 +1,10 @@
 package unice.polytech.si4.pnsinnov.teamm.encryption;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -27,14 +30,23 @@ public class KeyGeneration {
 
 	@GET
 	public void getEncodedString(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		request.setAttribute("key", Base64.getEncoder().encodeToString(getKey().getEncoded()));
-		try {
-			//request.setAttribute("ownFile", googleDrive.classifyFiles());
-			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
-		} catch (IOException | ServletException e) {
-			e.printStackTrace();
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+		if (session == null) {
+			try {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			logger.log(Level.WARN, "session is : " + session);
+			request.setAttribute("key", Base64.getEncoder().encodeToString(getKey().getEncoded()));
+			try {
+				//request.setAttribute("ownFile", googleDrive.classifyFiles());
+				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+			} catch (IOException | ServletException e) {
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	public static SecretKey getKey() {

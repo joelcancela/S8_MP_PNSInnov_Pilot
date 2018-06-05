@@ -29,17 +29,18 @@ public class Deleter {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		if (session == null) {
-			throw new RuntimeException("You must be connected to access this feature"); //TODO : Handle this case properly
+			return Response.status(403).build();
+		} else {
+			if (fileid == null) {
+				logger.log(Level.ERROR, "A file id must be provided");
+				return Response.status(404).build();
+			}
+			try {
+				GDrive.getGDrive().deleteFile(session, fileid);
+			} catch (IOException e) {
+				logger.log(Level.ERROR, e.getMessage());
+			}
+			return Response.ok().build();
 		}
-		if (fileid == null) {
-			logger.log(Level.ERROR, "A file id must be provided");
-			return Response.status(404).build();
-		}
-		try {
-			GDrive.getGDrive().deleteFile(session,fileid);
-		} catch (IOException e) {
-			logger.log(Level.ERROR, e.getMessage());
-		}
-		return Response.ok().build();
 	}
 }
