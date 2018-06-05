@@ -10,6 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 public class Login {
 
 	private static final Logger logger = Logger.getLogger(Login.class.getName());
-	private static HashMap<String, GDriveSession> driveSessions = new HashMap();
+	private static HashMap<String, GDriveSession> driveSessions = new HashMap<>();
 
 	@GET
 	public Response authorizeDrive(@Context HttpServletRequest request,
@@ -81,7 +82,7 @@ public class Login {
 	}
 
 	public static List<String> getAvailableUsers() {
-		return driveSessions.keySet().stream().collect(Collectors.toList());
+		return new ArrayList <>(driveSessions.keySet());
 	}
 
 	private static String retrieverUserIDFromCookie(HttpServletRequest request) {

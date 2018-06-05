@@ -104,6 +104,12 @@
             <artifactId>jersey-media-json-binding</artifactId>
         </dependency>
         -->
+        <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-multipart -->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>2.27</version>
+        </dependency>
         <dependency>
             <groupId>org.kie</groupId>
             <artifactId>kie-api</artifactId>
@@ -146,11 +152,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-multipart</artifactId>
-            <version>1.8</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,15 +1,20 @@
 package unice.polytech.si4.pnsinnov.teamm.api;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
+import com.google.api.client.http.FileContent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
 
@@ -20,14 +25,30 @@ public class ImportFile {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public void importFile(
-            @FormDataParam("inputFile") InputStream fileInputStream,
-            @FormDataParam("inputFile") FormDataContentDisposition fileDetail,
-            @FormParam("encrypt") String encrypt
+    public void importFile(@Context HttpServletRequest request,
+                           @Context HttpServletResponse response,
+                           @FormDataParam("inputFile") InputStream fileInputStream,
+                           @FormDataParam("inputFile") FormDataContentDisposition fileDetail,
+                           @FormDataParam("inputFile") FormDataBodyPart bodyPart,
+                           @FormDataParam("encrypt") String encrypt
     ) {
-
-        logger.log(Level.INFO, writeToFile(fileInputStream, "uploadedFile"));
-        logger.log(Level.INFO, encrypt);
+        GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+        if (session != null) {
+            File uploadedFile = writeToFile(fileInputStream, fileDetail.getFileName());
+            com.google.api.services.drive.model.File gFile = new com.google.api.services.drive.model.File();
+            FileContent gFileContent = new FileContent(bodyPart.getMediaType().toString(), uploadedFile);
+            gFile.setName(fileDetail.getFileName());
+            try {
+                com.google.api.services.drive.model.File file;
+                file = session.getDrive().files().create(gFile, gFileContent).setFields("id").execute();
+                logger.log(Level.INFO, "File ID : " + file.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            logger.log(Level.INFO, encrypt);
+        } else {
+            throw new RuntimeException("Unable to retrieve session");
+        }
     }
 
     // save uploaded file to new location
