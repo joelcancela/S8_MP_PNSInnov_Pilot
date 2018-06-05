@@ -36,7 +36,7 @@
     </div>
 </nav>
 <div class="container">
-    <form action="api/login?drive=google" method="post">
+    <form action="api/login" method="post">
         <div class="form-group">
             <label for="username">Username :</label>
             <input type="text" id="username" name="username">

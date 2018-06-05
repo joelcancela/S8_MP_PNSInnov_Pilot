@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -51,10 +52,21 @@ public class Login {
 	}
 
 	@POST
-	public void authorizeLogIn(@FormParam("username") String username,
+	public void authorizeLogIn(@Context HttpServletRequest request,
+							   @Context HttpServletResponse response,
+							   @FormParam("username") String username,
 							   @FormParam("password") String password) {
-		logger.log(Level.INFO, username);
-		logger.log(Level.INFO, password);
+		if (Login.getDriveSessions(username) != null) {
+			response.addCookie(new Cookie("userID", username));
+			try {
+				response.sendRedirect("drive-list");
+			} catch (IOException e) {
+				e.printStackTrace();
+				logger.log(Level.SEVERE, "Error while redirecting to drive-list");
+			}
+		}
+		//logger.log(Level.INFO, username);
+		//logger.log(Level.INFO, password);
 	}
 
 	public static GDriveSession getDriveSessions(String userID) {
