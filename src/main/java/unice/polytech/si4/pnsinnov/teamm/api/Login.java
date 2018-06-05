@@ -7,14 +7,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +50,13 @@ public class Login {
 		return Response.status(200).build();
 	}
 
+	@POST
+	public void authorizeLogIn(@FormParam("username") String username,
+							   @FormParam("password") String password) {
+		logger.log(Level.INFO, username);
+		logger.log(Level.INFO, password);
+	}
+
 	public static GDriveSession getDriveSessions(String userID) {
 		if (driveSessions.containsKey(userID)) {
 			return driveSessions.get(userID);
@@ -63,6 +67,10 @@ public class Login {
 			}
 			throw new RuntimeException("User ID " + userID + " not found, hashmap size : " + driveSessions.size()  + " containing : " + uiknown);
 		}
+	}
+
+	public static List<String> getAvailableUsers() {
+		return driveSessions.keySet().stream().collect(Collectors.toList());
 	}
 
 	private static String retrieverUserIDFromCookie(HttpServletRequest request) {
