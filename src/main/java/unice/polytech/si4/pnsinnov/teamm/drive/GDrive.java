@@ -14,6 +14,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.ChangeList;
 import com.google.api.services.drive.model.Channel;
+import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.api.OwnFile;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
@@ -210,6 +211,10 @@ public class GDrive {
 		} else {
 			return session.getDrive().files().get(fileid).executeMediaAsInputStream();
 		}
+	}
+
+	public Void deleteFile(GDriveSession session, String fileid) throws IOException {
+		return session.getDrive().files().delete(fileid).execute();
 	}
 
 	/**
