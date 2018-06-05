@@ -26,11 +26,11 @@ public class CreateRule {
             switch (regexMode) {
                 case "startsWith":
                     conditionParameter = ConditionParameter.REGEX_START;
-                    toCompare = "^"+regex;
+                    toCompare = "^"+regex+".*";
                     break;
                 case "endsWith":
                     conditionParameter = ConditionParameter.REGEX_END;
-                    toCompare = regex+"$";
+                    toCompare = ".*"+regex+"$";
                     break;
                 case "contains":
                     conditionParameter = ConditionParameter.REGEX_CONTAINS;

@@ -42,7 +42,7 @@ public class ProxyGoogleDrive {
             fileInfo.setSession(session);
             fileInfo.setExtension(file.getFileExtension());
             fileInfo.setMimeType(file.getMimeType());
-            fileInfo.setNameFile(file.getName());
+            fileInfo.setNameFile(file.getName().split("\\.")[0]);
             fileInfo.setAcceptedExtensions(fileClassifier.isAcceptedExtension(file.getFileExtension()));
             logger.log(Level.INFO, file.getName() + " is extensions accepted : " + fileInfo.isAcceptedExtensions());
             fileInfo.setAcceptedMimeType(fileClassifier.isAcceptedMimeType(file.getMimeType()));
