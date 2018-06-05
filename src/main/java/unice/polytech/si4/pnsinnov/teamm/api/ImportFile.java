@@ -42,6 +42,11 @@ public class ImportFile {
                 com.google.api.services.drive.model.File file;
                 file = session.getDrive().files().create(gFile, gFileContent).setFields("id").execute();
                 logger.log(Level.INFO, "File ID : " + file.getId());
+                if(encrypt != null && encrypt.equals("on")){
+                    response.sendRedirect("fileencryption?fileid="+file.getId());
+                } else {
+                    response.sendRedirect("drive-list");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
