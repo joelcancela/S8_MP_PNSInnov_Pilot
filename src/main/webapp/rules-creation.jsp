@@ -73,13 +73,6 @@
             </div>
         </div>
 
-        <div class="panel panel-default form-group" id="name-panel">
-            <div class="input-group">
-                <span class="input-group-addon">Rule name :</span>
-                <input type="text" class="form-control" name="ruleName" id="name" aria-describedby="basic-addon3">
-            </div>
-        </div>
-
         <div class="panel panel-default form-group" id="extension-panel">
             <div class="input-group">
                 <span class="input-group-addon">Extension to filter :</span>
@@ -101,9 +94,23 @@
         </div>
 
         <div class="panel panel-default form-group" id="pattern-panel" hidden>
-            <div class="input-group">
-                <span class="input-group-addon">Regular expression :</span>
-                <input type="text" class="form-control" name="regex" id="regex" aria-describedby="basic-addon3">
+            <div class="panel-heading">
+                Choose a regular expression :
+            </div>
+            <div class="panel-body">
+                <div class="radio">
+                    <label><input type="radio" name="regexMode" value="startsWith">Starts with</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="regexMode" value="endsWith">Ends with</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="regexMode" value="contains">Contains</label>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Expression to find :</span>
+                    <input type="text" name="regex" class="form-control" aria-describedby="basic-addon3">
+                </div>
             </div>
         </div>
 
