@@ -1,3 +1,4 @@
+<%@ page import="unice.polytech.si4.pnsinnov.teamm.api.Login" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="f" uri="http://privatememo.bounouas.com/functions" %>
 
@@ -35,6 +36,16 @@
             </button>
             <a class="navbar-brand" href="#">Welcome to PrivateMemo !</a>
         </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="${pageContext.request.contextPath}/login.jsp">
+                        <i class="fas fa-sign-in-alt"></i> Log In
+                    </a>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
     </div>
 </nav>
 <div class="container">
@@ -43,9 +54,6 @@
             <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
                     class="fab fa-google-drive"></i>
                 Connect to Google Drive</a>
-            <c:if test="${f:isAlreadyLoggedIn()}">
-                <br><span>Already connected</span>
-            </c:if>
         </div>
         <div class="col-sm-4">
             <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
@@ -56,7 +64,19 @@
                 Connect to One Drive</a>
         </div>
     </div>
+
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-success">Users available : </li>
+        <%
+            for (String user : Login.getAvailableUsers()) {
+        %>
+        <li class="list-group-item"><%=user%></li>
+        <%
+            }
+        %>
+    </ul>
 </div>
+
 </body>
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

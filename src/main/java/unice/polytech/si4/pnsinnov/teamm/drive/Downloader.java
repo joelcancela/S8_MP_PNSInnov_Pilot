@@ -5,10 +5,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -24,7 +27,12 @@ public class Downloader {
 
 	@GET
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response get(@QueryParam("fileid") String fileid) {
+	public Response get(@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("fileid") String fileid) {
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+
+		if (session == null) {
+			throw new RuntimeException("You must be connected to access this feature"); //TODO : Handle this case properly
+		}
 		if (fileid == null) {
 			logger.log(Level.ERROR, "A file id must be provided");
 			return Response.status(404).build();
@@ -32,8 +40,8 @@ public class Downloader {
 		InputStream out = null;
 		String filename = null;
 		try {
-			filename = Login.googleDrive.getFileName(fileid);
-			out = Login.googleDrive.downloadFileDirect(fileid);
+			filename = GDrive.getGDrive().getFileName(session, fileid);
+			out = GDrive.getGDrive().downloadFileDirect(session, fileid);
 		} catch (IOException e) {
 			logger.log(Level.ERROR, e.getMessage());
 		}

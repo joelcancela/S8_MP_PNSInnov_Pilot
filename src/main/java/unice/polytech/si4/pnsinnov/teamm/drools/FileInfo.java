@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,9 +19,11 @@ public class FileInfo {
     private static final Logger logger = LogManager.getLogger(FileInfo.class);
     private boolean acceptedMimeType;
     private boolean acceptedExtensions;
+	private GDriveSession session;
 
     public FileInfo() {
     }
+
 
     public String getExtension() {
         return extension;
@@ -50,6 +53,10 @@ public class FileInfo {
         this.nameFile = nameFile;
     }
 
+	public void setSession(GDriveSession session) {
+		this.session = session;
+	}
+
     public void moveFile(String folderName) {
         boolean folderExist = false;
         File fileMetaData = null;
@@ -67,7 +74,7 @@ public class FileInfo {
         }
 
         try {
-            FileList result = Login.googleDrive.drive.files().list()
+            FileList result = session.getDrive().files().list()
                     .setQ("mimeType='application/vnd.google-apps.folder'")
                     .execute();
             for (File f : result.getFiles()) {
@@ -87,7 +94,7 @@ public class FileInfo {
             fileMetaData.setName(folderName);
             fileMetaData.setMimeType("application/vnd.google-apps.folder");
             try {
-                fileMetaData = Login.googleDrive.drive.files().create(fileMetaData).setFields("id").execute();
+                fileMetaData = session.getDrive().files().create(fileMetaData).setFields("id").execute();
                 logger.log(Level.INFO, "Folder " + folderName + " created");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -99,7 +106,7 @@ public class FileInfo {
 
         File fileParents = null;
         try {
-            fileParents = Login.googleDrive.drive.files().get(this.file.getId()).setFields("parents").execute();
+            fileParents = session.getDrive().files().get(this.file.getId()).setFields("parents").execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,7 +124,7 @@ public class FileInfo {
         // Move the file to the new folder
         try {
             logger.log(Level.INFO, "Move file " + this.file.getName() + " to " + folderName);
-            file = Login.googleDrive.drive.files().update(this.file.getId(), null)
+            file = session.getDrive().files().update(this.file.getId(), null)
                     .setAddParents(fileMetaData.getId())
                     .setRemoveParents(previousParents.toString())
                     .setFields("id, parents")

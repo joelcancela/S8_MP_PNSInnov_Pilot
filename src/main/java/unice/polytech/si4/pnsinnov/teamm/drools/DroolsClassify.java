@@ -2,6 +2,8 @@ package unice.polytech.si4.pnsinnov.teamm.drools;
 
 import com.google.api.services.drive.model.File;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
+import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,11 +20,15 @@ public class DroolsClassify {
     @POST
     public void classifyFiles(@Context HttpServletRequest request,
                               @Context HttpServletResponse response) throws IOException, ServletException {
-        List<File> files = Login.googleDrive.getAutomaticFilesList();
-        System.out.println("PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
-        new ProxyGoogleDrive().applyRules(files);
-        request.setAttribute("list", files);
-        request.setAttribute("ownFile", Login.googleDrive.classifyFiles());
-        request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+        GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+
+        if (session != null) {
+            List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
+            System.out.println("PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
+            new ProxyGoogleDrive().applyRules(files, session);
+            request.setAttribute("list", files);
+            request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
+            request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+        }
     }
 }
