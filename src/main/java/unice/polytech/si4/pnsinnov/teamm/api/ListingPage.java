@@ -21,19 +21,23 @@ public class ListingPage {
 	private static final Logger logger = Logger.getLogger(ListingPage.class.getName());
 	@GET
 	public void getPage(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(request, response);
 
-		if (session != null) {
+		if (session == null) {
+			/*try {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}*/
+		} else {
 			try {
+				logger.log(Level.INFO, "session is : " + session);
 				request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 				logger.log(Level.SEVERE, "Imposssible to dispatch gdrive-list.jsp");
 			}
-		} else {
-			// TODO : HANDLE THIS CASE PROPERLY
-			throw  new RuntimeException("You must be connected to list your files");
 		}
 	}
 }

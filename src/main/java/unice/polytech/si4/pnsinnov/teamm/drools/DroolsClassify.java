@@ -20,7 +20,7 @@ public class DroolsClassify {
     @POST
     public void classifyFiles(@Context HttpServletRequest request,
                               @Context HttpServletResponse response) throws IOException, ServletException {
-        GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+        GDriveSession session = Login.retrieveDriveSessionFromCookie(request, response);
 
         if (session != null) {
             List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);

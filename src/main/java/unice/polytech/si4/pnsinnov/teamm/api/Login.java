@@ -3,6 +3,7 @@ package unice.polytech.si4.pnsinnov.teamm.api;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,13 +72,8 @@ public class Login {
 	public static GDriveSession getDriveSessions(String userID) {
 		if (driveSessions.containsKey(userID)) {
 			return driveSessions.get(userID);
-		} else {
-			String uiknown = "";
-			for (String s : driveSessions.keySet()) {
-				uiknown +=  "||" + s + "||";
-			}
-			throw new RuntimeException("User ID " + userID + " not found, hashmap size : " + driveSessions.size()  + " containing : " + uiknown);
 		}
+		return null;
 	}
 
 	public static List<String> getAvailableUsers() {
@@ -93,7 +89,15 @@ public class Login {
 		return null;
 	}
 
-	public static GDriveSession retrieveDriveSessionFromCookie(HttpServletRequest request) {
-		return Login.getDriveSessions(Login.retrieverUserIDFromCookie(request));
+	public static GDriveSession retrieveDriveSessionFromCookie(HttpServletRequest request, HttpServletResponse response) {
+		GDriveSession session = Login.getDriveSessions(Login.retrieverUserIDFromCookie(request));
+		if (session == null) {
+			try {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return session;
 	}
 }
