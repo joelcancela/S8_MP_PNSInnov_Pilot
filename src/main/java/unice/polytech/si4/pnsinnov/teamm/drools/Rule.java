@@ -21,33 +21,52 @@ public class Rule {
 
     public String conditionAsDRL() throws IllegalStateException, IllegalArgumentException {
         StringBuilder drl = new StringBuilder();
-        drl.append("\n\nrule \"" + name + "\"\n");
-        drl.append("when\n");
-        drl.append("    $file:FileInfo("+conditionParameter.parameterString+" == \""+toCompare+"\")\n");
-        drl.append("then\n");
-        drl.append("    $file.moveFile(\""+destinationFolder+"\");\n");
-        drl.append("end");
+        drl.append("\n\nrule \"")
+                .append(name)
+                .append("\"\n")
+                .append("when\n")
+                .append("    $file:FileInfo(")
+                .append(conditionParameter.parameterString)
+                .append(" == \"")
+                .append(toCompare)
+                .append("\")\n")
+                .append("then\n")
+                .append("    $file.moveFile(\"")
+                .append(destinationFolder)
+                .append("\");\n")
+                .append("end");
         return drl.toString();
     }
 
-    public String conditionRegexAsDRL(){
+    public String conditionRegexAsDRL() {
         StringBuilder drl = new StringBuilder();
-        drl.append("\n\nrule \"" + name + "\"\n");
-        drl.append("when\n");
-        drl.append("    $file:FileInfo("+conditionParameter.parameterString+" matches \""+toCompare+"\")\n");
-        drl.append("then\n");
-        drl.append("    $file.moveFile(\""+destinationFolder+"\");\n");
-        drl.append("end");
+        drl.append("\n\nrule \"")
+                .append(name)
+                .append("\"\n")
+                .append("when\n")
+                .append("    $file:FileInfo(nameFile ");
+        if (conditionParameter.equals(ConditionParameter.REGEX_CONTAINS)){
+            drl.append("contains \"");
+        } else {
+            drl.append("matches \"");
+        }
+        drl.append(toCompare)
+                .append("\")\n")
+                .append("then\n")
+                .append("    $file.moveFile(\"")
+                .append(destinationFolder)
+                .append("\");\n")
+                .append("end");
         return drl.toString();
     }
 
-    public void addRuleToSystem(String ruleContent){
+    public void addRuleToSystem(String ruleContent) {
         File file = new File("src/main/resources/rules/fileRules.drl");
-        try{
+        try {
             PrintWriter out = new PrintWriter(new FileWriter(file, true));
             out.append(ruleContent);
             out.close();
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println("Could not add rule");
         }
     }
