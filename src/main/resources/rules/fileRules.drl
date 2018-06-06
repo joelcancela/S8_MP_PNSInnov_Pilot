@@ -25,3 +25,24 @@ when
 then
     $file.moveFile("_NoRuleApplied");
 end
+
+rule "regex-^2018.*" salience 2
+when
+    $file:FileInfo(nameFile matches "^2018.*")
+then
+    $file.moveFile("start2018");
+end
+
+rule "regex-.*2018$" salience 2
+when
+    $file:FileInfo(nameFile matches ".*2018$")
+then
+    $file.moveFile("end2018");
+end
+
+rule "regex-2018"
+when
+    $file:FileInfo(nameFile contains "2018")
+then
+    $file.moveFile("contains2018");
+end

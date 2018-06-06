@@ -55,7 +55,11 @@ public class CreateRule {
                         break;
                 }
             }
-            if (toCompare != null && destinationDir != null && conditionParameter != null) {
+            if (toCompare != null
+                    && destinationDir != null
+                    && conditionParameter != null
+                    && !destinationDir.equals("_NoRuleApplied")
+                    && !destinationDir.equals("_Automatic")) {
                 Rule rule = new Rule(createRuleName(options, toCompare), toCompare, destinationDir, conditionParameter);
                 if (options.equals("patternButton")) {
                     rule.addRuleToSystem(rule.conditionRegexAsDRL());
