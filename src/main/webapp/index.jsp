@@ -50,33 +50,37 @@
 </nav>
 <div class="container">
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4 text-center">
             <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
                     class="fab fa-google-drive"></i>
                 Connect to Google Drive</a>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 text-center">
             <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
                 Connect to Dropbox</a>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 text-center">
             <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fas fa-cloud"></i>
                 Connect to One Drive</a>
         </div>
     </div>
-
-    <ul class="list-group">
-        <li class="list-group-item list-group-item-success">Users available : </li>
-        <%
-            for (String user : Login.getAvailableUsers()) {
-        %>
-        <li class="list-group-item"><%=user%></li>
-        <%
-            }
-        %>
-    </ul>
+    <div class="row">
+        <div style="margin-top: 30px;" class="panel panel-success">
+            <div class="panel-heading">Users available :</div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <%
+                        for (String user : Login.getAvailableUsers()) {
+                    %>
+                    <li class="list-group-item"><%=user%></li>
+                    <%
+                        }
+                    %>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
-
 </body>
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

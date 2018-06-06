@@ -38,7 +38,6 @@ ul.borderless > li {
     padding: 0;
 }
 
-#encryptDiv {
+#encryptDiv #usersDiv {
     padding-top: 30px;
 }
-
