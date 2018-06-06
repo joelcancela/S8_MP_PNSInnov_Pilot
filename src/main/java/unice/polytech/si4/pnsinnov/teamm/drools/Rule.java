@@ -3,16 +3,19 @@ package unice.polytech.si4.pnsinnov.teamm.drools;
 
 import unice.polytech.si4.pnsinnov.teamm.persistence.User;
 
-import java.io.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Rule {
     private String name;
     private String toCompare;
     private String destinationFolder;
     private ConditionParameter conditionParameter;
+
+    @PersistenceContext(unitName = "pilot-persistence-unit")
+    private EntityManager entityManager;
 
     public Rule(String name, String toCompare, String destinationFolder, ConditionParameter conditionParameter) {
         this.name = name;
@@ -63,11 +66,9 @@ public class Rule {
     }
 
     public void addRuleToSystem(String ruleContent, String userID) {
-        //TODO : ADD TO DATABASE
-
         List<String> rules = new ArrayList<>();
         rules.add(ruleContent);
         User user = new User.UserBuilder().setUserId(userID).setRules(rules).build();
-
+        entityManager.persist(user);
     }
 }
