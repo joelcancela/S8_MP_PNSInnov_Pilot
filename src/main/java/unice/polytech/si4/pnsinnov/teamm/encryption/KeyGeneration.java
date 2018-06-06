@@ -18,14 +18,16 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-
 /**
- * Created by Nassim B on 5/29/18.
+ * Class KeyGeneration used to generate keys with AES 128
+ *
+ * @author Nassim BOUNOUAS
+ * @author Joël CANCELA VAZ
  */
 @Path("generateKey")
 public class KeyGeneration {
 	private static final Logger logger = LogManager.getLogger(KeyGeneration.class);
-	private final static String CIPHER_ALGO = "AES";
+	static final String CIPHER_ALGO = "AES";
 	private static SecretKey key;
 
 	@GET
@@ -41,7 +43,6 @@ public class KeyGeneration {
 			logger.log(Level.WARN, "session is : " + session);
 			request.setAttribute("key", Base64.getEncoder().encodeToString(getKey().getEncoded()));
 			try {
-				//request.setAttribute("ownFile", googleDrive.classifyFiles());
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (IOException | ServletException e) {
 				logger.log(Level.ERROR, e.getMessage());
@@ -49,7 +50,7 @@ public class KeyGeneration {
 		}
 	}
 
-	public static SecretKey getKey() {
+	static SecretKey getKey() {
 		if (key == null) {
 			KeyGenerator keyGenerator = null;
 			try {
@@ -57,7 +58,7 @@ public class KeyGeneration {
 			} catch (NoSuchAlgorithmException e) {
 				logger.log(Level.ERROR, e.getMessage());
 			}
-			key = keyGenerator.generateKey();
+			key = keyGenerator.generateKey();//FIXME: This could break?
 		}
 		return key;
 	}
