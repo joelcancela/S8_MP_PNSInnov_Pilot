@@ -30,7 +30,7 @@ public class DroolsClassify {
         } else {
             List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
             System.out.println("PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors.toList()));
-            new ProxyGoogleDrive().applyRules(files, session);
+            new ProxyGoogleDrive().applyRules(files, session, Login.retrieverUserIDFromCookie(request));
             request.setAttribute("list", files);
             request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
             request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);

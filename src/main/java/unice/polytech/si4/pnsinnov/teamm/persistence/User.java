@@ -45,4 +45,8 @@ public class User {
         }
 
     }
+
+    public List<String> getRules() {
+        return rules;
+    }
 }

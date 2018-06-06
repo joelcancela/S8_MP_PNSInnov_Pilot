@@ -7,8 +7,12 @@ import org.apache.logging.log4j.Logger;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
+import unice.polytech.si4.pnsinnov.teamm.persistence.User;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +20,14 @@ import java.util.List;
 public class ProxyGoogleDrive {
     private static final Logger logger = LogManager.getLogger(ProxyGoogleDrive.class);
 
+    @PersistenceContext(unitName = "pilot-persistence-unit")
+    private EntityManager entityManager;
+
     public ProxyGoogleDrive() {
     }
 
-    public void applyRules(List<File> files, GDriveSession session) {
-        instantiateRules();
+    public void applyRules(List<File> files, GDriveSession session, String userID) {
+        instantiateRules(userID);
         List<FileInfo> fileInfos = new ArrayList<>();
         FileClassifier fileClassifier = new FileClassifier();
 
@@ -56,7 +63,7 @@ public class ProxyGoogleDrive {
 
     }
 
-    public void instantiateRules() {
+    public void instantiateRules(String userID) {
         java.io.File file = new java.io.File("src/main/resources/rules/rulesUse/rules.drl");
         try {
             PrintWriter out = new PrintWriter(new FileWriter(file, false));
@@ -71,7 +78,9 @@ public class ProxyGoogleDrive {
             br.close();
 
             //TODO : GET RULES FROM DATABASE
-            List<String> customRules = new ArrayList<>();
+            User user = entityManager.find(User.class, userID);
+            List<String> customRules = user.getRules();
+            System.out.println("AAAAAAAAAaa "+customRules.size());
             for (String rule : customRules) {
                 out.append(rule+"\n");
             }
