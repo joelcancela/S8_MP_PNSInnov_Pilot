@@ -11,24 +11,20 @@ import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 import unice.polytech.si4.pnsinnov.teamm.persistence.User;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProxyGoogleDrive {
     private static final Logger logger = LogManager.getLogger(ProxyGoogleDrive.class);
 
-    @PersistenceContext(unitName = "pilot-persistence-unit")
-    private EntityManager entityManager;
-
     public ProxyGoogleDrive() {
     }
 
-    public void applyRules(List<File> files, GDriveSession session, String userID) {
+    public void applyRules(List <File> files, GDriveSession session, String userID) {
         instantiateRules(userID);
-        List<FileInfo> fileInfos = new ArrayList<>();
+        List <FileInfo> fileInfos = new ArrayList <>();
         FileClassifier fileClassifier = new FileClassifier();
 
         for (File file : files) {
@@ -78,14 +74,16 @@ public class ProxyGoogleDrive {
             br.close();
 
             //TODO : GET RULES FROM DATABASE
-//            User user = entityManager.find(User.class, userID);
-//            List<String> customRules = user.getRules();
-            List<String> customRules = DataBase.getInstance().get(userID);
-            System.out.println("AAAAAAAAAaa "+customRules.size());
-            for (String rule : customRules) {
-                out.append(rule+"\n");
+            Optional <User> user = DataBase.find(userID);
+            if(user.isPresent()){
+                List<String> customRules = user.get().getRules();
+//            List <String> customRules = DataBase.getRulesForUser(userID);
+                System.out.println("AAAAAAAAAaa " + customRules.size());
+                for (String rule : customRules) {
+                    out.append(rule).append("\n");
+                }
+                out.close();
             }
-            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,19 +1,12 @@
 package unice.polytech.si4.pnsinnov.teamm.persistence;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 public class User {
 
-    @Id
     private String userId;
     private List<String> rules;
-
-    public User() {
-    }
 
     private User(UserBuilder builder) {
         userId = builder.userId;
@@ -44,6 +37,10 @@ public class User {
             return new User(this);
         }
 
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public List<String> getRules() {

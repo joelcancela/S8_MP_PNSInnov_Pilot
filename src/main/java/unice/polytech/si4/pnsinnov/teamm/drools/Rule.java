@@ -1,10 +1,10 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
 
+import unice.polytech.si4.pnsinnov.teamm.exceptions.UnableToRetrieveUserFileException;
+import unice.polytech.si4.pnsinnov.teamm.persistence.Serializer;
 import unice.polytech.si4.pnsinnov.teamm.persistence.User;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +13,6 @@ public class Rule {
     private String toCompare;
     private String destinationFolder;
     private ConditionParameter conditionParameter;
-
-    @PersistenceContext(unitName = "pilot-persistence-unit")
-    private EntityManager entityManager;
 
     public Rule(String name, String toCompare, String destinationFolder, ConditionParameter conditionParameter) {
         this.name = name;
@@ -68,14 +65,7 @@ public class Rule {
     public void addRuleToSystem(String ruleContent, String userID) {
         List<String> rules = new ArrayList<>();
         rules.add(ruleContent);
-//        User user = new User.UserBuilder().setUserId(userID).setRules(rules).build();
-//        entityManager.persist(user);
-        if (!DataBase.getInstance().containsKey(userID)){
-            DataBase.getInstance().put(userID, rules);
-        } else {
-            List<String> temp = DataBase.getInstance().get(userID);
-            temp.add(ruleContent);
-            DataBase.getInstance().put(userID, temp);
-        }
+        User user = new User.UserBuilder().setUserId(userID).setRules(rules).build();
+        DataBase.persist(user);
     }
 }
