@@ -19,27 +19,32 @@ import java.io.IOException;
 @Path("logout")
 public class Logout {
 
-	private static final Logger logger = LogManager.getLogger(Logout.class);
+    private static final Logger logger = LogManager.getLogger(Logout.class);
 
-	@GET
-	public void logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+    @GET
+    public void logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+        GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
-		if (session == null) {
-			try {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			} catch (IOException e) {
-				logger.log(Level.ERROR, e.getMessage());
-			}
-		} else {
-			Cookie logoutCookie = new Cookie("userID", "");
-			logoutCookie.setMaxAge(0);
-			response.addCookie(logoutCookie);
-			try {
-				response.sendRedirect("/PrivateMemo");
-			} catch (IOException e) {
-				throw new RuntimeException("Error while redirecting to home"); // TODO : Handle this case properly
-			}
-		}
-	}
+        if (session == null) {
+            try {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            } catch (IOException e) {
+                logger.log(Level.ERROR, e.getMessage());
+            }
+        } else {
+            Cookie logoutCookie = new Cookie("userID", "");
+            logoutCookie.setMaxAge(0);
+            response.addCookie(logoutCookie);
+            try {
+                response.sendRedirect("/PrivateMemo");
+            } catch (IOException e) {
+                try {
+                    logger.log(Level.ERROR, "Error while redirecting to home"); //TODO : Handle this case properly
+                    response.sendRedirect("connection-failed");
+                } catch (IOException e1) {
+                    logger.log(Level.ERROR, e.getMessage());
+                }
+            }
+        }
+    }
 }
