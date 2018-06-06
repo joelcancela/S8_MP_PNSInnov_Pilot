@@ -68,7 +68,14 @@ public class Rule {
     public void addRuleToSystem(String ruleContent, String userID) {
         List<String> rules = new ArrayList<>();
         rules.add(ruleContent);
-        User user = new User.UserBuilder().setUserId(userID).setRules(rules).build();
-        entityManager.persist(user);
+//        User user = new User.UserBuilder().setUserId(userID).setRules(rules).build();
+//        entityManager.persist(user);
+        if (!DataBase.getInstance().containsKey(userID)){
+            DataBase.getInstance().put(userID, rules);
+        } else {
+            List<String> temp = DataBase.getInstance().get(userID);
+            temp.add(ruleContent);
+            DataBase.getInstance().put(userID, temp);
+        }
     }
 }

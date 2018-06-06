@@ -78,8 +78,9 @@ public class ProxyGoogleDrive {
             br.close();
 
             //TODO : GET RULES FROM DATABASE
-            User user = entityManager.find(User.class, userID);
-            List<String> customRules = user.getRules();
+//            User user = entityManager.find(User.class, userID);
+//            List<String> customRules = user.getRules();
+            List<String> customRules = DataBase.getInstance().get(userID);
             System.out.println("AAAAAAAAAaa "+customRules.size());
             for (String rule : customRules) {
                 out.append(rule+"\n");

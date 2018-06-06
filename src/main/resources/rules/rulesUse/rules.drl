@@ -21,3 +21,11 @@ when
 then
     $file.moveFile("_NoRuleApplied");
 end
+
+
+rule "regex-LOOOL"
+when
+    $file:FileInfo(nameFile contains "LOOOL")
+then
+    $file.moveFile("GSpreadsheet");
+end
