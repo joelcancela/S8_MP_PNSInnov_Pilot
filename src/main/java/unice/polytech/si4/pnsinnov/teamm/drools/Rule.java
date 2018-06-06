@@ -1,7 +1,11 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
 
+import unice.polytech.si4.pnsinnov.teamm.persistence.User;
+
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Rule {
@@ -59,7 +63,11 @@ public class Rule {
     }
 
     public void addRuleToSystem(String ruleContent, String userID) {
-
         //TODO : ADD TO DATABASE
+
+        List<String> rules = new ArrayList<>();
+        rules.add(ruleContent);
+        User user = new User.UserBuilder().setUserId(userID).setRules(rules).build();
+
     }
 }
