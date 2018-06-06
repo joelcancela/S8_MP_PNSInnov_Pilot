@@ -11,7 +11,6 @@ import javax.crypto.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -42,45 +41,37 @@ public class FileEncryption {
 	public void retrieveAndCipherFile(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
-		if (session == null) {
-			try {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			} catch (IOException e) {
-				logger.log(Level.ERROR, e.getMessage());
-			}
-		} else {
-			if (fileid == null || fileid.isEmpty()) {
-				request.setAttribute("error", "A file id must be provided");
-				try {
-					request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
-					request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
-				} catch (IOException | ServletException e) {
-					logger.log(Level.ERROR, e.getMessage());
-				}
-			}
-			File file = null;
-			try {
-				String downloadedPath = GDrive.getGDrive().downloadFile(session, false, fileid, null);
-				//TODO : Currently exportedMime is mocked in method, must be provided by gui
-				logger.log(Level.INFO, "File downloaded to " + downloadedPath);
-				file = new File(downloadedPath);
-				File outFile = encryptFile(file, KeyGeneration.getKey());
-
-				GDrive.getGDrive().uploadFile(session, false, outFile);
-
-				request.setAttribute("success", "the file " + file.getName() + " has crypted and uploaded as : " + file.getName() + "-crypted");
-
-			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
-				logger.log(Level.ERROR, e.getMessage());
-				request.setAttribute("error", "An error occured while crypting the file " + file.getName());
-			}
-
+		if (fileid == null || fileid.isEmpty()) {
+			request.setAttribute("error", "A file id must be provided");
 			try {
 				request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (IOException | ServletException e) {
 				logger.log(Level.ERROR, e.getMessage());
 			}
+		}
+		File file = null;
+		try {
+			String downloadedPath = GDrive.getGDrive().downloadFile(session, false, fileid, null);
+			//TODO : Currently exportedMime is mocked in method, must be provided by gui
+			logger.log(Level.INFO, "File downloaded to " + downloadedPath);
+			file = new File(downloadedPath);
+			File outFile = encryptFile(file, KeyGeneration.getKey());
+
+			GDrive.getGDrive().uploadFile(session, false, outFile);
+
+			request.setAttribute("success", "the file " + file.getName() + " has crypted and uploaded as : " + file.getName() + "-crypted");
+
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
+			logger.log(Level.ERROR, e.getMessage());
+			request.setAttribute("error", "An error occured while crypting the file " + file.getName());
+		}
+
+		try {
+			request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
+			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
+		} catch (IOException | ServletException e) {
+			logger.log(Level.ERROR, e.getMessage());
 		}
 	}
 
