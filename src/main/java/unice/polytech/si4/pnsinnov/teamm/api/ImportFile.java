@@ -33,8 +33,7 @@ public class ImportFile {
                            @FormDataParam("inputFile") FormDataBodyPart bodyPart,
                            @FormDataParam("encrypt") String encrypt
     ) {
-        HttpSession httpsession = request.getSession();
-        GDriveSession session = Login.retrieveDriveSessionFromCookie(httpsession);
+        GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
         File uploadedFile = writeToFile(fileInputStream, fileDetail.getFileName());
         com.google.api.services.drive.model.File gFile = new com.google.api.services.drive.model.File();
         FileContent gFileContent = new FileContent(bodyPart.getMediaType().toString(), uploadedFile);

@@ -1,13 +1,4 @@
 <%@ page import="unice.polytech.si4.pnsinnov.teamm.drools.FileClassifier" %>
-<%@ page import="unice.polytech.si4.pnsinnov.teamm.api.Login" %>
-<%@ page import="unice.polytech.si4.pnsinnov.teamm.drools.FileInfo" %>
-<%@ page import="javax.servlet.http.HttpServletRequest" %>
-<%@ page import="unice.polytech.si4.pnsinnov.teamm.drive.GDrive" %>
-<%@ page import="java.util.stream.Collectors" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.google.api.services.drive.model.File" %>
-<%@ page import="java.io.IOException" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>
@@ -128,7 +119,7 @@
                 <span class="input-group-addon">Directory path :</span>
                 <input list="directories" name="destination-dir" id="destination-dir" class="form-control" autocomplete="off" aria-describedby="basic-addon3" />
                 <datalist id="directories">
-                    <c:forEach items="${listFolders}" var="folder">
+                    <c:forEach items="${it.listFolders}" var="folder">
                         <option value="${folder}">
                     </c:forEach>
                 </datalist>

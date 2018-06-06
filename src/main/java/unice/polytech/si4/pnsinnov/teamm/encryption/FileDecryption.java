@@ -3,6 +3,7 @@ package unice.polytech.si4.pnsinnov.teamm.encryption;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.server.mvc.Viewable;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
@@ -16,6 +17,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,6 +25,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class FileDecryption used to decrypt files with AES
@@ -37,42 +41,41 @@ public class FileDecryption {
 	String encryptedFileId;
 
 	@GET
-	public void retrieveAndDecipherFile(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+	public Response retrieveAndDecipherFile(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+		Map<String, Object> map = new HashMap();
 
 		if (encryptedFileId == null || encryptedFileId.isEmpty()) {
-			request.setAttribute("error", "A target file to decrypt must be provided");
+			map.put("error", "A target file to decrypt must be provided");
+		} else {
+			String downloadedPath = null;
 			try {
-				request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
-				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
-			} catch (IOException | ServletException e) {
+				downloadedPath = GDrive.getGDrive().downloadFile(session, false, encryptedFileId, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
+			} catch (IOException e) {
+				logger.log(Level.ERROR, e.getMessage());
+			}
+			logger.log(Level.INFO, "File downloaded to " + downloadedPath);
+			File inputFile = new File(downloadedPath);
+			try {
+				java.nio.file.Path currentRelativePath = Paths.get("");
+				java.nio.file.Path destination = Paths.get(currentRelativePath.toAbsolutePath().toString() + "/downloads");
+				File outFile = decryptFile(inputFile, KeyGeneration.getKey(), destination);
+				GDrive.getGDrive().uploadFile(session, false, outFile);
+				map.put("success", "the file " + inputFile.getName() + " has been decrypted and uploaded as : " + inputFile.getName() + "-decrypted");
+			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
+				logger.log(Level.ERROR, e.getMessage());
+				map.put("error", "An error occured while decrypting the file " + inputFile.getName());
+			}
+
+
+			try {
+				logger.log(Level.INFO, "session is : " + session);
+				map.put("ownFile", GDrive.getGDrive().classifyFiles(session));
+			} catch (IOException e) {
 				logger.log(Level.ERROR, e.getMessage());
 			}
 		}
-		String downloadedPath = null;
-		try {
-			downloadedPath = GDrive.getGDrive().downloadFile(session, false, encryptedFileId, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
-		} catch (IOException e) {
-			logger.log(Level.ERROR, e.getMessage());
-		}
-		logger.log(Level.INFO, "File downloaded to " + downloadedPath);
-		File inputFile = new File(downloadedPath);
-		try {
-			java.nio.file.Path currentRelativePath = Paths.get("");
-			java.nio.file.Path destination = Paths.get(currentRelativePath.toAbsolutePath().toString() + "/downloads");
-			File outFile = decryptFile(inputFile, KeyGeneration.getKey(), destination);
-			GDrive.getGDrive().uploadFile(session, false, outFile);
-			request.setAttribute("success", "the file " + inputFile.getName() + " has been decrypted and uploaded as : " + inputFile.getName() + "-decrypted");
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
-			logger.log(Level.ERROR, e.getMessage());
-			request.setAttribute("error", "An error occured while decrypting the file " + inputFile.getName());
-		}
-		try {
-			request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
-			request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
-		} catch (IOException | ServletException e) {
-			logger.log(Level.ERROR, e.getMessage());
-		}
+		return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
 	}
 
 	public File decryptFile(File cryptedFile, SecretKey key, java.nio.file.Path destination) throws

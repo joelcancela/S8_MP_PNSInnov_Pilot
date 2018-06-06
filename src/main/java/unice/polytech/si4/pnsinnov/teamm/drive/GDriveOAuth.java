@@ -47,10 +47,6 @@ public class GDriveOAuth {
 
 		GDrive.getGDrive().subscribeToChanges(gDriveSession);
 
-		// OLD request.setAttribute("list", googleDrive.getFilesList());
-		//request.setAttribute("ownFile", googleDrive.classifyFiles());
-		//request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
-		//response.addCookie(new Cookie("userID", userId));
 		response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 		response.sendRedirect("drive-list");
 	}

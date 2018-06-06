@@ -52,21 +52,21 @@
     </div><!-- /.container-fluid -->
 </nav>
 
-<c:if test="${success != null}">
+<c:if test="${it.success != null}">
     <div class="alert alert-success">
-        <strong>Success !</strong> <c:out value="${success}"/>.
+        <strong>Success !</strong> <c:out value="${it.success}"/>.
     </div>
 </c:if>
 
-<c:if test="${error != null}">
+<c:if test="${it.error != null}">
     <div class="alert alert-danger">
-        <strong>Error !</strong> <c:out value="${error}"/>.
+        <strong>Error !</strong> <c:out value="${it.error}"/>.
     </div>
 </c:if>
 
-<c:if test="${key != null}">
+<c:if test="${it.key != null}">
     <div class="alert alert-info">
-        <strong>Info !</strong> Your encryption key is : <c:out value="${key}"/>
+        <strong>Info !</strong> Your encryption key is : <c:out value="${it.key}"/>
     </div>
 </c:if>
 
