@@ -17,6 +17,13 @@ public class Rule {
     private ConditionParameter conditionParameter;
     private static final Logger logger = LogManager.getLogger(Rule.class);
 
+    /**
+     * Creates a rule
+     * @param name rule name
+     * @param toCompare selection criteria
+     * @param destinationFolder folder where the files matching the rule are going to be moved
+     * @param conditionParameter type of rule
+     */
     public Rule(String name, String toCompare, String destinationFolder, ConditionParameter conditionParameter) {
         this.name = name;
         this.toCompare = toCompare;

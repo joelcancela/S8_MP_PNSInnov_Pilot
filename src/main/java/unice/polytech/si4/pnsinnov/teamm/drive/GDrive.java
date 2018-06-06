@@ -19,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.OwnFile;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
+import unice.polytech.si4.pnsinnov.teamm.exceptions.NullFileException;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -177,7 +178,6 @@ public class GDrive {
 	}
 
 	/**
-	 * TODO: To try and test
 	 * Uploads a file using either resumable or direct media upload.
 	 */
 	public com.google.api.services.drive.model.File uploadFile(GDriveSession session, boolean useDirectUpload, File file) throws IOException {
@@ -261,22 +261,26 @@ public class GDrive {
 		List<OwnFile> folders = new ArrayList<>();
 		List<OwnFile> files = new ArrayList<>();
 
-		OwnFile root = new OwnFile(rootFile, true);
+		OwnFile root = new OwnFile(rootFile);
 		folders.add(root);
 		List<com.google.api.services.drive.model.File> filesDrive = getFilesList(session);
 		for (com.google.api.services.drive.model.File file : filesDrive) {
 			if (file.getParents() != null) {
 				if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-					folders.add(new OwnFile(file, true));
+					folders.add(new OwnFile(file));
 				} else {
-					files.add(new OwnFile(file, false));
+					files.add(new OwnFile(file));
 				}
 			}
 		}
 		for (OwnFile child : folders) {
 			for (OwnFile possibleParent : folders) {
 				if (child.file.getParents().size() > 0 && possibleParent.file.getId().equals(child.file.getParents().get(0))) {
-					possibleParent.addFolder(child);
+					try {
+						possibleParent.addFolder(child);
+					} catch (NullFileException e) {
+						e.printStackTrace();
+					}
 					break;
 				}
 			}
@@ -284,7 +288,11 @@ public class GDrive {
 		for (OwnFile child : files) {
 			for (OwnFile possibleParent : folders) {
 				if (possibleParent.file.getId().equals(child.file.getParents().get(0))) {
-					possibleParent.addFile(child);
+					try {
+						possibleParent.addFile(child);
+					} catch (NullFileException e) {
+						e.printStackTrace();
+					}
 					break;
 				}
 			}

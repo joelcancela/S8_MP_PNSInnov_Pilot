@@ -1,5 +1,8 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
+/**
+ * Different types of rules, depending on the filtering criteria
+ */
 public enum ConditionParameter {
     EXTENSION("extension"),
     MIME_TYPE("mimeType"),

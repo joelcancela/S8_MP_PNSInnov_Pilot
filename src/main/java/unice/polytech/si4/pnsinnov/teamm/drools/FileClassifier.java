@@ -24,11 +24,11 @@ public class FileClassifier {
 	private HashMap<String, String> acceptedExtensions;
 
 	public FileClassifier() {
-		this.acceptedMimeTypes = new HashMap();
+		this.acceptedMimeTypes = new HashMap<>();
 		this.acceptedMimeTypes.put("application/vnd.google-apps.spreadsheet", "GSpreadsheet");
 		this.acceptedMimeTypes.put("application/vnd.google-apps.document", "GDocs");
 
-		this.acceptedExtensions = new HashMap();
+		this.acceptedExtensions = new HashMap<>();
 		this.acceptedExtensions.put("pdf","PDF");
 		this.acceptedExtensions.put("svg","SVG");
 		this.acceptedExtensions.put("png","PNG");

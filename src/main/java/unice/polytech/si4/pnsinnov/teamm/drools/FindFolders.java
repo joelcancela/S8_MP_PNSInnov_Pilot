@@ -27,17 +27,21 @@ public class FindFolders {
         List<String> folderNames = new ArrayList<>();
         try {
             List<File> allFiles = GDrive.getGDrive().getFilesList(Login.retrieveDriveSessionFromCookie(request));
-            for (File file : allFiles) {
-                if(file.getMimeType().equals("application/vnd.google-apps.folder")
-                        && !file.getName().equals("_NoRuleApplied")
-                        && !file.getName().equals("_Automatic")){
-                    folderNames.add(file.getName());
-                }
-            }
+            createFoldersList(folderNames, allFiles);
         } catch (IOException e) {
             logger.log(Level.ERROR, e.getMessage());
         }
         request.setAttribute("listFolders", folderNames);
         request.getRequestDispatcher("/rules-creation.jsp").forward(request, response);
+    }
+
+    void createFoldersList(List <String> folderNames, List <File> allFiles) {
+        for (File file : allFiles) {
+            if(file.getMimeType().equals("application/vnd.google-apps.folder")
+                    && !file.getName().equals("_NoRuleApplied")
+                    && !file.getName().equals("_Automatic")){
+                folderNames.add(file.getName());
+            }
+        }
     }
 }

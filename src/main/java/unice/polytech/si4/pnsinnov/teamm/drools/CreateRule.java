@@ -75,7 +75,7 @@ public class CreateRule {
 		}
 	}
 
-	private String createRuleName(String options, String toCompare) {
+	String createRuleName(String options, String toCompare) {
 		StringBuilder nameBuilder = new StringBuilder();
 		if (options.equals("extensionButton")) {
 			nameBuilder.append("extension");

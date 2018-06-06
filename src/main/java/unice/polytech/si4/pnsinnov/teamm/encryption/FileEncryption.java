@@ -7,10 +7,7 @@ import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import javax.crypto.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,30 +15,30 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
+
+import static unice.polytech.si4.pnsinnov.teamm.encryption.KeyGeneration.CIPHER_ALGO;
 
 /**
- * Created by Nassim B on 5/28/18.
+ * Class FileEncryption used to encrypt files with AES
+ *
+ * @author Nassim BOUNOUAS
+ * @author Joël CANCELA VAZ
  */
 @Path("fileencryption")
 public class FileEncryption {
 	private static final Logger logger = LogManager.getLogger(FileEncryption.class);
-	private final String CIPHER_ALGO = "AES";
-	private static final String KEY_ALGORITHM = "AES";
 
-	@QueryParam("fileid") String fileid;
+	@QueryParam("fileid")
+	String fileid;
 
-	/**
-	 * Method handling HTTP GET requests. The returned object will be sent
-	 * to the client as "text/plain" media type.
-	 *
-	 * @return String that will be returned as a text/plain response.
-	 */
 	@GET
-	public void getIt(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+	public void retrieveAndCipherFile(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		if (session == null) {
@@ -51,7 +48,7 @@ public class FileEncryption {
 				logger.log(Level.ERROR, e.getMessage());
 			}
 		} else {
-			if (fileid.isEmpty() || fileid == null) {
+			if (fileid == null || fileid.isEmpty()) {
 				request.setAttribute("error", "A file id must be provided");
 				try {
 					request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
@@ -60,52 +57,16 @@ public class FileEncryption {
 					logger.log(Level.ERROR, e.getMessage());
 				}
 			}
-
-			String downloadedPath = null;
+			File file = null;
 			try {
-				downloadedPath = GDrive.getGDrive().downloadFile(session, false, fileid, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
-			} catch (IOException e) {
-				logger.log(Level.ERROR, e.getMessage());
-			}
-
-			logger.log(Level.INFO, "File downloaded to " + downloadedPath);
-			File file = new File(downloadedPath);
-			StringBuilder stringBuilder = new StringBuilder();
-
-
-			try {
-				Scanner scanner = new Scanner(file);
-				while (scanner.hasNext()) {
-					stringBuilder.append(scanner.next());
-				}
-			} catch (FileNotFoundException e) {
-				logger.log(Level.ERROR, e.getMessage());
-			}
-
-
-			try {
-				Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
-				cipher.init(Cipher.ENCRYPT_MODE, KeyGeneration.getKey());
-
-
-				FileInputStream inputStream = new FileInputStream(file);
-				byte[] inputBytes = new byte[(int) file.length()];
-				inputStream.read(inputBytes);
-
-				byte[] outputBytes = cipher.doFinal(inputBytes);
-
-				File outFile = new File(file.getPath() + "-crypted");
-				FileOutputStream outputStream = new FileOutputStream(outFile);
-				outputStream.write(outputBytes);
-
-				inputStream.close();
-				outputStream.close();
-
+				String downloadedPath = GDrive.getGDrive().downloadFile(session, false, fileid, null);
+				//TODO : Currently exportedMime is mocked in method, must be provided by gui
+				logger.log(Level.INFO, "File downloaded to " + downloadedPath);
+				file = new File(downloadedPath);
+				File outFile = encryptFile(file, KeyGeneration.getKey());
 
 				GDrive.getGDrive().uploadFile(session, false, outFile);
 
-				//return Base64.encodeBase64URLSafeString(cipher.doFinal(stringBuilder.toString().getBytes());
-				//return "File crypted and named : " + file.getName() + "-crypted";
 				request.setAttribute("success", "the file " + file.getName() + " has crypted and uploaded as : " + file.getName() + "-crypted");
 
 			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
@@ -120,6 +81,28 @@ public class FileEncryption {
 				logger.log(Level.ERROR, e.getMessage());
 			}
 		}
+	}
+
+	public File encryptFile(File inputFile, SecretKey key) throws IOException, BadPaddingException,
+			IllegalBlockSizeException,
+			InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
+		Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
+		cipher.init(Cipher.ENCRYPT_MODE, key);
+
+		File outFile;
+		FileOutputStream outputStream;
+		try (FileInputStream inputStream = new FileInputStream(inputFile)) {
+			byte[] inputBytes = new byte[(int) inputFile.length()];
+			inputStream.read(inputBytes);
+
+			byte[] outputBytes = cipher.doFinal(inputBytes);
+
+			outFile = new File(inputFile.getPath() + "-crypted");
+			outputStream = new FileOutputStream(outFile);
+			outputStream.write(outputBytes);
+		}
+		outputStream.close();
+		return outFile;
 	}
 
 }
