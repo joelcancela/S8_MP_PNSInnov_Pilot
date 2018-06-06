@@ -66,7 +66,7 @@
 
 <div class="container">
 
-    <form action="api/CreateRule" method="post">
+    <form action="CreateRule" method="post">
 
         <div class="panel panel-default form-group">
             <div class="btn-group btn-group-toggle btn-group-justified" data-toggle="buttons">
@@ -85,7 +85,7 @@
         <div class="panel panel-default form-group" id="extension-panel">
             <div class="input-group">
                 <span class="input-group-addon">Extension to filter :</span>
-                <input type="text" class="form-control" name="extension" id="extension" aria-describedby="basic-addon3">
+                <input type="text" class="form-control" name="extension" id="extension" autocomplete="off" aria-describedby="basic-addon3">
             </div>
         </div>
 

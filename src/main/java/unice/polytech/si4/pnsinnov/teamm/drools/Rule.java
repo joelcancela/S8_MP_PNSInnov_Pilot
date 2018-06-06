@@ -1,10 +1,8 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.Scanner;
 
 public class Rule {
     private String name;
@@ -45,7 +43,7 @@ public class Rule {
                 .append("\"\n")
                 .append("when\n")
                 .append("    $file:FileInfo(nameFile ");
-        if (conditionParameter.equals(ConditionParameter.REGEX_CONTAINS)){
+        if (conditionParameter.equals(ConditionParameter.REGEX_CONTAINS)) {
             drl.append("contains \"");
         } else {
             drl.append("matches \"");
@@ -60,14 +58,8 @@ public class Rule {
         return drl.toString();
     }
 
-    public void addRuleToSystem(String ruleContent) {
-        File file = new File("src/main/resources/rules/fileRules.drl");
-        try {
-            PrintWriter out = new PrintWriter(new FileWriter(file, true));
-            out.append(ruleContent);
-            out.close();
-        } catch (IOException e) {
-            System.out.println("Could not add rule");
-        }
+    public void addRuleToSystem(String ruleContent, String userID) {
+
+        //TODO : ADD TO DATABASE
     }
 }

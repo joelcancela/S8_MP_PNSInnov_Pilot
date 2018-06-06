@@ -31,6 +31,7 @@ public class CreateRule {
                 e.printStackTrace();
             }
         } else {
+            String userID = Login.retrieverUserIDFromCookie(request);
             ConditionParameter conditionParameter = null;
             String toCompare = null;
             if (options.equals("extensionButton")) {
@@ -62,9 +63,9 @@ public class CreateRule {
                     && !destinationDir.equals("_Automatic")) {
                 Rule rule = new Rule(createRuleName(options, toCompare), toCompare, destinationDir, conditionParameter);
                 if (options.equals("patternButton")) {
-                    rule.addRuleToSystem(rule.conditionRegexAsDRL());
+                    rule.addRuleToSystem(rule.conditionRegexAsDRL(), userID);
                 } else {
-                    rule.addRuleToSystem(rule.conditionAsDRL());
+                    rule.addRuleToSystem(rule.conditionAsDRL(), userID);
                 }
             }
         }

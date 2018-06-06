@@ -1,4 +1,4 @@
-package rules;
+package rules.rulesUse;
 import unice.polytech.si4.pnsinnov.teamm.drools.FileInfo
 
 rule "mimeTypeFile" salience 3
