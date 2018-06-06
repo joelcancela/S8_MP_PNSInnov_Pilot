@@ -25,7 +25,9 @@ public class FindFolders {
         try {
             List<File> allFiles = GDrive.getGDrive().getFilesList(Login.retrieveDriveSessionFromCookie(request));
             for (File file : allFiles) {
-                if(file.getMimeType().equals("application/vnd.google-apps.folder")){
+                if(file.getMimeType().equals("application/vnd.google-apps.folder")
+                        && !file.getName().equals("_NoRuleApplied")
+                        && !file.getName().equals("_Automatic")){
                     folderNames.add(file.getName());
                 }
             }
