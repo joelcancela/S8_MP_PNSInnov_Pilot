@@ -7,6 +7,7 @@ import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -26,21 +27,18 @@ public class Deleter {
 	@POST
 	public Response deleteFile(@Context HttpServletRequest request, @Context HttpServletResponse response,
 	                           @FormParam("fileid") String fileid) {
-		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+		HttpSession httpsession = request.getSession();
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(httpsession);
 
-		if (session == null) {
-			return Response.status(403).build();
-		} else {
-			if (fileid == null) {
-				logger.log(Level.ERROR, "A file id must be provided");
-				return Response.status(404).build();
-			}
-			try {
-				GDrive.getGDrive().deleteFile(session, fileid);
-			} catch (IOException e) {
-				logger.log(Level.ERROR, e.getMessage());
-			}
-			return Response.ok().build();
+		if (fileid == null) {
+			logger.log(Level.ERROR, "A file id must be provided");
+			return Response.status(404).build();
 		}
+		try {
+			GDrive.getGDrive().deleteFile(session, fileid);
+		} catch (IOException e) {
+			logger.log(Level.ERROR, e.getMessage());
+		}
+		return Response.ok().build();
 	}
 }

@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -39,15 +40,9 @@ public class Login {
             String userid = UUID.randomUUID().toString();
             GDriveSession gDriveSession = new GDriveSession(userid, gdrive.getFlow());
             driveSessions.put(userid, gDriveSession);
-            response.addCookie(new Cookie("userID", userid));
+            HttpSession session = request.getSession();
+            session.setAttribute("user.logged", userid);
             return Response.seeOther(gDriveSession.getAuthRequest().toURI()).build();
-			/*
-			 else {
-				OwnFile files = googleDrive.classifyFiles();
-
-				request.setAttribute("ownFile", files);
-				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
-			}*/
         }
         return Response.status(200).build();
     }
@@ -58,7 +53,8 @@ public class Login {
                                @FormParam("username") String username,
                                @FormParam("password") String password) {
         if (Login.getDriveSessions(username) != null) {
-            response.addCookie(new Cookie("userID", username));
+            HttpSession session = request.getSession();
+            session.setAttribute("user.logged", username);
             try {
                 response.sendRedirect("drive-list");
             } catch (IOException e) {
@@ -93,7 +89,10 @@ public class Login {
     }
 
     public static GDriveSession retrieveDriveSessionFromCookie(HttpServletRequest request) {
-        GDriveSession session = Login.getDriveSessions(Login.retrieverUserIDFromCookie(request));
-        return session;
+        HttpSession session = request.getSession();
+        String user = session.getAttribute("user.logged").toString();
+        logger.log(Level.INFO, "Retrieve drive session for : ", user);
+        GDriveSession gsession = Login.getDriveSessions(user);
+        return gsession;
     }
 }

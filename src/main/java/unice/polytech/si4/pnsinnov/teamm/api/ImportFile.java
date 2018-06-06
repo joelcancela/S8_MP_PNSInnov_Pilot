@@ -11,6 +11,7 @@ import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -32,28 +33,25 @@ public class ImportFile {
                            @FormDataParam("inputFile") FormDataBodyPart bodyPart,
                            @FormDataParam("encrypt") String encrypt
     ) {
-        GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
-        if (session != null) {
-            File uploadedFile = writeToFile(fileInputStream, fileDetail.getFileName());
-            com.google.api.services.drive.model.File gFile = new com.google.api.services.drive.model.File();
-            FileContent gFileContent = new FileContent(bodyPart.getMediaType().toString(), uploadedFile);
-            gFile.setName(fileDetail.getFileName());
-            try {
-                com.google.api.services.drive.model.File file;
-                file = session.getDrive().files().create(gFile, gFileContent).setFields("id").execute();
-                logger.log(Level.INFO, "File ID : " + file.getId());
-                if(encrypt != null && encrypt.equals("on")){
-                    response.sendRedirect("fileencryption?fileid="+file.getId());
-                } else {
-                    response.sendRedirect("drive-list");
-                }
-            } catch (IOException e) {
-                logger.log(Level.ERROR, e.getMessage());
+        HttpSession httpsession = request.getSession();
+        GDriveSession session = Login.retrieveDriveSessionFromCookie(httpsession);
+        File uploadedFile = writeToFile(fileInputStream, fileDetail.getFileName());
+        com.google.api.services.drive.model.File gFile = new com.google.api.services.drive.model.File();
+        FileContent gFileContent = new FileContent(bodyPart.getMediaType().toString(), uploadedFile);
+        gFile.setName(fileDetail.getFileName());
+        try {
+            com.google.api.services.drive.model.File file;
+            file = session.getDrive().files().create(gFile, gFileContent).setFields("id").execute();
+            logger.log(Level.INFO, "File ID : " + file.getId());
+            if(encrypt != null && encrypt.equals("on")){
+                response.sendRedirect("fileencryption?fileid="+file.getId());
+            } else {
+                response.sendRedirect("drive-list");
             }
-            logger.log(Level.INFO, encrypt);
-        } else {
-            throw new RuntimeException("Unable to retrieve session");
+        } catch (IOException e) {
+            logger.log(Level.ERROR, e.getMessage());
         }
+        logger.log(Level.INFO, encrypt);
     }
 
     // save uploaded file to new location

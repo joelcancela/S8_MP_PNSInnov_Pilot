@@ -8,6 +8,7 @@ import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -23,28 +24,18 @@ public class Logout {
 
     @GET
     public void logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-        GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
-
-        if (session == null) {
+        HttpSession httpsession = request.getSession();
+        httpsession.setAttribute("user.logged", null);
+        try {
+            response.sendRedirect("/PrivateMemo");
+        } catch (IOException e) {
             try {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            } catch (IOException e) {
+                logger.log(Level.ERROR, "Error while redirecting to home"); //TODO : Handle this case properly
+                response.sendRedirect("connection-failed");
+            } catch (IOException e1) {
                 logger.log(Level.ERROR, e.getMessage());
             }
-        } else {
-            Cookie logoutCookie = new Cookie("userID", "");
-            logoutCookie.setMaxAge(0);
-            response.addCookie(logoutCookie);
-            try {
-                response.sendRedirect("/PrivateMemo");
-            } catch (IOException e) {
-                try {
-                    logger.log(Level.ERROR, "Error while redirecting to home"); //TODO : Handle this case properly
-                    response.sendRedirect("connection-failed");
-                } catch (IOException e1) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
         }
+
     }
 }

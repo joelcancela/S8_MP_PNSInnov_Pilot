@@ -7,6 +7,7 @@ import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -30,24 +31,20 @@ public class Downloader {
 	public Response get(@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("fileid") String fileid) {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
-		if (session == null) {
-			return Response.status(403).build();
-		} else {
-			if (fileid == null) {
-				logger.log(Level.ERROR, "A file id must be provided");
-				return Response.status(404).build();
-			}
-			InputStream out = null;
-			String filename = null;
-			try {
-				filename = GDrive.getGDrive().getFileName(session, fileid);
-				out = GDrive.getGDrive().downloadFileDirect(session, fileid);
-			} catch (IOException e) {
-				logger.log(Level.ERROR, e.getMessage());
-			}
-
-			return Response.ok(out).header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
-					.build();
+		if (fileid == null) {
+			logger.log(Level.ERROR, "A file id must be provided");
+			return Response.status(404).build();
 		}
+		InputStream out = null;
+		String filename = null;
+		try {
+			filename = GDrive.getGDrive().getFileName(session, fileid);
+			out = GDrive.getGDrive().downloadFileDirect(session, fileid);
+		} catch (IOException e) {
+			logger.log(Level.ERROR, e.getMessage());
+		}
+
+		return Response.ok(out).header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+				.build();
 	}
 }

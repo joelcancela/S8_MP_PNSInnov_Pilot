@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
  *
  * @author Joël CANCELA VAZ
  */
-@Path("/")
+@Path("")
 public class Home {
 
 	@GET

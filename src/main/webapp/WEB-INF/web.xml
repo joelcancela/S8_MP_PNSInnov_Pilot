@@ -16,6 +16,16 @@
                 org.glassfish.jersey.server.mvc.jsp.JspMvcFeature
             </param-value>
         </init-param>
+        <init-param>
+            <param-name>
+                jersey.config.servlet.filter.staticContentRegex
+            </param-name>
+            <param-value>
+                (/(image|js|css)/?.*)|(/.*\.jsp)|(/WEB-INF/.*\.jsp)|
+                (/WEB-INF/.*\.jspf)|(/.*\.html)|(/favicon\.ico)|
+                (/robots\.txt)
+            </param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>

@@ -31,11 +31,7 @@ public class GDriveOAuth {
 	public void receiveCodeGDrive(@Context HttpServletRequest request,
 	                              @Context HttpServletResponse response,
 	                              @QueryParam("code") String code) throws IOException {
-		String userId = null;
-		Cookie cookies[] = request.getCookies();
-		for (Cookie c : cookies) {
-			if (c.getName().equals("userID")) userId = c.getValue();
-		}
+		String userId = request.getSession().getAttribute("user.logged").toString();
 
 
 		if (userId == null) {

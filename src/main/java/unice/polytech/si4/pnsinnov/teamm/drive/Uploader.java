@@ -8,6 +8,7 @@ import unice.polytech.si4.pnsinnov.teamm.encryption.FileEncryption;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;

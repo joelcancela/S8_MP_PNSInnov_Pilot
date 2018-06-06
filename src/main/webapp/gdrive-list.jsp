@@ -115,7 +115,7 @@
 
 
     <h3 style="margin: 1em 0 1em;">Files</h3>
-    <ownTags:directory tree="${ownFile}"/>
+    <ownTags:directory tree="${it.ownFile}"/>
 </div>
 </body>
 <!-- jQuery -->
