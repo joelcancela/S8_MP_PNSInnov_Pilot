@@ -43,7 +43,7 @@
                 <li><a href="#" data-toggle="modal" data-target="#importModal"><i class="fas fa-upload"></i> Import file</a>
                 </li>
                 <li><a href="generateKey"><i class="fas fa-lock"></i> Get encryption key</a></li>
-                <li><a href="FindFolders"><i class="fas fa-edit"></i> Define
+                <li><a href="ruleCreation"><i class="fas fa-edit"></i> Define
                     rules</a></li>
                 <li><a href="logout">
                     <i class="fas fa-sign-out-alt"></i> Log out </a></li>

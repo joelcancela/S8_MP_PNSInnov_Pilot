@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("FindFolders")
+@Path("ruleCreation")
 public class FindFolders {
     @GET
     public void getFolders(@Context HttpServletRequest request,
@@ -33,7 +33,6 @@ public class FindFolders {
             e.printStackTrace();
         }
         request.setAttribute("listFolders", folderNames);
-//        request.getRequestDispatcher("/rules-creation.jsp").forward(request, response);
-        response.sendRedirect("/PrivateMemo/rules-creation.jsp");
+        request.getRequestDispatcher("/rules-creation.jsp").forward(request, response);
     }
 }
