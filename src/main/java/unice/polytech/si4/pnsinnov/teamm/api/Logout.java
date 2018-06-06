@@ -1,5 +1,8 @@
 package unice.polytech.si4.pnsinnov.teamm.api;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import javax.servlet.http.Cookie;
@@ -16,6 +19,8 @@ import java.io.IOException;
 @Path("logout")
 public class Logout {
 
+	private static final Logger logger = LogManager.getLogger(Logout.class);
+
 	@GET
 	public void logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
@@ -24,7 +29,7 @@ public class Logout {
 			try {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 		} else {
 			Cookie logoutCookie = new Cookie("userID", "");

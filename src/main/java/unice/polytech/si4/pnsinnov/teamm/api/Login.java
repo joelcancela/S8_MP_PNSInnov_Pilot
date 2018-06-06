@@ -1,9 +1,11 @@
 package unice.polytech.si4.pnsinnov.teamm.api;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,9 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * Class Login
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 @Path("login")
 public class Login {
 
-	private static final Logger logger = Logger.getLogger(Login.class.getName());
+	private static final Logger logger = LogManager.getLogger(Login.class.getName());
 	private static HashMap<String, GDriveSession> driveSessions = new HashMap<>();
 
 	@GET
@@ -62,8 +61,7 @@ public class Login {
 			try {
 				response.sendRedirect("drive-list");
 			} catch (IOException e) {
-				e.printStackTrace(); //TODO : Handle this case properly
-				logger.log(Level.SEVERE, "Error while redirecting to drive-list");
+				logger.log(Level.ERROR, e.getMessage());
 			}
 		}
 		//logger.log(Level.INFO, username);

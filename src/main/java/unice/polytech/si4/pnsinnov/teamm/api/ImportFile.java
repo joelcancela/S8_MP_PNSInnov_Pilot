@@ -48,7 +48,7 @@ public class ImportFile {
                     response.sendRedirect("drive-list");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.ERROR, e.getMessage());
             }
             logger.log(Level.INFO, encrypt);
         } else {
@@ -74,7 +74,7 @@ public class ImportFile {
             out.close();
             return file;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ERROR, e.getMessage());
         }
         return null;
     }

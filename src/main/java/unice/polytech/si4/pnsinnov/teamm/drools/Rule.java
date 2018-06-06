@@ -1,6 +1,10 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,6 +15,7 @@ public class Rule {
     private String toCompare;
     private String destinationFolder;
     private ConditionParameter conditionParameter;
+    private static final Logger logger = LogManager.getLogger(Rule.class);
 
     public Rule(String name, String toCompare, String destinationFolder, ConditionParameter conditionParameter) {
         this.name = name;
@@ -67,7 +72,7 @@ public class Rule {
             out.append(ruleContent);
             out.close();
         } catch (IOException e) {
-            System.out.println("Could not add rule");
+            logger.log(Level.ERROR,"Could not add rule");
         }
     }
 }

@@ -1,5 +1,8 @@
 package unice.polytech.si4.pnsinnov.teamm.drive;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
 import javax.servlet.http.Cookie;
@@ -11,8 +14,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+
 
 /**
  * Class GDriveOAuth used as Callback for google authentification Service
@@ -22,7 +25,7 @@ import java.util.logging.Logger;
  */
 @Path("GDriveOAuth")
 public class GDriveOAuth {
-	private static final Logger logger = Logger.getLogger(GDriveOAuth.class.getName());
+	private static final Logger logger = LogManager.getLogger(GDriveOAuth.class.getName());
 
 	@GET
 	public void receiveCodeGDrive(@Context HttpServletRequest request,
@@ -43,7 +46,7 @@ public class GDriveOAuth {
 		try {
 			gDriveSession.setCredential(code);
 		} catch (GeneralSecurityException e) {
-			logger.log(Level.SEVERE, "Error occurred while set google session credentials");
+			logger.log(Level.ERROR, "Error occurred while set google session credentials");
 		}
 
 		GDrive.getGDrive().subscribeToChanges(gDriveSession);

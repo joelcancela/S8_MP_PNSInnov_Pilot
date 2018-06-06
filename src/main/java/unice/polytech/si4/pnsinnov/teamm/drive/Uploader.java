@@ -33,7 +33,7 @@ public class Uploader {
 			try {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 			return "";
 		} else {
@@ -54,7 +54,7 @@ public class Uploader {
 				logger.log(Level.INFO, "Try to upload file : " + file);
 				GDrive.getGDrive().uploadFile(session, false, file);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 
 			return stringBuilder.toString();

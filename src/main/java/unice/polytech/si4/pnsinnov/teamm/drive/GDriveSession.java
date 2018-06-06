@@ -10,14 +10,15 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
-import org.apache.http.client.methods.HttpTrace;
-import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+
 
 /**
  * Class GDriveSession
@@ -25,7 +26,7 @@ import java.util.logging.Logger;
  * @author Joël CANCELA VAZ
  */
 public class GDriveSession {
-	private final Logger logger = Logger.getLogger(GDriveSession.class.getName());
+	private final Logger logger = LogManager.getLogger(GDriveSession.class.getName());
 	GoogleAuthorizationCodeFlow flow;
 	Credential credential;
 	String userID;
@@ -58,7 +59,7 @@ public class GDriveSession {
 			savedStartPageToken = drive.changes()
 					.getStartPageToken().execute().getStartPageToken();
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage());
+			logger.log(Level.ERROR, e.getMessage());
 		}
 	}
 

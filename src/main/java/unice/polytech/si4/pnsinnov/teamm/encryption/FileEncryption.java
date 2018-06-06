@@ -48,7 +48,7 @@ public class FileEncryption {
 			try {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 		} else {
 			if (fileid.isEmpty() || fileid == null) {
@@ -57,7 +57,7 @@ public class FileEncryption {
 					request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
 					request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 				} catch (IOException | ServletException e) {
-					e.printStackTrace();
+					logger.log(Level.ERROR, e.getMessage());
 				}
 			}
 
@@ -65,7 +65,7 @@ public class FileEncryption {
 			try {
 				downloadedPath = GDrive.getGDrive().downloadFile(session, false, fileid, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 
 			logger.log(Level.INFO, "File downloaded to " + downloadedPath);
@@ -80,7 +80,6 @@ public class FileEncryption {
 				}
 			} catch (FileNotFoundException e) {
 				logger.log(Level.ERROR, e.getMessage());
-				logger.log(Level.INFO, "##### JPNE #####");
 			}
 
 
@@ -118,7 +117,7 @@ public class FileEncryption {
 				request.setAttribute("ownFile", GDrive.getGDrive().classifyFiles(session));
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (IOException | ServletException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 		}
 	}

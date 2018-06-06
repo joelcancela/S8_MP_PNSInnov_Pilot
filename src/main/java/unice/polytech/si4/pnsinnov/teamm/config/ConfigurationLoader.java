@@ -1,9 +1,13 @@
 package unice.polytech.si4.pnsinnov.teamm.config;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+
 
 /**
  * Class ConfigurationLoader
@@ -13,7 +17,7 @@ import java.util.logging.Logger;
 public class ConfigurationLoader {
 
 
-	private static final Logger logger = Logger.getLogger(ConfigurationLoader.class.getName());
+	private static final Logger logger = LogManager.getLogger(ConfigurationLoader.class.getName());
 	private static ConfigurationLoader instance = null;
 	private String host;
 

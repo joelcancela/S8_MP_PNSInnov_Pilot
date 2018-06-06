@@ -5,7 +5,6 @@ import com.google.api.services.drive.model.FileList;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import unice.polytech.si4.pnsinnov.teamm.api.Login;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
 import java.io.IOException;
@@ -81,7 +80,7 @@ public class FileInfo {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ERROR, e.getMessage());
         }
 
 
@@ -93,7 +92,7 @@ public class FileInfo {
                 fileMetaData = session.getDrive().files().create(fileMetaData).setFields("id").execute();
                 logger.log(Level.INFO, "Folder " + folderName + " created");
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.ERROR, e.getMessage());
             }
         }
 
@@ -104,7 +103,7 @@ public class FileInfo {
         try {
             fileParents = session.getDrive().files().get(this.file.getId()).setFields("parents").execute();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ERROR, e.getMessage());
         }
 
         StringBuilder previousParents = new StringBuilder();
@@ -126,7 +125,7 @@ public class FileInfo {
                     .setFields("id, parents")
                     .execute();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ERROR, e.getMessage());
         }
     }
 

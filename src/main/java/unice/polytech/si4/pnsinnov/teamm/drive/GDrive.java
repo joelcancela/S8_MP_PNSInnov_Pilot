@@ -14,7 +14,9 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.ChangeList;
 import com.google.api.services.drive.model.Channel;
-import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.OwnFile;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
 
@@ -24,8 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @author Joël CANCELA VAZ
  */
 public class GDrive {
-	private final static Logger logger = Logger.getLogger(GDrive.class.getName());
+	private final static Logger logger = LogManager.getLogger(GDrive.class.getName());
 	private final File DATA_STORE_DIR = new File("target/store");
 	private FileDataStoreFactory dataStoreFactory;
 	private HashMap<String, AbstractMap.SimpleEntry> exportedMimeMap;
@@ -47,8 +47,7 @@ public class GDrive {
 			try {
 				GDrive.gDrive = new GDrive();
 			} catch (IOException | GeneralSecurityException e) {
-				e.printStackTrace();
-				logger.log(Level.SEVERE, "Unable to instantiate GDrive");
+				logger.log(Level.ERROR, e.getMessage());
 			}
 		}
 		return gDrive;
@@ -107,7 +106,7 @@ public class GDrive {
 				addAllFiles(found.get(0), automaticFiles);
 			}
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage());
+			logger.log(Level.ERROR, e.getMessage());
 		}
 		return automaticFiles;
 	}
@@ -134,7 +133,7 @@ public class GDrive {
 		try {
 			return service.changes().watch(service.changes().getStartPageToken().execute().getStartPageToken(), channel).execute();
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, "Auto-tidying won't be available as you are running the server on localhost");
+			logger.log(Level.ERROR, "Auto-tidying won't be available as you are running the server on localhost");
 		}
 		return null;
 	}
@@ -150,7 +149,7 @@ public class GDrive {
 					.execute();
 			for (Change change : changes.getChanges()) {
 				if (change.getFile() == null) {
-					logger.log(Level.SEVERE, change.toPrettyString());
+					logger.log(Level.ERROR, change.toPrettyString());
 					continue;
 				}
 				boolean isFolder = change.getFile().getMimeType().contains("folder");

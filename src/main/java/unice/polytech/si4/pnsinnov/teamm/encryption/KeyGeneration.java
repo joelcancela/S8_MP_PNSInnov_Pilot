@@ -35,7 +35,7 @@ public class KeyGeneration {
 			try {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 		} else {
 			logger.log(Level.WARN, "session is : " + session);
@@ -44,7 +44,7 @@ public class KeyGeneration {
 				//request.setAttribute("ownFile", googleDrive.classifyFiles());
 				request.getRequestDispatcher("/gdrive-list.jsp").forward(request, response);
 			} catch (IOException | ServletException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 		}
 	}
@@ -55,7 +55,7 @@ public class KeyGeneration {
 			try {
 				keyGenerator = KeyGenerator.getInstance(CIPHER_ALGO);
 			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
+				logger.log(Level.ERROR, e.getMessage());
 			}
 			key = keyGenerator.generateKey();
 		}
