@@ -178,7 +178,6 @@ public class GDrive {
 	}
 
 	/**
-	 * TODO: To try and test
 	 * Uploads a file using either resumable or direct media upload.
 	 */
 	public com.google.api.services.drive.model.File uploadFile(GDriveSession session, boolean useDirectUpload, File file) throws IOException {
