@@ -16,23 +16,32 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Welcome to PrivateMemo !</a>
+            <a class="navbar-brand" href="/">Welcome to PrivateMemo !</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li>
                     <% if (session.getAttribute("user.logged") == null) { %>
+                <li>
                         <a href="${pageContext.request.contextPath}/login.jsp">
                             <i class="fas fa-sign-in-alt"></i> Log In
                         </a>
+                </li>
                     <% } else {%>
-                        <a href="${pageContext.request.contextPath}/logout">
-                            <i class="fas fa-sign-out-alt"></i> Log out
-                        </a>
+                <li>    <a href="#" data-toggle="modal" data-target="#importModal"><i class="fas fa-upload"></i> Import file</a>
+                </li>
+                <li>
+                        <a href="generateKey"><i class="fas fa-lock"></i> Get encryption key</a>
+                </li>
+                <li>
+                        <a href="ruleCreation"><i class="fas fa-edit"></i> Define rules</a>
+                </li>
+                <li>
+                        <a href="${pageContext.request.contextPath}/logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                </li>
                     <% } %>
 
-                </li>
+
             </ul>
         </div><!-- /.navbar-collapse -->
     </div>

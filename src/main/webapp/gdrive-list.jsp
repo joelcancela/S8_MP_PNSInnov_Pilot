@@ -5,34 +5,8 @@
     <jsp:param name="title" value="Google Drive Files List"/>
 </jsp:include>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/PrivateMemo">Google Drive</a>
-        </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" data-toggle="modal" data-target="#importModal"><i class="fas fa-upload"></i> Import file</a>
-                </li>
-                <li><a href="generateKey"><i class="fas fa-lock"></i> Get encryption key</a></li>
-                <li><a href="ruleCreation"><i class="fas fa-edit"></i> Define
-                    rules</a></li>
-                <li><a href="logout">
-                    <i class="fas fa-sign-out-alt"></i> Log out </a></li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
+<jsp:include page="navbar.jsp"/>
 
 <c:if test="${it.success != null}">
     <div class="alert alert-success">
