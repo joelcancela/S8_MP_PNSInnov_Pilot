@@ -58,6 +58,7 @@ public class FileInfo {
 	}
 
     public void moveFile(String folderName) {
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa");
         boolean folderExist = false;
         File fileMetaData = null;
 
@@ -71,10 +72,11 @@ public class FileInfo {
 
         try {
             FileList result = session.getDrive().files().list()
-                    .setQ("mimeType='application/vnd.google-apps.folder'")
+                    .setQ("mimeType='application/vnd.google-apps.folder' and trashed=false")
                     .execute();
             for (File f : result.getFiles()) {
-                if (f.getName().equals(folderName) && f.getTrashed() != null) {
+                System.out.println(f.getName());
+                if (f.getName().equals(folderName)) {
                     fileMetaData = f;
                     logger.log(Level.INFO, "Folder " + folderName + " already exists");
                     folderExist = true;

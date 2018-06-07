@@ -63,9 +63,9 @@ public class CreateRule {
                     && !destinationDir.equals("_Automatic")) {
                 Rule rule = new Rule(createRuleName(options, toCompare), toCompare, destinationDir, conditionParameter);
                 if (options.equals("patternButton")) {
-                    rule.addRuleToSystem(rule.conditionRegexAsDRL(), userID);
+                    rule.addRuleToSystem(userID, rule.conditionRegexAsDRL());
                 } else {
-                    rule.addRuleToSystem(rule.conditionAsDRL(), userID);
+                    rule.addRuleToSystem(userID, rule.conditionAsDRL());
                 }
             }
         }

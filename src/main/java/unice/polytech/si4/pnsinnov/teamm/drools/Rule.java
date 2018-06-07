@@ -5,6 +5,9 @@ import unice.polytech.si4.pnsinnov.teamm.exceptions.UnableToRetrieveUserFileExce
 import unice.polytech.si4.pnsinnov.teamm.persistence.Serializer;
 import unice.polytech.si4.pnsinnov.teamm.persistence.User;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +65,7 @@ public class Rule {
         return drl.toString();
     }
 
-    public void addRuleToSystem(String ruleContent, String userID) {
+    public void addRuleToSystem(String userID, String ruleContent) {
         List<String> rules = new ArrayList<>();
         rules.add(ruleContent);
         User user = new User.UserBuilder().setUserId(userID).setRules(rules).build();
