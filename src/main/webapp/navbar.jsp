@@ -16,7 +16,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Welcome to PrivateMemo !</a>
+            <a class="navbar-brand" href="/">Welcome to PrivateMemo !</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -40,7 +40,7 @@
                         <a href="displayRules"><i class="far fa-eye"></i> Display my rules</a>
                 </li>
                 <li>
-                        <a href="${pageContext.request.contextPath}/logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                        <a href="${pageContext.request.contextPath}/api/logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
                 </li>
                     <% } %>
 
