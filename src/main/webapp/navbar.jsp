@@ -37,6 +37,9 @@
                         <a href="ruleCreation"><i class="fas fa-edit"></i> Define rules</a>
                 </li>
                 <li>
+                        <a href="displayRules"><i class="far fa-eye"></i> Display my rules</a>
+                </li>
+                <li>
                         <a href="${pageContext.request.contextPath}/logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
                 </li>
                     <% } %>

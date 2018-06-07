@@ -86,7 +86,7 @@
         <div class="panel panel-default form-group" id="directory-panel">
             <div class="input-group">
                 <span class="input-group-addon">Directory path :</span>
-                <input list="directories" name="destination-dir" id="destination-dir" class="form-control" autocomplete="off" aria-describedby="basic-addon3" />
+                <input required list="directories" name="destination-dir" id="destination-dir" class="form-control" autocomplete="off" aria-describedby="basic-addon3" />
                 <datalist id="directories">
                     <c:forEach items="${it.listFolders}" var="folder">
                         <option value="${folder}">
