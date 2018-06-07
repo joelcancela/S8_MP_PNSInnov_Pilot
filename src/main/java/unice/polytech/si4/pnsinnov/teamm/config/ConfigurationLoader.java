@@ -7,15 +7,12 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.Properties;
 
-
-
 /**
  * Class ConfigurationLoader
  *
  * @author Joël CANCELA VAZ
  */
 public class ConfigurationLoader {
-
 
 	private static final Logger logger = LogManager.getLogger(ConfigurationLoader.class.getName());
 	private static ConfigurationLoader instance = null;

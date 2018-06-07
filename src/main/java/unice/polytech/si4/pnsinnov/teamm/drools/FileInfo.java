@@ -5,7 +5,7 @@ import com.google.api.services.drive.model.FileList;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
 import java.io.IOException;
 import java.util.List;

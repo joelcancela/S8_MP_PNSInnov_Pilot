@@ -3,17 +3,18 @@ package unice.polytech.si4.pnsinnov.teamm.api;
 import com.google.api.services.drive.model.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class OwnFileTest {
+public class FileRepresentationTest {
 
-    private OwnFile ownFile;
+    private FileRepresentation ownFile;
 
     @BeforeEach
     public void setUp() throws Exception {
         File file = new File();
-        ownFile = new OwnFile(file);
+        ownFile = new FileRepresentation(file);
     }
 
     @Test
@@ -24,7 +25,7 @@ public class OwnFileTest {
 
     @Test
     public void addFolderTest() throws Exception {
-        OwnFile folder = new OwnFile(new File());
+        FileRepresentation folder = new FileRepresentation(new File());
         ownFile.addFolder(folder);
         assertEquals(1, ownFile.getFolders().size());
         assertTrue(ownFile.getFolders().contains(folder));
@@ -32,7 +33,7 @@ public class OwnFileTest {
 
     @Test
     public void addTrashedFolderTest() throws Exception {
-        OwnFile trashedFolder = new OwnFile(new File().setTrashed(true));
+        FileRepresentation trashedFolder = new FileRepresentation(new File().setTrashed(true));
         ownFile.addFolder(trashedFolder);
         assertEquals(1, ownFile.getFolders().size());
         assertTrue(ownFile.getFolders().contains(trashedFolder));
@@ -40,7 +41,7 @@ public class OwnFileTest {
 
     @Test
     public void addAlreadyExistingFolderTest() throws Exception {
-        OwnFile folder = new OwnFile(new File());
+        FileRepresentation folder = new FileRepresentation(new File());
         ownFile.addFolder(folder);
         assertEquals(1, ownFile.getFolders().size());
         assertTrue(ownFile.getFolders().contains(folder));
@@ -50,13 +51,13 @@ public class OwnFileTest {
 
     @Test
     public void metaFolderTest() throws Exception {
-        OwnFile folder = new OwnFile(new File());
+        FileRepresentation folder = new FileRepresentation(new File());
         folder.addFolder(folder);
         assertEquals(1, folder.getFolders().size());
     }
     @Test
     public void addFileTest() throws Exception {
-        OwnFile file = new OwnFile(new File());
+        FileRepresentation file = new FileRepresentation(new File());
         ownFile.addFile(file);
         assertEquals(1, ownFile.getFiles().size());
         assertTrue(ownFile.getFiles().contains(file));
@@ -64,7 +65,7 @@ public class OwnFileTest {
 
     @Test
     public void addTrashedFileTest() throws Exception {
-        OwnFile trashedFile = new OwnFile(new File().setTrashed(true));
+        FileRepresentation trashedFile = new FileRepresentation(new File().setTrashed(true));
         ownFile.addFile(trashedFile);
         assertEquals(1, ownFile.getFiles().size());
         assertTrue(ownFile.getFiles().contains(trashedFile));
@@ -72,7 +73,7 @@ public class OwnFileTest {
 
     @Test
     public void addAlreadyExistingFileTest() throws Exception {
-        OwnFile file = new OwnFile(new File());
+        FileRepresentation file = new FileRepresentation(new File());
         ownFile.addFile(file);
         assertEquals(1, ownFile.getFiles().size());
         assertTrue(ownFile.getFiles().contains(file));
@@ -82,14 +83,14 @@ public class OwnFileTest {
 
     @Test
     public void metaFileTest() throws Exception {
-        OwnFile file = new OwnFile(new File());
+        FileRepresentation file = new FileRepresentation(new File());
         file.addFile(file);
         assertEquals(1, file.getFiles().size());
     }
 
     @Test
     public void emptyFileName() throws Exception {
-        OwnFile file = new OwnFile(new File());
+        FileRepresentation file = new FileRepresentation(new File());
         assertEquals("", file.toString());
     }
 

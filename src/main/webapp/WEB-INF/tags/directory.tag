@@ -1,4 +1,4 @@
-<%@ attribute name="tree" required="true" type="unice.polytech.si4.pnsinnov.teamm.api.OwnFile" %>
+<%@ attribute name="tree" required="true" type="unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="ownTags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

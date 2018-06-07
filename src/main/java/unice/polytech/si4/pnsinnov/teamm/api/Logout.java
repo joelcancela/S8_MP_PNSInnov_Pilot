@@ -3,9 +3,7 @@ package unice.polytech.si4.pnsinnov.teamm.api;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;

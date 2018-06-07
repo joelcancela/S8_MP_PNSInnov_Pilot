@@ -1,11 +1,10 @@
-package unice.polytech.si4.pnsinnov.teamm.drive;
+package unice.polytech.si4.pnsinnov.teamm.drive.gdrive;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -18,7 +17,7 @@ import java.security.GeneralSecurityException;
 
 
 /**
- * Class GDriveOAuth used as Callback for google authentification Service
+ * Class GDriveOAuth used as Callback for google authentication Service
  *
  * @author Joël CANCELA VAZ
  * @author Nassim BOUNOUAS
@@ -35,7 +34,7 @@ public class GDriveOAuth {
 
 
 		if (userId == null) {
-			throw new RuntimeException("User ID can't be retrieved from cookies");
+			throw new RuntimeException("RuleSet ID can't be retrieved from cookies");
 		}
 
 		GDriveSession gDriveSession = Login.getDriveSessions(userId);

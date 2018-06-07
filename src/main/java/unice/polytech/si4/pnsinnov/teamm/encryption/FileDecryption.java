@@ -5,14 +5,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.server.mvc.Viewable;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
-import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
-import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
 import javax.crypto.*;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -50,7 +48,7 @@ public class FileDecryption {
 		} else {
 			String downloadedPath = null;
 			try {
-				downloadedPath = GDrive.getGDrive().downloadFile(session, false, encryptedFileId, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
+				downloadedPath = GDrive.getGDrive().downloadFile(session, encryptedFileId, null); //TODO : Currently exportedMime is mocked in method, must be provided by gui
 			} catch (IOException e) {
 				logger.log(Level.ERROR, e.getMessage());
 			}
@@ -70,7 +68,7 @@ public class FileDecryption {
 
 			try {
 				logger.log(Level.INFO, "session is : " + session);
-				map.put("ownFile", GDrive.getGDrive().classifyFiles(session));
+				map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
 			} catch (IOException e) {
 				logger.log(Level.ERROR, e.getMessage());
 			}

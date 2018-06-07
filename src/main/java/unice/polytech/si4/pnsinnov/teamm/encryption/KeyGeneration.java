@@ -23,6 +23,7 @@ import java.util.Map;
  *
  * @author Nassim BOUNOUAS
  * @author Joël CANCELA VAZ
+ * //FIXME: Key is the same for every user?
  */
 @Path("generateKey")
 public class KeyGeneration {
@@ -43,10 +44,10 @@ public class KeyGeneration {
 			KeyGenerator keyGenerator = null;
 			try {
 				keyGenerator = KeyGenerator.getInstance(CIPHER_ALGO);
+				key = keyGenerator.generateKey();
 			} catch (NoSuchAlgorithmException e) {
 				logger.log(Level.ERROR, e.getMessage());
 			}
-			key = keyGenerator.generateKey();//FIXME: This could break?
 		}
 		return key;
 	}

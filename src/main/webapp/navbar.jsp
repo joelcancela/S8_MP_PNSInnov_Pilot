@@ -21,7 +21,7 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                    <% if (session.getAttribute("user.logged") == null) { %>
+                    <% if (session.getAttribute("ruleSet.logged") == null) { %>
                 <li>
                         <a href="${pageContext.request.contextPath}/login.jsp">
                             <i class="fas fa-sign-in-alt"></i> Log In

@@ -1,18 +1,9 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
-import com.google.api.services.drive.model.File;
-import unice.polytech.si4.pnsinnov.teamm.api.Login;
-import unice.polytech.si4.pnsinnov.teamm.drive.GDrive;
-import unice.polytech.si4.pnsinnov.teamm.drive.GDriveSession;
 import unice.polytech.si4.pnsinnov.teamm.drools.exceptions.UnhandledExtension;
 import unice.polytech.si4.pnsinnov.teamm.drools.exceptions.UnhandledMimeType;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 /**

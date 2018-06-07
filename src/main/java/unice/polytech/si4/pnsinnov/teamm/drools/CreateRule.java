@@ -1,6 +1,5 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
@@ -26,43 +25,43 @@ public class CreateRule {
 	                    @FormParam("mimeTypeResult") String mimeTypeResult,
 	                    @FormParam("regexMode") String regexMode) {
 
-        ConditionParameter conditionParameter = null;
-        String toCompare = null;
-        if (options.equals("extensionButton")) {
-            conditionParameter = ConditionParameter.EXTENSION;
-            toCompare = extension;
-        } else if (options.equals("mimeButton")) {
-            conditionParameter = ConditionParameter.MIME_TYPE;
-            toCompare = mimeTypeResult;
-        } else if (options.equals("patternButton")) {
-            switch (regexMode) {
-                case "startsWith":
-                    conditionParameter = ConditionParameter.REGEX_START;
-                    toCompare = "^" + regex + ".*";
-                    break;
-                case "endsWith":
-                    conditionParameter = ConditionParameter.REGEX_END;
-                    toCompare = ".*" + regex + "$";
-                    break;
-                case "contains":
-                    conditionParameter = ConditionParameter.REGEX_CONTAINS;
-                    toCompare = regex;
-                    break;
-            }
-        }
-        if (toCompare != null
-                && destinationDir != null
-                && conditionParameter != null
-                && !destinationDir.equals("_NoRuleApplied")
-                && !destinationDir.equals("_Automatic")) {
-            Rule rule = new Rule(createRuleName(options, toCompare), toCompare, destinationDir, conditionParameter);
-            if (options.equals("patternButton")) {
-                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionRegexAsDRL());
-            } else {
-                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionAsDRL());
-            }
-        }
-    }
+		ConditionParameter conditionParameter = null;
+		String toCompare = null;
+		if (options.equals("extensionButton")) {
+			conditionParameter = ConditionParameter.EXTENSION;
+			toCompare = extension;
+		} else if (options.equals("mimeButton")) {
+			conditionParameter = ConditionParameter.MIME_TYPE;
+			toCompare = mimeTypeResult;
+		} else if (options.equals("patternButton")) {
+			switch (regexMode) {
+				case "startsWith":
+					conditionParameter = ConditionParameter.REGEX_START;
+					toCompare = "^" + regex + ".*";
+					break;
+				case "endsWith":
+					conditionParameter = ConditionParameter.REGEX_END;
+					toCompare = ".*" + regex + "$";
+					break;
+				case "contains":
+					conditionParameter = ConditionParameter.REGEX_CONTAINS;
+					toCompare = regex;
+					break;
+			}
+		}
+		if (toCompare != null
+				&& destinationDir != null
+				&& conditionParameter != null
+				&& !destinationDir.equals("_NoRuleApplied")
+				&& !destinationDir.equals("_Automatic")) {
+			Rule rule = new Rule(createRuleName(options, toCompare), toCompare, destinationDir, conditionParameter);
+			if (options.equals("patternButton")) {
+				rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionRegexAsDRL());
+			} else {
+				rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionAsDRL());
+			}
+		}
+	}
 
 	String createRuleName(String options, String toCompare) {
 		StringBuilder nameBuilder = new StringBuilder();

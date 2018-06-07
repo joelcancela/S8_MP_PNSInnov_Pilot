@@ -4,10 +4,11 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -21,10 +22,11 @@ import java.io.InputStream;
 
 /**
  * Created by Nassim B on 5/30/18.
+ * TODO: To edit when abstraction will be done
  */
 @Path("downloadDrive")
-public class Downloader {
-	private static final Logger logger = LogManager.getLogger(Downloader.class);
+public class FileDownloader {
+	private static final Logger logger = LogManager.getLogger(FileDownloader.class);
 
 	@GET
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)

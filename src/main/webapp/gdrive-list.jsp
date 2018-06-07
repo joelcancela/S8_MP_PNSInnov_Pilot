@@ -49,8 +49,8 @@
     <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
-                <form action="import" method="post" enctype="multipart/form-data">
-                    <div class="modal-header"><h4>Import file</h4></div>
+                <form action="upload" method="post" enctype="multipart/form-data">
+                    <div class="modal-header"><h4>Upload file</h4></div>
                     <div class="modal-body">
                         <div>
                             <label for="inputFile">File input</label>

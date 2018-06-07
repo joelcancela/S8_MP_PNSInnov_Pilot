@@ -1,4 +1,4 @@
-package unice.polytech.si4.pnsinnov.teamm.drive;
+package unice.polytech.si4.pnsinnov.teamm.drive.gdrive;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -17,9 +17,9 @@ import com.google.api.services.drive.model.Channel;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import unice.polytech.si4.pnsinnov.teamm.api.OwnFile;
 import unice.polytech.si4.pnsinnov.teamm.config.ConfigurationLoader;
-import unice.polytech.si4.pnsinnov.teamm.exceptions.NullFileException;
+import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
+import unice.polytech.si4.pnsinnov.teamm.drive.exceptions.NullFileException;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -71,12 +71,10 @@ public class GDrive {
 				Collections.singleton(DriveScopes.DRIVE)).setDataStoreFactory(dataStoreFactory)
 				.build();
 
-
 		gdriveMime = new ArrayList<>();
 		gdriveMime.add("application/vnd.google-apps.presentation");
 		gdriveMime.add("application/vnd.google-apps.spreadsheet");
 		gdriveMime.add("application/vnd.google-apps.document");
-
 
 		// Mock mime exporting parameter
 		exportedMimeMap = new HashMap();
@@ -102,7 +100,7 @@ public class GDrive {
 	public List<com.google.api.services.drive.model.File> getAutomaticFilesList(GDriveSession session) {
 		List<com.google.api.services.drive.model.File> automaticFiles = new ArrayList<>();
 		try {
-			List<OwnFile> found = this.classifyFiles(session).getFolders().stream().filter(f -> f.file.getName().equals("_Automatic")).collect(Collectors.toList());
+			List<FileRepresentation> found = this.buildFileTree(session).getFolders().stream().filter(f -> f.file.getName().equals("_Automatic")).collect(Collectors.toList());
 			if (!found.isEmpty()) {
 				addAllFiles(found.get(0), automaticFiles);
 			}
@@ -112,15 +110,15 @@ public class GDrive {
 		return automaticFiles;
 	}
 
-	public void addAllFiles(OwnFile root, List<com.google.api.services.drive.model.File> toAdd) {
+	public void addAllFiles(FileRepresentation root, List<com.google.api.services.drive.model.File> toAdd) {
 		toAdd.addAll(root.getFiles().stream().map(f -> f.file).collect(Collectors.toList()));
-		for (OwnFile ownfile : root.getFolders()) {
+		for (FileRepresentation ownfile : root.getFolders()) {
 			addAllFiles(ownfile, toAdd);
 		}
 	}
 
 	public Channel subscribeToChanges(GDriveSession session) {//TODO: watch mutliples sessions
-		Channel notifications = watchChange(session.getDrive(), session.userID + "-watches", ConfigurationLoader.getInstance().getHost() + "/PrivateMemo/api/notifications&userId=" + session.userID);
+		Channel notifications = watchChange(session.getDrive(), session.userID + "-watches", ConfigurationLoader.getInstance().getHost() + "/PrivateMemo/api/GDriveChanges&userId=" + session.userID);
 		logger.log(Level.INFO, "Watching for changes on Google Drive");
 		return notifications;
 	}
@@ -193,13 +191,12 @@ public class GDrive {
 
 	public String getFileName(GDriveSession session, String fileid) throws IOException {
 		com.google.api.services.drive.model.File file = session.getDrive().files().get(fileid).execute();
-		if(exportedMimeMap.containsKey(file.getMimeType())){
-			return file.getName()+exportedMimeMap.get(file.getMimeType()).getValue();
-		}else{
+		if (exportedMimeMap.containsKey(file.getMimeType())) {
+			return file.getName() + exportedMimeMap.get(file.getMimeType()).getValue();
+		} else {
 			return file.getName();
 		}
 	}
-
 
 	public InputStream downloadFileDirect(GDriveSession session, String fileid) throws IOException {
 		com.google.api.services.drive.model.File file = session.getDrive().files().get(fileid).execute();
@@ -216,14 +213,10 @@ public class GDrive {
 		return session.getDrive().files().delete(fileid).execute();
 	}
 
-	/**
-	 * Downloads a file using either resumable or direct media download.
-	 */
-	public String downloadFile(GDriveSession session, boolean useDirectDownload, String fileid, String exportedMime) throws IOException {
+	public String downloadFile(GDriveSession session, String fileid, String exportedMime) throws IOException {
 		com.google.api.services.drive.model.File file = session.getDrive().files().get(fileid).execute();
 		String fileName = file.getName();
 		String mimetype = file.getMimeType();
-
 
 		//GDrive file get exported mime and add extension
 		if (gdriveMime.contains(mimetype)) {
@@ -242,7 +235,6 @@ public class GDrive {
 		File output = new File(parentDir, fileName);
 		OutputStream out = new FileOutputStream(output);
 
-
 		if (gdriveMime.contains(mimetype)) {
 			session.getDrive().files().export(fileid, exportedMime).executeMediaAndDownloadTo(out);
 		} else {
@@ -251,47 +243,46 @@ public class GDrive {
 		return output.getPath();
 	}
 
-
-	public OwnFile classifyFiles(GDriveSession session) throws IOException {
+	public FileRepresentation buildFileTree(GDriveSession session) throws IOException {
 		String rootId = session.getDrive().files().get("root").setFields("id").execute().getId();
 		com.google.api.services.drive.model.File rootFile = new com.google.api.services.drive.model.File();
 		rootFile.setParents(new ArrayList<>());
 		rootFile.setId(rootId);
 		rootFile.setName("Drive Root");
-		List<OwnFile> folders = new ArrayList<>();
-		List<OwnFile> files = new ArrayList<>();
+		List<FileRepresentation> folders = new ArrayList<>();
+		List<FileRepresentation> files = new ArrayList<>();
 
-		OwnFile root = new OwnFile(rootFile);
+		FileRepresentation root = new FileRepresentation(rootFile);
 		folders.add(root);
 		List<com.google.api.services.drive.model.File> filesDrive = getFilesList(session);
 		for (com.google.api.services.drive.model.File file : filesDrive) {
 			if (file.getParents() != null) {
 				if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-					folders.add(new OwnFile(file));
+					folders.add(new FileRepresentation(file));
 				} else {
-					files.add(new OwnFile(file));
+					files.add(new FileRepresentation(file));
 				}
 			}
 		}
-		for (OwnFile child : folders) {
-			for (OwnFile possibleParent : folders) {
+		for (FileRepresentation child : folders) {
+			for (FileRepresentation possibleParent : folders) {
 				if (child.file.getParents().size() > 0 && possibleParent.file.getId().equals(child.file.getParents().get(0))) {
 					try {
 						possibleParent.addFolder(child);
 					} catch (NullFileException e) {
-						e.printStackTrace();
+						logger.log(Level.ERROR, e.getMessage());
 					}
 					break;
 				}
 			}
 		}
-		for (OwnFile child : files) {
-			for (OwnFile possibleParent : folders) {
+		for (FileRepresentation child : files) {
+			for (FileRepresentation possibleParent : folders) {
 				if (possibleParent.file.getId().equals(child.file.getParents().get(0))) {
 					try {
 						possibleParent.addFile(child);
 					} catch (NullFileException e) {
-						e.printStackTrace();
+						logger.log(Level.ERROR, e.getMessage());
 					}
 					break;
 				}
@@ -299,6 +290,5 @@ public class GDrive {
 		}
 		return root;
 	}
-
 
 }

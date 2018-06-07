@@ -1,4 +1,4 @@
-package unice.polytech.si4.pnsinnov.teamm.exceptions;
+package unice.polytech.si4.pnsinnov.teamm.drools.exceptions;
 
 public class UnableToRetrieveUserFileException extends Exception {
 

@@ -1,4 +1,4 @@
-package unice.polytech.si4.pnsinnov.teamm.drive;
+package unice.polytech.si4.pnsinnov.teamm.drive.gdrive;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -19,9 +19,9 @@ import java.io.IOException;
 /**
  * Created by Nassim B on 5/23/18.
  */
-@Path("notifications")
-public class Notifications {
-	private static final Logger logger = LogManager.getLogger(Notifications.class);
+@Path("GDriveChanges")
+public class GDriveChanges {
+	private static final Logger logger = LogManager.getLogger(GDriveChanges.class);
 
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
@@ -29,7 +29,7 @@ public class Notifications {
 		MultivaluedMap<String, String> rh = headers.getRequestHeaders();
 		String userID = rh.getFirst("x-goog-channel-id");
 		String headersChange = rh.getFirst("x-goog-resource-state");
-		//FIXME : Multiple User
+		//FIXME : Multiple RuleSet
 		if(Login.getDriveSessions(userID) != null){
 			logger.log(Level.INFO, "Changes received for ["+userID+"] headerChange:"+headersChange);
 			try {

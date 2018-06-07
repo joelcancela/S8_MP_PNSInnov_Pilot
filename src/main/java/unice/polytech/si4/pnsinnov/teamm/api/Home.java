@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Class Home
+ * Class Home that displays the home page
  *
  * @author Joël CANCELA VAZ
  */
@@ -18,7 +18,7 @@ public class Home {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Response index() {
+	public Response getHomepage() {
 		return Response.ok(new Viewable("/index.jsp", null)).build();
 	}
 }

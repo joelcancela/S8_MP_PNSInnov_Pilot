@@ -4,10 +4,11 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,10 +20,11 @@ import java.io.IOException;
  * Class Deleter
  *
  * @author Joël CANCELA VAZ
+ * TODO: To edit when abstraction will be done
  */
 @Path("deleteDrive")
-public class Deleter {
-	private static final Logger logger = LogManager.getLogger(Downloader.class);
+public class FileDeleter {
+	private static final Logger logger = LogManager.getLogger(FileDownloader.class);
 
 	@POST
 	public Response deleteFile(@Context HttpServletRequest request, @Context HttpServletResponse response,
