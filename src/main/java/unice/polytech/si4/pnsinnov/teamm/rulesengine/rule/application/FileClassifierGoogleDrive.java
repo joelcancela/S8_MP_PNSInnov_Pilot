@@ -1,4 +1,4 @@
-package unice.polytech.si4.pnsinnov.teamm.drools;
+package unice.polytech.si4.pnsinnov.teamm.rulesengine.rule.application;
 
 import com.google.api.services.drive.model.File;
 import org.apache.logging.log4j.Level;
@@ -13,9 +13,11 @@ import org.kie.api.builder.Message;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import unice.polytech.si4.pnsinnov.teamm.drive.FileClassifier;
+import unice.polytech.si4.pnsinnov.teamm.drive.FileInfo;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
-import unice.polytech.si4.pnsinnov.teamm.drools.persistence.RuleSet;
-import unice.polytech.si4.pnsinnov.teamm.drools.persistence.RuleSetSerializer;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSet;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSetSerializer;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -26,10 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProxyGoogleDrive {
-	private static final Logger logger = LogManager.getLogger(ProxyGoogleDrive.class);
+/**
+ * TODO: To edit when abstraction will be done
+ */
+public class FileClassifierGoogleDrive {
+	private static final Logger logger = LogManager.getLogger(FileClassifierGoogleDrive.class);
 
-	public ProxyGoogleDrive() {
+	public FileClassifierGoogleDrive() {
 	}
 
 	public void applyRules(List<File> files, GDriveSession session, String userID) {

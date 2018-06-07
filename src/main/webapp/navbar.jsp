@@ -16,12 +16,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Welcome to PrivateMemo !</a>
+            <a class="navbar-brand" href="#">Welcome to PrivateMemo !</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                    <% if (session.getAttribute("ruleSet.logged") == null) { %>
+                    <% if (session.getAttribute("user.logged") == null) { %>
                 <li>
                         <a href="${pageContext.request.contextPath}/login.jsp">
                             <i class="fas fa-sign-in-alt"></i> Log In

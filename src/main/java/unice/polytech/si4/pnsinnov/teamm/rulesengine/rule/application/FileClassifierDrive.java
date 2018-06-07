@@ -1,4 +1,4 @@
-package unice.polytech.si4.pnsinnov.teamm.drools;
+package unice.polytech.si4.pnsinnov.teamm.rulesengine.rule.application;
 
 import com.google.api.services.drive.model.File;
 import org.apache.logging.log4j.Level;
@@ -22,10 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * TODO: To edit when abstraction will be done
+ */
 @Path("drools")
-public class DroolsClassify {
+public class FileClassifierDrive {
 
-	private static final Logger logger = LogManager.getLogger(DroolsClassify.class);
+	private static final Logger logger = LogManager.getLogger(FileClassifierDrive.class);
 
 	@POST
 	public Response classifyFiles(@Context HttpServletRequest request,
@@ -35,7 +38,7 @@ public class DroolsClassify {
 		List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
 		logger.log(Level.DEBUG, "PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors
 				.toList()));
-		new ProxyGoogleDrive().applyRules(files, session, Login.retrieverUserIDFromCookie(request));
+		new FileClassifierGoogleDrive().applyRules(files, session, Login.retrieverUserIDFromCookie(request));
 
 		Map<String, Object> map = new HashMap();
 		try {

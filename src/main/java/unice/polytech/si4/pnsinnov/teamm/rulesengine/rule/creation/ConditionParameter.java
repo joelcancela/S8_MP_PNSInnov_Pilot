@@ -1,4 +1,4 @@
-package unice.polytech.si4.pnsinnov.teamm.drools;
+package unice.polytech.si4.pnsinnov.teamm.rulesengine.rule.creation;
 
 /**
  * Different types of rules, depending on the filtering criteria

@@ -1,7 +1,7 @@
-package unice.polytech.si4.pnsinnov.teamm.drools;
+package unice.polytech.si4.pnsinnov.teamm.drive;
 
-import unice.polytech.si4.pnsinnov.teamm.drools.exceptions.UnhandledExtension;
-import unice.polytech.si4.pnsinnov.teamm.drools.exceptions.UnhandledMimeType;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.exceptions.UnhandledExtensionRException;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.exceptions.UnhandledMimeTypeRException;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -37,7 +37,7 @@ public class FileClassifier {
 		if (isAcceptedMimeType(mimeType)) {
 			return this.acceptedMimeTypes.get(mimeType);
 		} else {
-			throw new UnhandledMimeType();
+			throw new UnhandledMimeTypeRException();
 		}
 	}
 
@@ -45,7 +45,7 @@ public class FileClassifier {
 		if (isAcceptedExtension(extension)) {
 			return this.acceptedExtensions.get(extension);
 		} else {
-			throw new UnhandledExtension();
+			throw new UnhandledExtensionRException();
 		}
 	}
 

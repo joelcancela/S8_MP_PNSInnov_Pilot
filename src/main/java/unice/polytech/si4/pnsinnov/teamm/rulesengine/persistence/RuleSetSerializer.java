@@ -1,10 +1,10 @@
-package unice.polytech.si4.pnsinnov.teamm.drools.persistence;
+package unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence;
 
 import com.google.gson.Gson;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import unice.polytech.si4.pnsinnov.teamm.drools.exceptions.UnableToRetrieveUserFileException;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.exceptions.UnableToRetrieveUserFileException;
 
 import java.io.*;
 import java.nio.file.Paths;

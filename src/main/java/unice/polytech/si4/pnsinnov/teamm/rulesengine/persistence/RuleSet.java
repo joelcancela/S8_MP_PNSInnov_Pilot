@@ -1,4 +1,4 @@
-package unice.polytech.si4.pnsinnov.teamm.drools.persistence;
+package unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence;
 
 import java.util.ArrayList;
 import java.util.List;

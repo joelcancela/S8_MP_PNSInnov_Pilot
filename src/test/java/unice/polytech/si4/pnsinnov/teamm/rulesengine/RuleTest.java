@@ -1,6 +1,7 @@
-package unice.polytech.si4.pnsinnov.teamm.drools;
+package unice.polytech.si4.pnsinnov.teamm.rulesengine;
 
 import org.junit.jupiter.api.BeforeEach;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.rule.Rule;
 
 class RuleTest {
 

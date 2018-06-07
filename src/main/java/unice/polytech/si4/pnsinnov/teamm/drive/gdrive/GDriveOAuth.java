@@ -34,7 +34,7 @@ public class GDriveOAuth {
 
 
 		if (userId == null) {
-			throw new RuntimeException("RuleSet ID can't be retrieved from cookies");
+			throw new RuntimeException("User ID can't be retrieved from cookies");
 		}
 
 		GDriveSession gDriveSession = Login.getDriveSessions(userId);

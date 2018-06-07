@@ -32,9 +32,9 @@
             <div class="panel-body">
                 <ul class="list-group">
                     <%
-                        for (String ruleSet : Login.getAvailableUsers()) {
+                        for (String user : Login.getAvailableUsers()) {
                     %>
-                    <li class="list-group-item"><%=ruleSet%></li>
+                    <li class="list-group-item"><%=user%></li>
                     <%
                         }
                     %>

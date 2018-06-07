@@ -1,8 +1,9 @@
-package unice.polytech.si4.pnsinnov.teamm.drools;
+package unice.polytech.si4.pnsinnov.teamm.rulesengine.rule.creation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.rule.Rule;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

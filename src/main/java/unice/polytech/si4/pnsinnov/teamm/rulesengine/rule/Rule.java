@@ -1,11 +1,12 @@
-package unice.polytech.si4.pnsinnov.teamm.drools;
+package unice.polytech.si4.pnsinnov.teamm.rulesengine.rule;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import unice.polytech.si4.pnsinnov.teamm.drools.exceptions.UnableToRetrieveUserFileException;
-import unice.polytech.si4.pnsinnov.teamm.drools.persistence.RuleSet;
-import unice.polytech.si4.pnsinnov.teamm.drools.persistence.RuleSetSerializer;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.exceptions.UnableToRetrieveUserFileException;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSet;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSetSerializer;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.rule.creation.ConditionParameter;
 
 import java.util.ArrayList;
 import java.util.List;

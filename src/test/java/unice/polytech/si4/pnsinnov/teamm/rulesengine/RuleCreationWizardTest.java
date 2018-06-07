@@ -1,22 +1,23 @@
-package unice.polytech.si4.pnsinnov.teamm.drools;
+package unice.polytech.si4.pnsinnov.teamm.rulesengine;
 
 import com.google.api.services.drive.model.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import unice.polytech.si4.pnsinnov.teamm.rulesengine.rule.creation.RuleCreationWizard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FindFoldersTest {
+class RuleCreationWizardTest {
 
-    private FindFolders findFolders;
+    private RuleCreationWizard ruleCreationWizard;
     private List<File> files;
 
     @BeforeEach
     void setUp() {
-        findFolders = new FindFolders();
+        ruleCreationWizard = new RuleCreationWizard();
         files = new ArrayList <>();
         files.add(new File().setMimeType("application/vnd.google-apps.folder").setName("_NoRuleApplied").setTrashed(false));
         files.add(new File().setMimeType("application/vnd.google-apps.folder").setName("_Automatic").setTrashed(false));
@@ -27,7 +28,7 @@ class FindFoldersTest {
     @Test
     void createFoldersList() {
         List<String> foldersList = new ArrayList <>();
-        findFolders.createFoldersList(foldersList, files);
+        ruleCreationWizard.createFoldersList(foldersList, files);
         assertEquals(1, foldersList.size());
     }
 }

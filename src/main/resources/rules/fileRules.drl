@@ -1,5 +1,5 @@
 package rules;
-import unice.polytech.si4.pnsinnov.teamm.drools.FileInfo
+import unice.polytech.si4.pnsinnov.teamm.drive.FileInfo
 
 rule "mimeTypeFile" salience 3
 when
