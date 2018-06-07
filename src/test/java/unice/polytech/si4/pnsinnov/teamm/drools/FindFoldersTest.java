@@ -18,10 +18,10 @@ class FindFoldersTest {
     void setUp() {
         findFolders = new FindFolders();
         files = new ArrayList <>();
-        files.add(new File().setMimeType("application/vnd.google-apps.folder").setName("_NoRuleApplied"));
-        files.add(new File().setMimeType("application/vnd.google-apps.folder").setName("_Automatic"));
-        files.add(new File().setMimeType("application/vnd.google-apps.folder").setName("dirName"));
-        files.add(new File().setMimeType("text/plain"));
+        files.add(new File().setMimeType("application/vnd.google-apps.folder").setName("_NoRuleApplied").setTrashed(false));
+        files.add(new File().setMimeType("application/vnd.google-apps.folder").setName("_Automatic").setTrashed(false));
+        files.add(new File().setMimeType("application/vnd.google-apps.folder").setName("dirName").setTrashed(false));
+        files.add(new File().setMimeType("text/plain").setTrashed(false));
     }
 
     @Test

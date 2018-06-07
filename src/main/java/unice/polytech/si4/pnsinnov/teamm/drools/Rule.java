@@ -6,9 +6,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import unice.polytech.si4.pnsinnov.teamm.exceptions.UnableToRetrieveUserFileException;
+import unice.polytech.si4.pnsinnov.teamm.persistence.Serializer;
+import unice.polytech.si4.pnsinnov.teamm.persistence.User;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Rule {
     private String name;
@@ -57,7 +63,7 @@ public class Rule {
                 .append("\"\n")
                 .append("when\n")
                 .append("    $file:FileInfo(nameFile ");
-        if (conditionParameter.equals(ConditionParameter.REGEX_CONTAINS)){
+        if (conditionParameter.equals(ConditionParameter.REGEX_CONTAINS)) {
             drl.append("contains \"");
         } else {
             drl.append("matches \"");
@@ -72,14 +78,10 @@ public class Rule {
         return drl.toString();
     }
 
-    public void addRuleToSystem(String ruleContent) {
-        File file = new File("src/main/resources/rules/fileRules.drl");
-        try {
-            PrintWriter out = new PrintWriter(new FileWriter(file, true));
-            out.append(ruleContent);
-            out.close();
-        } catch (IOException e) {
-            logger.log(Level.ERROR,"Could not add rule");
-        }
+    public void addRuleToSystem(String userID, String ruleContent) {
+        List<String> rules = new ArrayList<>();
+        rules.add(ruleContent);
+        User user = new User.UserBuilder().setUserId(userID).setRules(rules).build();
+        DataBase.persist(user);
     }
 }

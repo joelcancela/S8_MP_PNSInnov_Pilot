@@ -79,14 +79,14 @@ public class Login {
         return new ArrayList <>(driveSessions.keySet());
     }
 
-    private static String retrieverUserIDFromCookie(HttpServletRequest request) {
-        Cookie cookies[] = request.getCookies();
-        for (Cookie c : cookies) {
-            logger.log(Level.INFO, "FOUND COOKIE : " + c.getName() + " Valued : " + c.getValue());
-            if (c.getName().equals("userID")) return c.getValue();
-        }
-        return null;
-    }
+	public static String retrieverUserIDFromCookie(HttpServletRequest request) {
+		Cookie cookies[] = request.getCookies();
+		for (Cookie c : cookies) {
+			logger.log(Level.INFO, "FOUND COOKIE : " + c.getName() + " Valued : " + c.getValue());
+			if (c.getName().equals("userID")) return c.getValue();
+		}
+		return null;
+	}
 
     public static GDriveSession retrieveDriveSessionFromCookie(HttpServletRequest request) {
         HttpSession session = request.getSession();
