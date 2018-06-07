@@ -7,17 +7,6 @@
 </jsp:include>
 <body>
 
-<script>
-    function createRuleSuccessfully(){
-        var $div2 = $("#successCreateRule");
-        if ($div2.is(":visible")) { return; }
-        $div2.show();
-        setTimeout(function() {
-            $div2.hide();
-        }, 3000);
-    }
-</script>
-
 <jsp:include page="navbar.jsp"/>
 
 <div class="alert alert-success" id="successCreateRule" hidden>
@@ -26,7 +15,7 @@
 
 <div class="container">
 
-    <form action="CreateRule" method="post">
+    <form action="CreateRule" method="post" id="formRuleCreation">
 
         <div class="panel panel-default form-group">
             <div class="btn-group btn-group-toggle btn-group-justified" data-toggle="buttons">
@@ -102,7 +91,7 @@
             </div>
         </div>
 
-        <input type="submit" class="btn" onclick="createRuleSuccessfully()">
+        <input type="submit" class="btn" id="submitButton">
     </form>
 
 </div>
@@ -115,4 +104,28 @@
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 <script src="../js/rules-form.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        $("#submitButton").click(function() {
+            var $emptyFields = $('#formRuleCreation * :input:visible').filter(function() {
+                console.log("Test");
+                return $.trim(this.value) === "";
+            });
+
+            if (!$emptyFields.length) {
+                console.log("form has been filled");
+                var $div2 = $("#successCreateRule");
+                if ($div2.is(":visible")) { return; }
+                $div2.show();
+                setTimeout(function() {
+                    $div2.hide();
+                }, 3000);
+            } else {
+                console.log("form not completed");
+            }
+        });
+    });
+</script>
 </html>
