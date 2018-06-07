@@ -41,7 +41,7 @@ public class FileDecryption {
 	@GET
 	public Response retrieveAndDecipherFile(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
-		Map<String, Object> map = new HashMap();
+		Map<String, Object> map = new HashMap<>();
 
 		if (encryptedFileId == null || encryptedFileId.isEmpty()) {
 			map.put("error", "A target file to decrypt must be provided");

@@ -44,7 +44,7 @@ public class FileEncryption {
 	public Response retrieveAndCipherFile(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
-		Map<String, Object> map = new HashMap();
+		Map<String, Object> map = new HashMap<>();
 
 		if (fileid == null || fileid.isEmpty()) {
 			map.put("error", "A file id must be provided");
@@ -65,6 +65,11 @@ public class FileEncryption {
 				logger.log(Level.ERROR, e.getMessage());
 				map.put("error", "An error occured while crypting the file " + file.getName());
 			}
+		}
+		try {
+			map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
+		} catch (IOException e) {
+			logger.log(Level.ERROR, e.getMessage());
 		}
 		return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
 	}

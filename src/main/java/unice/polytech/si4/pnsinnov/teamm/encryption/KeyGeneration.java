@@ -4,6 +4,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.server.mvc.Viewable;
+import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -13,6 +16,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.HashMap;
@@ -33,9 +37,14 @@ public class KeyGeneration {
 
 	@GET
 	public Response getEncodedString(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		Map<String, Object> map = new HashMap();
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+		Map<String, Object> map = new HashMap<>();
 		map.put("key", Base64.getEncoder().encodeToString(getKey().getEncoded()));
-
+		try {
+			map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
+		} catch (IOException e) {
+			logger.log(Level.ERROR, e.getMessage());
+		}
 		return Response.ok(new Viewable("/gdrive-list.jsp", map)).build(); // TODO : Create a dedicated page to key retrieving
 	}
 
