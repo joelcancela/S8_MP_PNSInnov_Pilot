@@ -24,7 +24,8 @@ public class CreateRule {
 	                    @FormParam("regex") String regex,
 	                    @FormParam("destination-dir") String destinationDir,
 	                    @FormParam("mimeTypeResult") String mimeTypeResult,
-	                    @FormParam("regexMode") String regexMode) {
+	                    @FormParam("regexMode") String regexMode,
+                        @FormParam("weight") int weight) {
 
         ConditionParameter conditionParameter = null;
         String toCompare = null;
@@ -57,9 +58,9 @@ public class CreateRule {
                 && !destinationDir.equals("_Automatic")) {
             Rule rule = new Rule(createRuleName(options, toCompare), toCompare, destinationDir, conditionParameter);
             if (options.equals("patternButton")) {
-                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionRegexAsDRL());
+                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionRegexAsDRL(weight));
             } else {
-                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionAsDRL());
+                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionAsDRL(weight));
             }
         }
     }

@@ -14,9 +14,9 @@
     <div class="list-group">
         <c:forEach items="${it.customRules}" var="rule">
             <div class="list-group-item">
-                <span class="badge badge-primary badge-pill">42</span>
-                <h4 class="list-group-item-heading" style="color:blue;">${rule[0]}</h4>
-                <p class="list-group-item-text">${rule[1]}</p>
+                <span class="badge badge-primary badge-pill">${rule[0]}</span>
+                <h4 class="list-group-item-heading" style="color:dimgrey;">${rule[1]}</h4>
+                <p class="list-group-item-text">${rule[2]}</p>
             </div>
         </c:forEach>
     </div>

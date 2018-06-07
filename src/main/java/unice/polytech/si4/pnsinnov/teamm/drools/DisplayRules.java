@@ -11,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Path("displayRules")
 public class DisplayRules {
@@ -18,18 +20,28 @@ public class DisplayRules {
     public Response getCustomRules(@Context HttpServletRequest request,
                                @Context HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
-        List<String[]> customRules = new ArrayList<>();
+        List<List<String>> customRules = new ArrayList<>();
         Optional<User> user = DataBase.find(Login.retrieverUserIDFromCookie(request));
         if (user.isPresent()){
             List<String> temp = user.get().getRules();
             for (String rule : temp) {
+                List<String> list = new ArrayList<>();
+                Pattern p = Pattern.compile("salience ([0-9]+)");
+                Matcher matcher = p.matcher(rule);
+                if (matcher.find()){
+                    list.add(matcher.group(1));
+                } else {
+                    System.out.println("Regex not found");
+                }
                 rule = rule.replace("\n", " ");
                 rule = rule.replace("when", ": when");
                 rule = rule.replace("$file:FileInfo(", "");
                 rule = rule.replace(")", "");
                 rule = rule.replace("$file.moveFile(", "file moves to ");
                 rule = rule.replace("; end", "");
-                customRules.add(rule.split(":"));
+                rule = rule.replace("salience "+list.get(0), "");
+                list.addAll(Arrays.asList(rule.split(":")));
+                customRules.add(list);
             }
         }
         map.put("customRules", customRules);
