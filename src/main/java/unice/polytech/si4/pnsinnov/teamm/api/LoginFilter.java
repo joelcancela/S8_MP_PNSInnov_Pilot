@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.drive.GDriveOAuth;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
@@ -34,13 +35,19 @@ public class LoginFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext)
 	{
-		Object loggedAttribute = webRequest.getSession().getAttribute("user.logged");
+		HttpSession session = webRequest.getSession();
+		Object loggedAttribute = session.getAttribute("user.logged");
+		String loggedName = (loggedAttribute == null) ? "" : loggedAttribute.toString();
 		logger.log(Level.INFO, "REQUEST INTERCEPTED : " + requestContext.toString());
 		logger.log(Level.INFO, "FROM : " + resinfo.getResourceClass());
-		logger.log(Level.INFO, "Session : " + (webRequest.getSession() == null));
+		logger.log(Level.INFO, "Session : " + (session == null));
 		logger.log(Level.INFO, "Connected : " + loggedAttribute == null);
-		logger.log(Level.INFO, "Redirecting to 403 : " + (webRequest.getSession() == null || ((loggedAttribute == null) && (resinfo.getResourceClass() != Login.class && resinfo.getResourceClass() != GDriveOAuth.class))));
-		if (webRequest.getSession() == null|| ((loggedAttribute == null) && (resinfo.getResourceClass() != Login.class && resinfo.getResourceClass() != GDriveOAuth.class))) {
+		logger.log(Level.INFO, "logged attribute : " + loggedName);
+		logger.log(Level.INFO, "Found : " + (Login.getDriveSessions(loggedName) == null));
+		boolean notInLoginPage = (resinfo.getResourceClass() != Login.class && resinfo.getResourceClass() != GDriveOAuth.class);
+		boolean userNotExist = Login.getDriveSessions(loggedName) == null;
+		logger.log(Level.INFO, "Redirecting to 403 : " + (session == null || ((loggedAttribute == null) && notInLoginPage) || (userNotExist && notInLoginPage)));
+		if (session == null || ((loggedAttribute == null) && notInLoginPage) || (session == null || ((loggedAttribute == null) && notInLoginPage) || (userNotExist && notInLoginPage))) {
 			requestContext.abortWith(ACCESS_FORBIDDEN);
 		}
 	}
