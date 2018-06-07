@@ -45,6 +45,7 @@ public class FindFolders {
     void createFoldersList(List <String> folderNames, List <File> allFiles) {
         for (File file : allFiles) {
             if(file.getMimeType().equals("application/vnd.google-apps.folder")
+                    && !file.getTrashed()
                     && !file.getName().equals("_NoRuleApplied")
                     && !file.getName().equals("_Automatic")){
                 folderNames.add(file.getName());
