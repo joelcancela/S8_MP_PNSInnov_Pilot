@@ -23,7 +23,8 @@ public class Logout {
     @GET
     public void logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
         HttpSession httpsession = request.getSession();
-        httpsession.setAttribute("user.logged", null);
+        //httpsession.setAttribute("user.logged", null);
+        httpsession.removeAttribute("user.logged");
         try {
             response.sendRedirect("/PrivateMemo");
         } catch (IOException e) {
