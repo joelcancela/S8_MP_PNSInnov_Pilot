@@ -16,7 +16,8 @@ public class Serializer {
 
     public static void serializeToJson(User user, File file) throws UnableToRetrieveUserFileException {
         try {
-            if ((file.getParentFile().exists() || file.getParentFile().mkdirs()) && file.createNewFile()) {
+            if ((file.getParentFile().exists() || file.getParentFile().mkdirs())) {
+                file.createNewFile();
                 FileWriter fw = new FileWriter(file);
                 new Gson().toJson(user, fw);
                 fw.flush();
