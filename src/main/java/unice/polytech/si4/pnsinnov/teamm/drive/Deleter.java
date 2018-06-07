@@ -27,8 +27,7 @@ public class Deleter {
 	@POST
 	public Response deleteFile(@Context HttpServletRequest request, @Context HttpServletResponse response,
 	                           @FormParam("fileid") String fileid) {
-		HttpSession httpsession = request.getSession();
-		GDriveSession session = Login.retrieveDriveSessionFromCookie(httpsession);
+		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		if (fileid == null) {
 			logger.log(Level.ERROR, "A file id must be provided");
