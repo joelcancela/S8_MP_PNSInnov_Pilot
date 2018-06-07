@@ -80,10 +80,9 @@ public class Login {
 	}
 
 	public static String retrieverUserIDFromCookie(HttpServletRequest request) {
-		Cookie cookies[] = request.getCookies();
-		for (Cookie c : cookies) {
-			logger.log(Level.INFO, "FOUND COOKIE : " + c.getName() + " Valued : " + c.getValue());
-			if (c.getName().equals("userID")) return c.getValue();
+		Object attribute = request.getSession().getAttribute("user.logged");
+		if (attribute != null) {
+			return attribute.toString();
 		}
 		return null;
 	}
