@@ -95,6 +95,13 @@
             </div>
         </div>
 
+        <div class="panel panel-default form-group" id="weight-panel">
+            <div class="input-group">
+                <span class="input-group-addon">Weight of the rule :</span>
+                <input type="number" step="1" value="0" class="form-control" name="weight" id="weight" autocomplete="off" aria-describedby="basic-addon3">
+            </div>
+        </div>
+
         <input type="submit" class="btn" onclick="createRuleSuccessfully()">
     </form>
 
