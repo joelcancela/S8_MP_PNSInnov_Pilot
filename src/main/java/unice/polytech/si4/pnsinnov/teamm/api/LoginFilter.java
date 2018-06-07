@@ -34,12 +34,13 @@ public class LoginFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext)
 	{
+		Object loggedAttribute = webRequest.getSession().getAttribute("user.logged");
 		logger.log(Level.INFO, "REQUEST INTERCEPTED : " + requestContext.toString());
 		logger.log(Level.INFO, "FROM : " + resinfo.getResourceClass());
-		logger.log(Level.INFO, "Session : " + webRequest.getSession().getId());
-		logger.log(Level.INFO, "Connected : " + webRequest.getSession().getAttribute("user.logged"));
-
-		if (webRequest.getSession().getAttribute("user.logged") == null && (resinfo.getResourceClass() != Login.class && resinfo.getResourceClass() != GDriveOAuth.class)) {
+		logger.log(Level.INFO, "Session : " + (webRequest.getSession() == null));
+		logger.log(Level.INFO, "Connected : " + loggedAttribute == null);
+		logger.log(Level.INFO, "Redirecting to 403 : " + (webRequest.getSession() == null || ((loggedAttribute == null) && (resinfo.getResourceClass() != Login.class && resinfo.getResourceClass() != GDriveOAuth.class))));
+		if (webRequest.getSession() == null|| ((loggedAttribute == null) && (resinfo.getResourceClass() != Login.class && resinfo.getResourceClass() != GDriveOAuth.class))) {
 			requestContext.abortWith(ACCESS_FORBIDDEN);
 		}
 	}
