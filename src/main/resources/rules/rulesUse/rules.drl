@@ -1,4 +1,4 @@
-package rules;
+package rules.rulesUse;
 import unice.polytech.si4.pnsinnov.teamm.drools.FileInfo
 
 rule "mimeTypeFile" salience 3
@@ -20,4 +20,12 @@ when
     $file:FileInfo()
 then
     $file.moveFile("_NoRuleApplied");
+end
+
+
+rule "regex-LOOOL"
+when
+    $file:FileInfo(nameFile contains "LOOOL")
+then
+    $file.moveFile("GSpreadsheet");
 end
