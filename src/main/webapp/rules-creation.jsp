@@ -9,8 +9,11 @@
 
 <jsp:include page="navbar.jsp"/>
 
-<div class="alert alert-success" id="successCreateRule" hidden>
+<div class="alert alert-success" id="successCreateRule" role="alert" hidden>
     <strong>Success !</strong> Your rule has been successfully created.
+</div>
+<div class="alert alert-danger" id="failCreateRule" role="alert" hidden>
+    <strong>Error !</strong> One or more field are not completed to create the rule.
 </div>
 
 <div class="container">
@@ -44,7 +47,7 @@
             </div>
             <div class="panel-body">
                 <c:forEach items="<%=new FileClassifier().getMimeTypes()%>" var="mimeType">
-                    <div class="radio">
+                    <div class="radio" id="mimeTypes">
                         <label><input type="radio" name="mimeTypeResult" value="${mimeType}">${mimeType}</label>
                     </div>
                 </c:forEach>
@@ -57,7 +60,7 @@
             </div>
             <div class="panel-body">
                 <div class="radio">
-                    <label><input type="radio" name="regexMode" value="startsWith">Starts with</label>
+                    <label><input type="radio" name="regexMode" value="startsWith" checked>Starts with</label>
                 </div>
                 <div class="radio">
                     <label><input type="radio" name="regexMode" value="endsWith">Ends with</label>
@@ -110,12 +113,10 @@
     $(document).ready(function() {
         $("#submitButton").click(function() {
             var $emptyFields = $('#formRuleCreation * :input:visible').filter(function() {
-                console.log("Test");
                 return $.trim(this.value) === "";
             });
 
             if (!$emptyFields.length) {
-                console.log("form has been filled");
                 var $div2 = $("#successCreateRule");
                 if ($div2.is(":visible")) { return; }
                 $div2.show();
@@ -123,9 +124,16 @@
                     $div2.hide();
                 }, 3000);
             } else {
-                console.log("form not completed");
+                var $div3 = $("#failCreateRule");
+                if ($div3.is(":visible")) { return; }
+                $div3.show();
+                setTimeout(function() {
+                    $div3.hide();
+                }, 3000);
             }
         });
+        var label = $("#mimeTypes").children().first();
+        label.children().first().attr('checked', true);
     });
 </script>
 </html>
