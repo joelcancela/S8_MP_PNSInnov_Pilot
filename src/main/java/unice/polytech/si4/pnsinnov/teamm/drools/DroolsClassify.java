@@ -36,7 +36,7 @@ public class DroolsClassify {
 		List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
 		logger.log(Level.DEBUG, "PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors
 				.toList()));
-		new ProxyGoogleDrive().applyRules(files, session);
+		new ProxyGoogleDrive().applyRules(files, session, Login.retrieverUserIDFromCookie(request));
 
 		Map<String, Object> map = new HashMap();
 		try {
