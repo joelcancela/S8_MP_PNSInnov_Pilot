@@ -1,20 +1,13 @@
 package unice.polytech.si4.pnsinnov.teamm.drools;
 
-
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import unice.polytech.si4.pnsinnov.teamm.exceptions.UnableToRetrieveUserFileException;
-import unice.polytech.si4.pnsinnov.teamm.persistence.Serializer;
 import unice.polytech.si4.pnsinnov.teamm.persistence.User;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Rule {
     private String name;
@@ -25,9 +18,10 @@ public class Rule {
 
     /**
      * Creates a rule
-     * @param name rule name
-     * @param toCompare selection criteria
-     * @param destinationFolder folder where the files matching the rule are going to be moved
+     *
+     * @param name               rule name
+     * @param toCompare          selection criteria
+     * @param destinationFolder  folder where the files matching the rule are going to be moved
      * @param conditionParameter type of rule
      */
     public Rule(String name, String toCompare, String destinationFolder, ConditionParameter conditionParameter) {
@@ -79,7 +73,13 @@ public class Rule {
     }
 
     public void addRuleToSystem(String userID, String ruleContent) {
-        List<String> rules = new ArrayList<>();
+        Optional<User> result = DataBase.find(userID);
+        List<String> rules;
+        if (result.isPresent()) {
+            rules = result.get().getRules();
+        } else {
+            rules = new ArrayList<>();
+        }
         rules.add(ruleContent);
         User user = new User.UserBuilder().setUserId(userID).setRules(rules).build();
         DataBase.persist(user);
