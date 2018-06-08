@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>unice.polytech.si4.pnsinnov.teamm</groupId>
-    <artifactId>PrivateMemo</artifactId>
+    <artifactId>Pilot</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>PrivateMemo</name>
+    <name>Pilot</name>
 
     <properties>
         <jetty.http.port>9999</jetty.http.port>
@@ -20,7 +20,7 @@
     </properties>
 
     <build>
-        <finalName>PrivateMemo</finalName>
+        <finalName>Pilot</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

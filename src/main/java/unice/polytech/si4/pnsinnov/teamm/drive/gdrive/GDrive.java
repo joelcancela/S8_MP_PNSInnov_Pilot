@@ -131,7 +131,7 @@ public class GDrive {
 	}
 
 	public Channel subscribeToChanges(GDriveSession session) {//TODO: watch mutliples sessions
-		Channel notifications = watchChange(session.getDrive(), session.userID + "-watches", ConfigurationLoader.getInstance().getHost() + "/PrivateMemo/api/GDriveChanges&userId=" + session.userID);
+		Channel notifications = watchChange(session.getDrive(), session.userID + "-watches", ConfigurationLoader.getInstance().getHost() + "/Pilot/api/GDriveChanges&userId=" + session.userID);
 		logger.log(Level.INFO, "Watching for changes on Google Drive");
 		return notifications;
 	}

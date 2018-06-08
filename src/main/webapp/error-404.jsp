@@ -40,7 +40,7 @@
             <br>
             <div class="col-lg-6 col-lg-offset-3">
                 <div class="btn-group btn-group-justified">
-                    <a href="/PrivateMemo" class="btn btn-info">Return Home</a>
+                    <a href="/Pilot" class="btn btn-info">Return Home</a>
                 </div>
             </div>
         </div>

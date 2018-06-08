@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="f" uri="http://privatememo.bounouas.com/functions" %>
+<%@taglib prefix="f" uri="http://pilot.bounouas.com/functions" %>
 
 <jsp:include page="header.jsp">
     <jsp:param name="title" value="Log in"/>
