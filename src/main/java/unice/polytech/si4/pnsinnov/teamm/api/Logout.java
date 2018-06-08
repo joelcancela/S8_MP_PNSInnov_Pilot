@@ -25,7 +25,7 @@ public class Logout {
         HttpSession httpsession = request.getSession();
         httpsession.removeAttribute("user.logged");
         try {
-            response.sendRedirect("/PrivateMemo");
+            response.sendRedirect("/Pilot");
         } catch (IOException e) {
             try {
                 logger.log(Level.ERROR, "Error while redirecting to home"); //TODO : Handle this case properly

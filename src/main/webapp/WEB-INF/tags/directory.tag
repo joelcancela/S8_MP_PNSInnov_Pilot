@@ -46,9 +46,11 @@
             </c:otherwise>
         </c:choose>
         <c:forEach items="${tree.getFolders()}" var="folder">
+            <c:if test="${folder.file.getTrashed() == 'false'}">
             <li><span class="fa-li"><i class="fas fa-folder-open text-warning"></i></span><ownTags:directory
                     tree="${folder}"/>
             </li>
+            </c:if>
         </c:forEach>
         <c:forEach items="${tree.getFiles()}" var="file">
             <li>

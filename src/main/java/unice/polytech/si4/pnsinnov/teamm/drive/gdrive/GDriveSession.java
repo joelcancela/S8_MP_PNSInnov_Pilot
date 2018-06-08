@@ -31,9 +31,9 @@ public class GDriveSession {
 	Credential credential;
 	String userID;
 	private Drive drive;
-	String redirectURLOAuth = ConfigurationLoader.getInstance().getHost() + "/PrivateMemo/api/GDriveOAuth";
+	String redirectURLOAuth = ConfigurationLoader.getInstance().getHost() + "/Pilot/api/GDriveOAuth";
 	private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-	private final String APPLICATION_NAME = "PrivateMemo";
+	private final String APPLICATION_NAME = "Pilot";
 	public String savedStartPageToken;
 
 	public GDriveSession(String userID, GoogleAuthorizationCodeFlow flow) {
