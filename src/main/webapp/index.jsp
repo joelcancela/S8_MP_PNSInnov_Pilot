@@ -3,7 +3,7 @@
 <%@taglib prefix="f" uri="http://pilot.bounouas.com/functions" %>
 
 <jsp:include page="header.jsp">
-    <jsp:param name="title" value="Private Memo"/>
+    <jsp:param name="title" value="Pilot"/>
 </jsp:include>
 
 <body>
