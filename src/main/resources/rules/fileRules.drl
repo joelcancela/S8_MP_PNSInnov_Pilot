@@ -1,14 +1,14 @@
 package rules;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileInfo
 
-rule "mimeTypeFile" salience 0
+rule "mimeTypeFile" salience -1
 when
     $file:FileInfo(acceptedMimeType)
 then
     $file.moveFile("mimetype");
 end
 
-rule "extensionFile" salience 0
+rule "extensionFile" salience -1
 when
     $file:FileInfo(acceptedExtensions)
 then

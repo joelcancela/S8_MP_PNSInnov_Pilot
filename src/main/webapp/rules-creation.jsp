@@ -1,6 +1,6 @@
 <%@ page import="unice.polytech.si4.pnsinnov.teamm.drive.FileClassifier" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" isErrorPage="true" %>
 
 <jsp:include page="header.jsp">
     <jsp:param name="title" value="Create rule"/>
@@ -15,6 +15,12 @@
 <div class="alert alert-danger" id="failCreateRule" role="alert" hidden>
     <strong>Error !</strong> One or more field are not completed to create the rule.
 </div>
+<c:if test="${it.error != null}">
+    <div class="alert alert-danger" id="salienceException" role="alert">
+        <strong>Error !</strong> ${it.error}
+    </div>
+</c:if>
+
 
 <div class="container">
 
@@ -23,13 +29,15 @@
         <div class="panel panel-default form-group">
             <div class="btn-group btn-group-toggle btn-group-justified" data-toggle="buttons">
                 <label class="btn btn-info active" id="extensionLabel" onclick="displayDiv('extensionLabel')">
-                    <input type="radio" name="options" id="extensionButton" value="extensionButton" autocomplete="off" checked> Extension
+                    <input type="radio" name="options" id="extensionButton" value="extensionButton" autocomplete="off"
+                           checked> Extension
                 </label>
                 <label class="btn btn-info" id="mimeLabel" onclick="displayDiv('mimeLabel')">
                     <input type="radio" name="options" id="mimeButton" value="mimeButton" autocomplete="off"> MIME type
                 </label>
                 <label class="btn btn-info" id="patternLabel" onclick="displayDiv('patternLabel')">
-                    <input type="radio" name="options" id="patternButton" value="patternButton" autocomplete="off"> Pattern
+                    <input type="radio" name="options" id="patternButton" value="patternButton" autocomplete="off">
+                    Pattern
                 </label>
             </div>
         </div>
@@ -37,7 +45,8 @@
         <div class="panel panel-default form-group" id="extension-panel">
             <div class="input-group">
                 <span class="input-group-addon">Extension to filter :</span>
-                <input type="text" class="form-control" name="extension" id="extension" autocomplete="off" aria-describedby="basic-addon3">
+                <input type="text" class="form-control" name="extension" id="extension" autocomplete="off"
+                       aria-describedby="basic-addon3">
             </div>
         </div>
 
@@ -78,11 +87,12 @@
         <div class="panel panel-default form-group" id="directory-panel">
             <div class="input-group">
                 <span class="input-group-addon">Directory path :</span>
-                <input required list="directories" name="destination-dir" id="destination-dir" class="form-control" autocomplete="off" aria-describedby="basic-addon3" />
+                <input required list="directories" name="destination-dir" id="destination-dir" class="form-control"
+                       autocomplete="off" aria-describedby="basic-addon3"/>
                 <datalist id="directories">
                     <c:forEach items="${it.listFolders}" var="folder">
-                        <option value="${folder}">
-                    </c:forEach>
+                    <option value="${folder}">
+                        </c:forEach>
                 </datalist>
             </div>
         </div>
@@ -90,7 +100,8 @@
         <div class="panel panel-default form-group" id="weight-panel">
             <div class="input-group">
                 <span class="input-group-addon">Weight of the rule :</span>
-                <input type="number" step="1" value="0" min="-1000" class="form-control" name="weight" id="weight" autocomplete="off" aria-describedby="basic-addon3">
+                <input type="number" step="1" value="0" min="0" class="form-control" name="weight" id="weight"
+                       autocomplete="off" aria-describedby="basic-addon3">
             </div>
         </div>
 
@@ -109,25 +120,28 @@
 <script src="../js/rules-form.js"></script>
 
 <script>
-
-    $(document).ready(function() {
-        $("#submitButton").click(function() {
-            var $emptyFields = $('#formRuleCreation * :input:visible').filter(function() {
+    $(document).ready(function () {
+        $("#submitButton").click(function () {
+            var $emptyFields = $('#formRuleCreation * :input:visible').filter(function () {
                 return $.trim(this.value) === "";
             });
 
             if (!$emptyFields.length) {
                 var $div2 = $("#successCreateRule");
-                if ($div2.is(":visible")) { return; }
+                if ($div2.is(":visible")) {
+                    return;
+                }
                 $div2.show();
-                setTimeout(function() {
+                setTimeout(function () {
                     $div2.hide();
                 }, 3000);
             } else {
                 var $div3 = $("#failCreateRule");
-                if ($div3.is(":visible")) { return; }
+                if ($div3.is(":visible")) {
+                    return;
+                }
                 $div3.show();
-                setTimeout(function() {
+                setTimeout(function () {
                     $div3.hide();
                 }, 3000);
             }
