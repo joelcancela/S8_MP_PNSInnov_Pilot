@@ -11,21 +11,30 @@
 <jsp:include page="navbar.jsp"/>
 
 <div class="container">
-    <div class="row">
-        <div class="col-sm-4 text-center">
-            <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
-                    class="fab fa-google-drive"></i>
-                Connect to Google Drive</a>
-        </div>
-        <div class="col-sm-4 text-center">
-            <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
-                Connect to Dropbox</a>
-        </div>
-        <div class="col-sm-4 text-center">
-            <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fas fa-cloud"></i>
-                Connect to One Drive</a>
-        </div>
-    </div>
+    <c:choose>
+        <c:when test="${request.getSession().getAttribute(user.logged) != null}">
+            <div class="row">
+                <div class="col-sm-4 text-center">
+                    <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
+                            class="fab fa-google-drive"></i>
+                        Connect to Google Drive</a>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
+                        Connect to Dropbox</a>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fas fa-cloud"></i>
+                        Connect to One Drive</a>
+                </div>
+            </div>
+        </c:when>
+        <c:otherwise>
+                <span>Please subscribe</span>
+        </c:otherwise>
+    </c:choose>
+
+
     <div class="row">
         <div style="margin-top: 30px;" class="panel panel-success">
             <div class="panel-heading">Users available :</div>
