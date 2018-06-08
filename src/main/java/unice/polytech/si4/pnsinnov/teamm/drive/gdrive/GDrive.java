@@ -278,26 +278,31 @@ public class GDrive {
 			}
 		}
 		for (FileRepresentation child : folders) {
-			for (FileRepresentation possibleParent : folders) {
-				if (child.file.getParents().size() > 0 && possibleParent.file.getId().equals(child.file.getParents().get(0))) {
-					try {
-						possibleParent.addFolder(child);
-					} catch (NullFileException e) {
-						logger.log(Level.ERROR, e.getMessage());
+			if (child.file.getTrashed() != null && !child.file.getTrashed()){
+				for (FileRepresentation possibleParent : folders) {
+					if (child.file.getParents().size() > 0
+							&& possibleParent.file.getId().equals(child.file.getParents().get(0))) {
+						try {
+							possibleParent.addFolder(child);
+						} catch (NullFileException e) {
+							logger.log(Level.ERROR, e.getMessage());
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}
 		for (FileRepresentation child : files) {
-			for (FileRepresentation possibleParent : folders) {
-				if (possibleParent.file.getId().equals(child.file.getParents().get(0))) {
-					try {
-						possibleParent.addFile(child);
-					} catch (NullFileException e) {
-						logger.log(Level.ERROR, e.getMessage());
+			if (child.file.getTrashed() != null && !child.file.getTrashed()){
+				for (FileRepresentation possibleParent : folders) {
+					if (possibleParent.file.getId().equals(child.file.getParents().get(0))) {
+						try {
+							possibleParent.addFile(child);
+						} catch (NullFileException e) {
+							logger.log(Level.ERROR, e.getMessage());
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}
