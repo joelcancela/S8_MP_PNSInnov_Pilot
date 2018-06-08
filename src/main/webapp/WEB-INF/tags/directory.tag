@@ -21,12 +21,8 @@
                 <c:out value="${tree}"/></a></span>
         </c:when>
         <c:otherwise>
-            <c:if test="${tree.file.getTrashed() == 'true'}">
-                <s>
-            </c:if>
-            <span><a target="_blank" href="<c:out value="${tree.file.getWebViewLink()}"/>"><c:out value="${tree}"/></a></span>
-            <c:if test="${tree.file.getTrashed() == 'true'}">
-                </s>
+            <c:if test="${tree.file.getTrashed() == 'false'}">
+                <span><a target="_blank" href="<c:out value="${tree.file.getWebViewLink()}"/>"><c:out value="${tree}"/></a></span>
             </c:if>
         </c:otherwise>
     </c:choose>
