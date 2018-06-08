@@ -21,9 +21,6 @@
                 <c:out value="${tree}"/></a></span>
         </c:when>
         <c:otherwise>
-            <c:if test="${tree.file.getTrashed() == 'false'}">
-                <span><a target="_blank" href="<c:out value="${tree.file.getWebViewLink()}"/>"><c:out value="${tree}"/></a></span>
-            </c:if>
         </c:otherwise>
     </c:choose>
     <c:if test="${!tree.getFolders().isEmpty() || !tree.getFiles().isEmpty()}">
@@ -47,18 +44,23 @@
         </c:choose>
         <c:forEach items="${tree.getFolders()}" var="folder">
             <c:if test="${folder.file.getTrashed() == 'false'}">
-            <li><span class="fa-li"><i class="fas fa-folder-open text-warning"></i></span><ownTags:directory
-                    tree="${folder}"/>
-            </li>
+                <li><span class="fa-li"><i class="fas fa-folder-open
+                text-warning"></i></span><a target="_blank" href="<c:out value="${folder.file.getWebViewLink()}"/>">
+                    <c:out
+                            value="${folder}"/></a><ownTags:directory
+                        tree="${folder}"/>
+                </li>
             </c:if>
         </c:forEach>
         <c:forEach items="${tree.getFiles()}" var="file">
-            <li>
+            <ownTags:directory tree="${file}"/>
+            <c:if test="${file.file.getTrashed() == 'false'}">
+                <li>
                 <span class="fa-li">
                     <i class="fas fa-file text-success"></i>
                 </span>
-                <ownTags:directory tree="${file}"/>
-                <c:if test="${file.file.getTrashed() == 'false'}">
+                    <span><a target="_blank" href="<c:out value="${file.file.getWebViewLink()}"/>"><c:out
+                            value="${file}"/></a></span>
                     <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
                         <i class="fas fa-download"></i>
                     </a>
@@ -77,13 +79,13 @@
                             </a>
                         </c:otherwise>
                     </c:choose>
-                </c:if>
-                <a class="file"
-                   onclick="deleteConfirm('<c:out value="${file.file.getId()}"/>','<c:out
-                           value="${file.file.getName()}"/>')"> <i
-                        class="fas fa-times"></i>
-                </a>
-            </li>
+                    <a class="file"
+                       onclick="deleteConfirm('<c:out value="${file.file.getId()}"/>','<c:out
+                               value="${file.file.getName()}"/>')"> <i
+                            class="fas fa-times"></i>
+                    </a>
+                </li>
+            </c:if>
         </c:forEach>
         </ul>
     </c:if>
