@@ -33,7 +33,7 @@ import java.util.Map;
  * @author Joël CANCELA VAZ
  */
 @Path("filedecryption")
-public class FileDecryption {
+public class FileDecryption extends Encryption {
 	private static final Logger logger = LogManager.getLogger(FileDecryption.class);
 	@QueryParam("encryptedFileId")
 	String encryptedFileId;
@@ -59,7 +59,7 @@ public class FileDecryption {
 				java.nio.file.Path destination = Paths.get(currentRelativePath.toAbsolutePath().toString() + "/downloads");
 				File outFile = decryptFile(inputFile, KeyGeneration.getKey(), destination);
 				GDrive.getGDrive().uploadFile(session, false, outFile);
-				map.put("success", "the file " + inputFile.getName() + " has been decrypted and uploaded as : " + inputFile.getName() + "-decrypted");
+				map.put("success", "the file " + inputFile.getName() + " has been decrypted and uploaded as : " + getNewName(inputFile.getPath(), false));
 			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
 				logger.log(Level.ERROR, e.getMessage());
 				map.put("error", "An error occured while decrypting the file " + inputFile.getName());
@@ -86,8 +86,8 @@ public class FileDecryption {
 		byte[] inputBytes = new byte[(int) cryptedFile.length()];
 		inputStream.read(inputBytes);
 		byte[] outputBytes = cipher.doFinal(inputBytes);
-		logger.log(Level.INFO, "OUTPUT FILE : " + destination.toString() + "/" + cryptedFile.getName() + "-decrypted");
-		File outFile = new File(destination.toString() + "/" + cryptedFile.getName() + "-decrypted");
+		logger.log(Level.INFO, "OUTPUT FILE : " + destination.toString() + "/" + getNewName(cryptedFile.getName(), false));
+		File outFile = new File(destination.toString() + "/" + getNewName(cryptedFile.getName(), false));
 		FileOutputStream outputStream = new FileOutputStream(outFile);
 		outputStream.write(outputBytes);
 		inputStream.close();

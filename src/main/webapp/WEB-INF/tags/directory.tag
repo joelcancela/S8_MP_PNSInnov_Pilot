@@ -1,6 +1,9 @@
 <%@ attribute name="tree" required="true" type="unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="ownTags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fnP" uri="http://privatememo.bounouas.com/functions" %>
+<%--<%@ tag import="java.util.regex.Pattern" %>--%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
     function modifyIcon(element) {
@@ -66,7 +69,7 @@
                     </a>
 
                     <c:choose>
-                        <c:when test="${file.file.getName().endsWith(\"-crypted\")}">
+                        <c:when test="${fnP:isFileCrypted(file)}">
                             <a target="_blank" class="file"
                                href="filedecryption?encryptedFileId=<c:out value="${file.file.getId()}"/>">
                                 <i class="fas fa-lock-open"></i>

@@ -15,4 +15,10 @@
         <function-class>unice.polytech.si4.pnsinnov.teamm.api.Login</function-class>
         <function-signature>boolean isAlreadyLoggedIn()</function-signature>
     </function>-->
+
+    <function>
+        <name>isFileCrypted</name>
+        <function-class>unice.polytech.si4.pnsinnov.teamm.tld.TldFunctions</function-class>
+        <function-signature>boolean isFileCrypted(unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation)</function-signature>
+    </function>
 </taglib>
