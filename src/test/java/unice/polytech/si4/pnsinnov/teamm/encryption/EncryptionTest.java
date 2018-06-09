@@ -39,6 +39,9 @@ public class EncryptionTest {
 		fileEncryption = new FileEncryption();
 		fileDecryption = new FileDecryption();
 		classLoader = getClass().getClassLoader();
+		// necessary inits in some cases
+		fileCrypted = new File("");
+		fileUncrypted = new File("");
 	}
 
 	@Test
@@ -63,6 +66,22 @@ public class EncryptionTest {
 		fileCrypted = fileEncryption.encryptFile(fileClear, secretKey);
 		fileUncrypted = fileDecryption.decryptFile(fileCrypted, secretKey, Paths.get(path));
 		assertTrue(FileUtils.contentEquals(fileClear, fileUncrypted));
+	}
+
+	@Test
+	void getNewNameTest(){
+		String filename = "foo.txt";
+		assertEquals("foo-crypted.txt", fileEncryption.getNewName(filename, true));
+		assertEquals("foo-decrypted.txt", fileEncryption.getNewName(filename, false));
+		String filename2 = "foo.bar.txt";
+		assertEquals("foo.bar-crypted.txt", fileEncryption.getNewName(filename2, true));
+		assertEquals("foo.bar-decrypted.txt", fileEncryption.getNewName(filename2, false));
+		String filename3 = ".bar";
+		assertEquals(".bar-crypted", fileEncryption.getNewName(filename3, true));
+		assertEquals(".bar-decrypted", fileEncryption.getNewName(filename3, false));
+		String filename4 = "foo";
+		assertEquals("foo-crypted", fileEncryption.getNewName(filename4, true));
+		assertEquals("foo-decrypted", fileEncryption.getNewName(filename4, false));
 	}
 
 	@AfterAll
