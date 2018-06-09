@@ -2,7 +2,7 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="ownTags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="fnP" uri="http://privatememo.bounouas.com/functions" %>
+<%@ taglib prefix="fnP" uri="http://pilot.bounouas.com/functions" %>
 <%--<%@ tag import="java.util.regex.Pattern" %>--%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
