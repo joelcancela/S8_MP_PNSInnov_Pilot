@@ -34,14 +34,16 @@ public class DisplayRules {
 				} else {
 					System.out.println("Regex not found");
 				}
-				rule = rule.replace("\n", " ");
-				rule = rule.replace("when", ": when");
-				rule = rule.replace("$file:FileInfo(", "");
-				rule = rule.replace(", false)", "");
-				rule = rule.replace("$file.moveFile(", "file moves to ");
-				rule = rule.replace("; end", "");
-				rule = rule.replace("salience " + list.get(0), "");
-				list.addAll(Arrays.asList(rule.split(":")));
+				String newRule = rule.replace("\n", " ");
+				newRule = newRule.replace("when", ": <strong>When</strong>");
+				newRule = newRule.replace("$file:FileInfo(", "");
+				newRule = newRule.replace(", simulation, treeFile", "");
+				newRule = newRule.replace(")", "");
+				newRule = newRule.replace("$file.moveFile(", "the file is moved to ");
+				newRule = newRule.replace("; end", "");
+				newRule = newRule.replace("salience " + list.get(0), "");
+				newRule = newRule.replace("then", "<strong>then</strong>");
+				list.addAll(Arrays.asList(newRule.split(":")));
 				customRules.add(list);
 			}
 		}

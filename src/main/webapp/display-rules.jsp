@@ -23,7 +23,7 @@
                             <a onclick="reloadPage()" href="deleteRule?ruleSalience=${rule[0]}" style="float: right;"><i class="fas fa-times"></i></a>
                             <span class="badge badge-primary badge-pill" style="float: left;">${rule[0]}</span>
                         </p>
-                        <h4 class="list-group-item-heading" style="color:dimgrey;">${rule[1]}</h4>
+                        <h3 class="list-group-item-heading" style="color:dimgrey;">${rule[1]}</h3>
                         <div class="list-group-item-text">${rule[2]}</div>
                     </div>
                 </c:forEach>
