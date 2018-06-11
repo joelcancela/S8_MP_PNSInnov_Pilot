@@ -38,7 +38,7 @@ public class FileClassifierDrive {
 		List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
 		logger.log(Level.DEBUG, "PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors
 				.toList()));
-		new FileClassifierGoogleDrive().applyRules(files, session, Login.retrieverUserIDFromCookie(request));
+		new FileClassifierGoogleDrive().applyRules(files, session, Login.retrieverUserIDFromCookie(request), false);
 
 		Map<String, Object> map = new HashMap();
 		try {

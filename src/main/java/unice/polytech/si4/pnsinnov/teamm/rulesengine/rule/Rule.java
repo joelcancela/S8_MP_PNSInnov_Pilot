@@ -48,7 +48,7 @@ public class Rule {
 				.append("then\n")
 				.append("    $file.moveFile(\"")
 				.append(destinationFolder)
-				.append("\");\n")
+				.append("\", simulation, treeFile);\n")
 				.append("end");
 		return drl.toString();
 	}
@@ -70,7 +70,7 @@ public class Rule {
 				.append("then\n")
 				.append("    $file.moveFile(\"")
 				.append(destinationFolder)
-				.append("\");\n")
+				.append("\", simulation, treeFile);\n")
 				.append("end");
 		return drl.toString();
 	}

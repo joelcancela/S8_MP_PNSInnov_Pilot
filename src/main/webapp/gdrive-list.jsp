@@ -79,7 +79,7 @@
         <c:if test="${it.simulate}">
             <div class="listing panel panel-default" style="display: inline-block;">
                 <h3 style="margin: 1em 0 1em;">Simulation</h3>
-                <ownTags:directory-simulation tree="${it.ownFile}"/>
+                <ownTags:directory-simulation tree="${it.treeSimulation}"/>
             </div>
         </c:if>
     </div>

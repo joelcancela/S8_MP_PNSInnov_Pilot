@@ -1,23 +1,27 @@
 package rules;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileInfo
+import org.kie.api.runtime.KieRuntime
+
+global Boolean simulation;
+global unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation treeFile;
 
 rule "mimeTypeFile" salience -1
 when
     $file:FileInfo(acceptedMimeType)
 then
-    $file.moveFile("mimetype");
+    $file.moveFile("mimetype", simulation, treeFile);
 end
 
 rule "extensionFile" salience -1
 when
     $file:FileInfo(acceptedExtensions)
 then
-    $file.moveFile("extension");
+    $file.moveFile("extension", simulation, treeFile);
 end
 
 rule "default" salience -1001
 when
     $file:FileInfo()
 then
-    $file.moveFile("_NoRuleApplied");
+    $file.moveFile("_NoRuleApplied", simulation, treeFile);
 end

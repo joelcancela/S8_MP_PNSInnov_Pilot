@@ -37,7 +37,7 @@ public class DisplayRules {
 				rule = rule.replace("\n", " ");
 				rule = rule.replace("when", ": when");
 				rule = rule.replace("$file:FileInfo(", "");
-				rule = rule.replace(")", "");
+				rule = rule.replace(", false)", "");
 				rule = rule.replace("$file.moveFile(", "file moves to ");
 				rule = rule.replace("; end", "");
 				rule = rule.replace("salience " + list.get(0), "");
