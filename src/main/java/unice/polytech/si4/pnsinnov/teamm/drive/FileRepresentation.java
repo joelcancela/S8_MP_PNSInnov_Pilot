@@ -53,7 +53,7 @@ public class FileRepresentation implements Serializable {
     public void addChildFolder(String name) {
         File folder = new File();
         folder.setName(name);
-        folder.setId(name);
+        folder.setId(name.replace(" ", ""));
         folder.setMimeType("application/vnd.google-apps.folder");
         this.folders.add(new FileRepresentation(folder));
     }
