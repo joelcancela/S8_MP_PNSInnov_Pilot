@@ -47,12 +47,12 @@
             <c:if test="${folder.file.getTrashed() == 'false'}">
                 <li><span class="fa-li"><i class="fas fa-folder-open
                 text-warning"></i></span><a target="_blank" href="<c:out value="${folder.file.getWebViewLink()}"/>">
-                    <c:out value="${folder}"/></a><ownTags:directory tree="${folder}"/>
+                    <c:out value="${folder}"/></a><ownTags:directory-simulation tree="${folder}"/>
                 </li>
             </c:if>
         </c:forEach>
         <c:forEach items="${tree.getFiles()}" var="file">
-            <ownTags:directory tree="${file}"/>
+            <ownTags:directory-simulation tree="${file}"/>
             <c:if test="${file.file.getTrashed() == 'false'}">
                 <li>
                 <span class="fa-li">
