@@ -31,7 +31,7 @@
         <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal" data-target="#ownModal">
     </form>
     <form action="drools-simulate" method="post" style="margin: 0px;display:inline;">
-        <input type="submit" value="Simulate" class="btn btn-info" data-backdrop="static" data-toggle="modal" data-target="#ownModal">
+        <input type="submit" value="Preview" class="btn btn-info" data-backdrop="static" data-toggle="modal" data-target="#ownModal">
     </form>
 
     <div class="modal fade" id="ownModal" tabindex="-1" role="dialog" aria-labelledby="ownModalLabel">
@@ -73,12 +73,12 @@
 
     <div>
         <div class="listing panel panel-default" style="display: inline-block;">
-            <h3 style="margin: 1em 0 1em;">Files</h3>
+            <h3 style="margin: 1em 0 1em;">My Files</h3>
             <ownTags:directory tree="${it.ownFile}"/>
         </div>
         <c:if test="${it.simulate}">
             <div class="listing panel panel-default" style="display: inline-block;">
-                <h3 style="margin: 1em 0 1em;">Simulation</h3>
+                <h3 style="margin: 1em 0 1em;">Preview</h3>
                 <ownTags:directory-simulation tree="${it.treeSimulation}"/>
             </div>
         </c:if>
