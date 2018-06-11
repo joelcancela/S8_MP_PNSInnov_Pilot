@@ -71,9 +71,16 @@
         </div>
     </div>
 
-
-    <h3 style="margin: 1em 0 1em;">Files</h3>
-    <ownTags:directory tree="${it.ownFile}"/>
+    <div>
+        <div class="listing panel panel-default" style="display: inline-block;">
+            <h3 style="margin: 1em 0 1em;">Files</h3>
+            <ownTags:directory tree="${it.ownFile}"/>
+        </div>
+        <div class="listing panel panel-default" style="display: inline-block;">
+            <h3 style="margin: 1em 0 1em;">Simulation</h3>
+            <ownTags:directory tree="${it.ownFile}"/>
+        </div>
+    </div>
 </div>
 </body>
 <!-- jQuery -->
