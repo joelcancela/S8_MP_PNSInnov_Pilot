@@ -36,7 +36,7 @@ public class FileClassifierSimulate {
 	private static final Logger logger = LogManager.getLogger(FileClassifierSimulate.class);
 
 	@POST
-	public Response classifyFiles(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+	public Response classifyFilesSimulation(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
@@ -50,6 +50,8 @@ public class FileClassifierSimulate {
 		} catch (IOException e) {
 			logger.log(Level.ERROR, e.getMessage());
 		}
+
+		map.put("simulate", true);
 
 		return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
 	}
