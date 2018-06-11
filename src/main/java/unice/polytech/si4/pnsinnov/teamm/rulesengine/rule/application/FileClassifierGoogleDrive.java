@@ -16,6 +16,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileClassifier;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileInfo;
+import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSet;
@@ -39,10 +40,18 @@ public class FileClassifierGoogleDrive {
     public FileClassifierGoogleDrive() {
     }
 
-    public void applyRules(List<File> files, GDriveSession session, String userID) {
+    public FileRepresentation applyRules(List<File> files, GDriveSession session, String userID, boolean simulation) {
         checkNeededFolders(session);
         List<FileInfo> fileInfos = new ArrayList<>();
         FileClassifier fileClassifier = new FileClassifier();
+        FileRepresentation treeFiles = null;
+        if (simulation){
+            try {
+                treeFiles = GDrive.getGDrive().buildFileTree(session);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         for (File file : files) {
             FileInfo fileInfo = new FileInfo();
@@ -86,6 +95,8 @@ public class FileClassifierGoogleDrive {
             for (FileInfo file : fileInfos) {
                 logger.log(Level.INFO, "### Applying rules on the file " + file.getNameFile() + " ###");
                 KieSession kSession = kbase.newKieSession();
+                kSession.setGlobal("simulation", simulation);
+                kSession.setGlobal("treeFile", treeFiles);
                 kSession.insert(file);
                 kSession.fireAllRules(1);
                 kSession.dispose();
@@ -93,6 +104,7 @@ public class FileClassifierGoogleDrive {
         } catch (IOException e) {
             logger.log(Level.ERROR, e.getMessage());
         }
+        return treeFiles;
     }
 
     private void checkNeededFolders(GDriveSession session) {

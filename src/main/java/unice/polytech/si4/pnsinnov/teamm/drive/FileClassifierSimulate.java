@@ -33,24 +33,26 @@ import java.util.stream.Collectors;
 @Path("drools-simulate")
 public class FileClassifierSimulate {
 
-	private static final Logger logger = LogManager.getLogger(FileClassifierSimulate.class);
+    private static final Logger logger = LogManager.getLogger(FileClassifierSimulate.class);
 
-	@POST
-	public Response classifyFiles(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+    @POST
+    public Response classifyFilesSimulation(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+        GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
-		List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
-		logger.log(Level.DEBUG, "PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors
-				.toList()));
-		// new FileClassifierGoogleDrive().applyRules(files, session, Login.retrieverUserIDFromCookie(request));
+        List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
+        logger.log(Level.DEBUG, "PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors
+                .toList()));
+        FileRepresentation tree = new FileClassifierGoogleDrive().applyRules(files, session, Login.retrieverUserIDFromCookie(request), true);
 
-		Map<String, Object> map = new HashMap();
-		try {
-			map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
-		} catch (IOException e) {
-			logger.log(Level.ERROR, e.getMessage());
-		}
+        Map<String, Object> map = new HashMap<>();
+        try {
+            map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        map.put("treeSimulation", tree);
+        map.put("simulate", true);
 
-		return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
-	}
+        return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
+    }
 }
