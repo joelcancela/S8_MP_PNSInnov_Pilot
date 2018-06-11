@@ -45,6 +45,7 @@ public class DisplayRules {
 				customRules.add(list);
 			}
 		}
+		customRules.sort((o1, o2) -> Integer.parseInt(o2.get(0)) - Integer.parseInt(o1.get(0)));
 		map.put("customRules", customRules);
 		return Response.ok(new Viewable("/display-rules.jsp", map)).build();
 	}
