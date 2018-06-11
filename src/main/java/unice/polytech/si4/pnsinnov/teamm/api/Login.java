@@ -30,6 +30,8 @@ public class Login {
 
 	private static final Logger logger = LogManager.getLogger(Login.class.getName());
 	private static HashMap<String, GDriveSession> driveSessions = new HashMap<>();
+	private static HashMap<String, String> usersPassword = new HashMap<>();
+	private static HashMap<String, String> usersUuid = new HashMap<>();
 
 	@GET
 	public Response authorizeDrive(@Context HttpServletRequest request,
@@ -37,11 +39,10 @@ public class Login {
 	                               @QueryParam("drive") String driveType) {
 		if (driveType.equals("google")) {
 			GDrive gdrive = GDrive.getGDrive();
-			String userid = UUID.randomUUID().toString();
+			HttpSession session = request.getSession();
+			String userid = session.getAttribute("user.logged").toString();
 			GDriveSession gDriveSession = new GDriveSession(userid, gdrive.getFlow());
 			driveSessions.put(userid, gDriveSession);
-			HttpSession session = request.getSession();
-			session.setAttribute("user.logged", userid);
 			return Response.seeOther(gDriveSession.getAuthRequest().toURI()).build();
 		}
 		return Response.status(200).build();
@@ -52,11 +53,11 @@ public class Login {
 	                           @Context HttpServletResponse response,
 	                           @FormParam("username") String username,
 	                           @FormParam("password") String password) {
-		if (Login.getDriveSessions(username) != null) {
+		if (Login.usersPassword.containsKey(username) && Login.usersPassword.get(username).equals(password)) {
 			HttpSession session = request.getSession();
-			session.setAttribute("user.logged", username);
+			session.setAttribute("user.logged", usersUuid.get(username));
 			try {
-				response.sendRedirect("drive-list");
+				response.sendRedirect(request.getContextPath());
 			} catch (IOException e) {
 				try {
 					logger.log(Level.ERROR, "Error while redirecting to drive-list"); //TODO : Handle this case properly
@@ -75,8 +76,25 @@ public class Login {
 		return null;
 	}
 
+	public static boolean registerUser(String username, String password) {
+		if (Login.usersPassword.containsKey(username)) {
+			return false;
+		}
+		Login.usersPassword.put(username, password);
+		String userid = UUID.randomUUID().toString();
+		Login.usersUuid.put(username, userid);
+		return true;
+	}
+
+	public static String getUserID(String username) {
+		if (usersUuid.containsKey(username)) {
+			return usersUuid.get(username);
+		}
+		return null;
+	}
+
 	public static List<String> getAvailableUsers() {
-		return new ArrayList<>(driveSessions.keySet());
+		return new ArrayList<>(usersPassword.keySet());
 	}
 
 	public static String retrieverUserIDFromCookie(HttpServletRequest request) {

@@ -12,13 +12,23 @@
 <div class="container">
 
     <div class="list-group">
-        <c:forEach items="${it.customRules}" var="rule">
-            <div class="list-group-item">
-                <span class="badge badge-primary badge-pill">${rule[0]}</span>
-                <h4 class="list-group-item-heading" style="color:dimgrey;">${rule[1]}</h4>
-                <p class="list-group-item-text">${rule[2]}</p>
-            </div>
-        </c:forEach>
+        <c:choose>
+            <c:when test="${it.customRules.size() == 0}">
+                <div class="alert alert-info" role="alert">No custom rule found.</div>
+            </c:when>
+            <c:otherwise>
+                <c:forEach items="${it.customRules}" var="rule">
+                    <div class="list-group-item">
+                        <p>
+                            <a onclick="reloadPage()" href="deleteRule?ruleSalience=${rule[0]}" style="float: right;"><i class="fas fa-times"></i></a>
+                            <span class="badge badge-primary badge-pill" style="float: left;">${rule[0]}</span>
+                        </p>
+                        <h4 class="list-group-item-heading" style="color:dimgrey;">${rule[1]}</h4>
+                        <div class="list-group-item-text">${rule[2]}</div>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
     </div>
 
 </div>
@@ -31,4 +41,10 @@
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 <script src="../js/rules-form.js"></script>
+
+<script>
+    function reloadPage() {
+        setTimeout(function(){window.location.reload();}, 1500);
+    }
+</script>
 </html>
