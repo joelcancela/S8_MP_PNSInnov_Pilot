@@ -34,7 +34,7 @@ import static unice.polytech.si4.pnsinnov.teamm.encryption.KeyGeneration.CIPHER_
  * @author Joël CANCELA VAZ
  */
 @Path("fileencryption")
-public class FileEncryption {
+public class FileEncryption extends Encryption {
 	private static final Logger logger = LogManager.getLogger(FileEncryption.class);
 
 	@QueryParam("fileid")
@@ -59,7 +59,7 @@ public class FileEncryption {
 
 				GDrive.getGDrive().uploadFile(session, false, outFile);
 
-				map.put("success", "the file " + file.getName() + " has crypted and uploaded as : " + file.getName() + "-crypted");
+				map.put("success", "the file " + file.getName() + " has crypted and uploaded as : " + getNewName(file.getName(), true));
 
 			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
 				logger.log(Level.ERROR, e.getMessage());
@@ -88,7 +88,7 @@ public class FileEncryption {
 
 			byte[] outputBytes = cipher.doFinal(inputBytes);
 
-			outFile = new File(inputFile.getPath() + "-crypted");
+			outFile = new File(getNewName(inputFile.getPath(), true));
 			outputStream = new FileOutputStream(outFile);
 			outputStream.write(outputBytes);
 		}
