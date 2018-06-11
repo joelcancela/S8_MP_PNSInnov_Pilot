@@ -37,7 +37,7 @@
         </div>
     <% } else {%>
         <div class="row">
-            <form method="post" action="api/subscribe" style="border:1px solid #ccc">
+            <form method="post" action="api/subscribe" style="border:1px solid #ccc" class="form-signin">
                 <div class="col-md-2">
                 </div>
                 <div class="col-md-8">
@@ -46,12 +46,12 @@
                     <hr>
 
                     <label class="col-md-3" for="username"><b>Username</b></label>
-                    <input class="col-md-9" type="text" placeholder="Enter Email" name="username" required>
+                    <input class="col-md-9 form-control" type="text" placeholder="Enter Email" name="username" required>
 
                     <label class="col-md-3" for="password"><b>Password</b></label>
-                    <input class="col-md-9" type="password" placeholder="Enter Password" name="password" required>
+                    <input class="col-md-9 form-control" type="password" placeholder="Enter Password" name="password" required>
 
-                    <button class="col-md-12" type="submit" class="signupbtn">Sign Up</button>
+                    <button class="btn btn-lg btn-primary btn-block col-md-12" type="submit" class="signupbtn">Sign Up</button>
 
                 </div>
                 <div class="col-md-2">
