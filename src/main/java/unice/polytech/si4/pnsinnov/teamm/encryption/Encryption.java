@@ -14,22 +14,22 @@ public abstract class Encryption {
      * @return new file name
      */
     protected String getNewName(String fileName, boolean encryption) {
+        String nameToMatch = encryption ? fileName : fileName.replace("-crypted", "");
         Pattern pattern = Pattern.compile("(.*)(\\.[^.]*)$");
-        System.out.println(Pattern.matches(".*-crypted\\..*", "foo-crypted.md"));
-        Matcher matcher = pattern.matcher(fileName);
+        Matcher matcher = pattern.matcher(nameToMatch);
         if (matcher.find()) {
             /* File with extension */
             if (matcher.group(1).equals("")) {
                 /* File being only an extension (e.g. ".bashrc") */
-                return encryption ? matcher.group(2) + "-crypted" : matcher.group(2) + "-decrypted";
+                return encryption ? matcher.group(2) + "-crypted" : matcher.group(2);
             } else {
                 /* "Normal" file (e.g. "file.txt") */
-                String prefix = encryption ? matcher.group(1) + "-crypted" : matcher.group(1) + "-decrypted";
+                String prefix = encryption ? matcher.group(1) + "-crypted" : matcher.group(1);
                 return prefix + matcher.group(2);
             }
         } else {
             /* File without extension (e.g. "file") */
-            return encryption ? fileName + "-crypted" : fileName + "-decrypted";
+            return encryption ? nameToMatch + "-crypted" : nameToMatch;
         }
     }
 

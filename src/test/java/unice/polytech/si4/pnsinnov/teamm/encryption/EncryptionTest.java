@@ -71,17 +71,21 @@ public class EncryptionTest {
 	@Test
 	void getNewNameTest(){
 		String filename = "foo.txt";
+		assertEquals(filename, fileEncryption.getNewName(fileEncryption.getNewName(filename, true), false));
 		assertEquals("foo-crypted.txt", fileEncryption.getNewName(filename, true));
-		assertEquals("foo-decrypted.txt", fileEncryption.getNewName(filename, false));
+//		assertEquals("foo.txt", fileEncryption.getNewName(filename, false));
 		String filename2 = "foo.bar.txt";
+		assertEquals(filename2, fileEncryption.getNewName(fileEncryption.getNewName(filename2, true), false));
 		assertEquals("foo.bar-crypted.txt", fileEncryption.getNewName(filename2, true));
-		assertEquals("foo.bar-decrypted.txt", fileEncryption.getNewName(filename2, false));
+//		assertEquals("foo.bar.txt", fileEncryption.getNewName(filename2, false));
 		String filename3 = ".bar";
+		assertEquals(filename3, fileEncryption.getNewName(fileEncryption.getNewName(filename3, true), false));
 		assertEquals(".bar-crypted", fileEncryption.getNewName(filename3, true));
-		assertEquals(".bar-decrypted", fileEncryption.getNewName(filename3, false));
+//		assertEquals(".bar", fileEncryption.getNewName(filename3, false));
 		String filename4 = "foo";
+		assertEquals(filename4, fileEncryption.getNewName(fileEncryption.getNewName(filename4, true), false));
 		assertEquals("foo-crypted", fileEncryption.getNewName(filename4, true));
-		assertEquals("foo-decrypted", fileEncryption.getNewName(filename4, false));
+//		assertEquals("foo", fileEncryption.getNewName(filename4, false));
 	}
 
 	@AfterAll

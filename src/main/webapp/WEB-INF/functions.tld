@@ -18,7 +18,7 @@
 
     <function>
         <name>isFileCrypted</name>
-        <function-class>unice.polytech.si4.pnsinnov.teamm.tld.TldFunctions</function-class>
+        <function-class>unice.polytech.si4.pnsinnov.teamm.encryption.TldFunctions</function-class>
         <function-signature>boolean isFileCrypted(unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation)</function-signature>
     </function>
 </taglib>
