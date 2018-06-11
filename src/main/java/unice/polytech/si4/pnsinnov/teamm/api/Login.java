@@ -3,10 +3,11 @@ package unice.polytech.si4.pnsinnov.teamm.api;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.drive.dropbox.DropboxDrive;
+import unice.polytech.si4.pnsinnov.teamm.drive.dropbox.DropboxSession;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,10 +15,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
 
 /**
  * Class Login
@@ -30,11 +30,12 @@ public class Login {
 
 	private static final Logger logger = LogManager.getLogger(Login.class.getName());
 	private static HashMap<String, GDriveSession> driveSessions = new HashMap<>();
+	private static HashMap<String, DropboxSession>  dropboxSessions = new HashMap<>();
 
 	@GET
 	public Response authorizeDrive(@Context HttpServletRequest request,
 	                               @Context HttpServletResponse response,
-	                               @QueryParam("drive") String driveType) {
+	                               @QueryParam("drive") String driveType) throws URISyntaxException {
 		if (driveType.equals("google")) {
 			GDrive gdrive = GDrive.getGDrive();
 			String userid = UUID.randomUUID().toString();
@@ -43,6 +44,16 @@ public class Login {
 			HttpSession session = request.getSession();
 			session.setAttribute("user.logged", userid);
 			return Response.seeOther(gDriveSession.getAuthRequest().toURI()).build();
+		} else if (driveType.equals("dropbox")) {
+			DropboxDrive dropboxDrive = DropboxDrive.getDropboxDrive();
+			String userid = UUID.randomUUID().toString();
+			DropboxSession dropboxSession = dropboxDrive.createNewSession(userid);
+			dropboxSessions.put(userid, dropboxSession);
+			HttpSession session = request.getSession();
+			session.setAttribute("user.logged_dropbox", userid);
+			URI uri = new URI(dropboxSession.getAuthURL(request));
+
+			return Response.seeOther(uri).build();
 		}
 		return Response.status(200).build();
 	}
@@ -71,6 +82,13 @@ public class Login {
 	public static GDriveSession getDriveSessions(String userID) {
 		if (driveSessions.containsKey(userID)) {
 			return driveSessions.get(userID);
+		}
+		return null;
+	}
+
+	public static DropboxSession getDropboxSession(String userID) {
+		if (dropboxSessions.containsKey(userID)) {
+			return dropboxSessions.get(userID);
 		}
 		return null;
 	}

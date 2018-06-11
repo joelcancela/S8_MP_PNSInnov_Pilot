@@ -3,6 +3,7 @@ package unice.polytech.si4.pnsinnov.teamm.api;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.drive.dropbox.DropboxOAuth;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveOAuth;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +35,7 @@ public class LoginVerifier implements ContainerRequestFilter {
 	HttpServletRequest webRequest;
 
 	@Override
-	public void filter(ContainerRequestContext requestContext)
-	{
+	public void filter(ContainerRequestContext requestContext) {
 		HttpSession session = webRequest.getSession();
 		Object loggedAttribute = session.getAttribute("user.logged");
 		String loggedName = (loggedAttribute == null) ? "" : loggedAttribute.toString();
@@ -45,7 +45,8 @@ public class LoginVerifier implements ContainerRequestFilter {
 		logger.log(Level.INFO, "Connected : " + loggedAttribute == null);
 		logger.log(Level.INFO, "logged attribute : " + loggedName);
 		logger.log(Level.INFO, "Found : " + (Login.getDriveSessions(loggedName) == null));
-		boolean notInLoginPage = (resinfo.getResourceClass() != Login.class && resinfo.getResourceClass() != GDriveOAuth.class);
+		boolean notInLoginPage = (resinfo.getResourceClass() != Login.class && resinfo.getResourceClass() !=
+				GDriveOAuth.class && resinfo.getResourceClass() != DropboxOAuth.class);
 		boolean userNotExist = Login.getDriveSessions(loggedName) == null;
 		logger.log(Level.INFO, "Redirecting to 403 : " + (session == null || ((loggedAttribute == null) && notInLoginPage) || (userNotExist && notInLoginPage)));
 		if (session == null || ((loggedAttribute == null) && notInLoginPage) || (session == null || ((loggedAttribute == null) && notInLoginPage) || (userNotExist && notInLoginPage))) {

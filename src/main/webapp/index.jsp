@@ -18,7 +18,8 @@
                 Connect to Google Drive</a>
         </div>
         <div class="col-sm-4 text-center">
-            <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
+            <a href="api/login?drive=dropbox" class="btn btn-primary btn-lg active" role="button"><i
+                    class="fab fa-dropbox"></i>
                 Connect to Dropbox</a>
         </div>
         <div class="col-sm-4 text-center">
