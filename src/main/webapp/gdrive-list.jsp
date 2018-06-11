@@ -27,9 +27,11 @@
 </c:if>
 
 <div class="container">
-    <form action="drools" method="post" style="margin: 0px;">
-        <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal"
-               data-target="#ownModal">
+    <form action="drools" method="post" style="margin: 0px;display:inline;">
+        <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal" data-target="#ownModal">
+    </form>
+    <form action="drools-simulate" method="post" style="margin: 0px;display:inline;">
+        <input type="submit" value="Simulate" class="btn btn-info" data-backdrop="static" data-toggle="modal" data-target="#ownModal">
     </form>
 
     <div class="modal fade" id="ownModal" tabindex="-1" role="dialog" aria-labelledby="ownModalLabel">
