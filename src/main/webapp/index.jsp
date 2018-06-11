@@ -11,29 +11,54 @@
 <jsp:include page="navbar.jsp"/>
 
 <div class="container">
-    <c:choose>
-        <c:when test="${request.getSession().getAttribute(user.logged) != null}">
-            <div class="row">
-                <div class="col-sm-4 text-center">
-                    <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
-                            class="fab fa-google-drive"></i>
-                        Connect to Google Drive</a>
-                </div>
-                <div class="col-sm-4 text-center">
-                    <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
-                        Connect to Dropbox</a>
-                </div>
-                <div class="col-sm-4 text-center">
-                    <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fas fa-cloud"></i>
-                        Connect to One Drive</a>
-                </div>
+    <% if (session.getAttribute("user.logged") != null) { %>
+        <div class="row">
+            <% if (Login.getDriveSessions(session.getAttribute("user.logged").toString()) == null) { %>
+            <div class="col-sm-4 text-center">
+                <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
+                        class="fab fa-google-drive"></i>
+                    Connect to Google Drive</a>
             </div>
-        </c:when>
-        <c:otherwise>
-                <span>Please subscribe</span>
-        </c:otherwise>
-    </c:choose>
+            <% } else { %>
+            <div class="col-sm-4 text-center">
+                <a href="api/drive-list" class="btn btn-success btn-lg active" role="button"><i
+                        class="fab fa-google-drive"></i>
+                    Access to Google Drive</a>
+            </div>
+            <% } %>
+            <div class="col-sm-4 text-center">
+                <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
+                    Connect to Dropbox</a>
+            </div>
+            <div class="col-sm-4 text-center">
+                <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fas fa-cloud"></i>
+                    Connect to One Drive</a>
+            </div>
+        </div>
+    <% } else {%>
+        <div class="row">
+            <form method="post" action="api/subscribe" style="border:1px solid #ccc">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-8">
+                    <h1>Sign Up</h1>
+                    <p>Please fill in this form to create an account.</p>
+                    <hr>
 
+                    <label class="col-md-3" for="username"><b>Username</b></label>
+                    <input class="col-md-9" type="text" placeholder="Enter Email" name="username" required>
+
+                    <label class="col-md-3" for="password"><b>Password</b></label>
+                    <input class="col-md-9" type="password" placeholder="Enter Password" name="password" required>
+
+                    <button class="col-md-12" type="submit" class="signupbtn">Sign Up</button>
+
+                </div>
+                <div class="col-md-2">
+                </div>
+            </form>
+        </div>
+    <% } %>
 
     <div class="row">
         <div style="margin-top: 30px;" class="panel panel-success">
