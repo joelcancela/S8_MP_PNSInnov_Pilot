@@ -18,7 +18,7 @@ import unice.polytech.si4.pnsinnov.teamm.drive.FileInfo;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
-import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GoogleTempFile;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GoogleFileInfo;
 import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSet;
 import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSetSerializer;
 
@@ -42,7 +42,7 @@ public class FileClassifierGoogleDrive {
 
     public FileRepresentation applyRules(List<File> files, GDriveSession session, String userID, boolean simulation) {
         checkNeededFolders(session);
-        List<GoogleTempFile> fileInfos = new ArrayList<>();
+        List<GoogleFileInfo> fileInfos = new ArrayList<>();
         FileClassifier fileClassifier = new FileClassifier();
         FileRepresentation treeFiles = null;
         if (simulation){
@@ -54,7 +54,7 @@ public class FileClassifierGoogleDrive {
         }
 
         for (File file : files) {
-            GoogleTempFile fileInfo = new GoogleTempFile(file.getName().split("\\.")[0]);
+            GoogleFileInfo fileInfo = new GoogleFileInfo(file.getName().split("\\.")[0]);
             fileInfo.setSession(session);
             fileInfo.setExtension(file.getFileExtension());
             fileInfo.setMimeType(file.getMimeType());

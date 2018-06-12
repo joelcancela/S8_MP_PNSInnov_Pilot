@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
+import java.util.Optional;
+
 /**
  * FIXME: FileInfo vs FileRepresentation vs FileClassifier
  */
@@ -17,12 +19,23 @@ public abstract class FileInfo<T> {
     private boolean acceptedMimeType;
     private boolean acceptedExtensions;
     protected GDriveSession session;
+    protected Optional<Boolean> trashed;
+    protected String webViewLink;
 
     public FileInfo(T file) {
+        this();
         this.file = file;
     }
 
     public FileInfo() {
+        this.extension = "";
+        this.mimeType = "";
+        this.name = "";
+        this.id = "";
+        this.webViewLink = "";
+        this.acceptedExtensions = false;
+        this.acceptedMimeType = false;
+        this.trashed = Optional.empty();
     }
 
     public abstract void moveFile(String folderName, boolean simulation, FileRepresentation<T> treeFile);
@@ -85,6 +98,14 @@ public abstract class FileInfo<T> {
 
     public void setAcceptedExtensions(boolean acceptedExtensions) {
         this.acceptedExtensions = acceptedExtensions;
+    }
+
+    public boolean getTrashed() {
+        return trashed.orElse(false);
+    }
+
+    public String getWebViewLink() {
+        return webViewLink;
     }
 }
 

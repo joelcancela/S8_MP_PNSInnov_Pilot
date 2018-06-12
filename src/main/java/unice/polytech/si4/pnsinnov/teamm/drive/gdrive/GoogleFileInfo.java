@@ -12,22 +12,26 @@ import unice.polytech.si4.pnsinnov.teamm.drive.exceptions.NullFileException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
-public class GoogleTempFile extends FileInfo<File> {
+public class GoogleFileInfo extends FileInfo<File> {
 
-    public GoogleTempFile(String filename){
+    public GoogleFileInfo(String filename){
+        super();
         this.setName(filename);
     }
 
-    public GoogleTempFile(File file){
+    public GoogleFileInfo(File file){
         super(file);
         id = file.getId();
         extension = file.getFileExtension();
         mimeType = file.getMimeType();
         name = file.getName();
+        trashed = Optional.ofNullable(file.getTrashed());
+        webViewLink = file.getWebViewLink();
     }
 
-    private static final Logger logger = LogManager.getLogger(GoogleTempFile.class);
+    private static final Logger logger = LogManager.getLogger(GoogleFileInfo.class);
 
     @Override
     public void moveFile(String folderName, boolean simulation, FileRepresentation<File> treeFile) {
@@ -74,7 +78,7 @@ public class GoogleTempFile extends FileInfo<File> {
             fileMetaData.setMimeType("application/vnd.google-apps.folder");
             if (simulation) {
                 try {
-                    treeFile.addChildFolder(new GoogleTempFile(folderName));
+                    treeFile.addChildFolder(new GoogleFileInfo(folderName));
                     logger.log(Level.INFO, "Simulation : Folder " + folderName + " created");
                 } catch (NullFileException e) {
                     e.printStackTrace();

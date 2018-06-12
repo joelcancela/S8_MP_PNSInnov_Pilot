@@ -30,7 +30,7 @@
         <c:choose>
             <c:when test="${!tree.getFile().getName().equals(\"Drive Root\")}">
                 <c:choose>
-                    <c:when test="${tree.file.getFile().getTrashed() == 'true'}">
+                    <c:when test="${tree.file.getTrashed() == 'true'}">
                         <ul class="fa-ul collapse" id="${tree.file.getId()}">
                     </c:when>
                     <c:otherwise>
@@ -46,9 +46,9 @@
             </c:otherwise>
         </c:choose>
         <c:forEach items="${tree.getFolders()}" var="folder">
-            <c:if test="${folder.file.getFile().getTrashed() == 'false'}">
+            <c:if test="${folder.file.getTrashed() == 'false'}">
                 <li><span class="fa-li"><i class="fas fa-folder-open
-                text-warning"></i></span><a target="_blank" href="<c:out value="${folder.file.getFile().getWebViewLink()}"/>">
+                text-warning"></i></span><a target="_blank" href="<c:out value="${folder.file.getWebViewLink()}"/>">
                     <c:out
                             value="${folder}"/></a><ownTags:directory
                         tree="${folder}"/>
@@ -57,12 +57,12 @@
         </c:forEach>
         <c:forEach items="${tree.getFiles()}" var="file">
             <ownTags:directory tree="${file}"/>
-            <c:if test="${file.file.getFile().getTrashed() == 'false'}">
+            <c:if test="${file.file.getTrashed() == 'false'}">
                 <li>
                 <span class="fa-li">
                     <i class="fas fa-file text-success"></i>
                 </span>
-                    <span><a target="_blank" href="<c:out value="${file.file.getFile().getWebViewLink()}"/>"><c:out
+                    <span><a target="_blank" href="<c:out value="${file.file.getWebViewLink()}"/>"><c:out
                             value="${file}"/></a></span>
                     <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
                         <i class="fas fa-download"></i>

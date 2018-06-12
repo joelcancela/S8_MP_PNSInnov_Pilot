@@ -4,7 +4,7 @@ import com.google.api.services.drive.model.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
-import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GoogleTempFile;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GoogleFileInfo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +15,7 @@ public class FileRepresentationTest {
     @BeforeEach
     public void setUp() throws Exception {
         File file = new File();
-        ownFile = new FileRepresentation <>(new GoogleTempFile(file));
+        ownFile = new FileRepresentation <>(new GoogleFileInfo(file));
     }
 
     @Test
@@ -26,7 +26,7 @@ public class FileRepresentationTest {
 
     @Test
     public void addFolderTest() throws Exception {
-        FileRepresentation<File> folder = new FileRepresentation<>(new GoogleTempFile(new File()));
+        FileRepresentation<File> folder = new FileRepresentation<>(new GoogleFileInfo(new File()));
         ownFile.addFolder(folder);
         assertEquals(1, ownFile.getFolders().size());
         assertTrue(ownFile.getFolders().contains(folder));
@@ -34,7 +34,7 @@ public class FileRepresentationTest {
 
     @Test
     public void addTrashedFolderTest() throws Exception {
-        FileRepresentation<File> trashedFolder = new FileRepresentation<>(new GoogleTempFile(new File().setTrashed(true)));
+        FileRepresentation<File> trashedFolder = new FileRepresentation<>(new GoogleFileInfo(new File().setTrashed(true)));
         ownFile.addFolder(trashedFolder);
         assertEquals(1, ownFile.getFolders().size());
         assertTrue(ownFile.getFolders().contains(trashedFolder));
@@ -42,7 +42,7 @@ public class FileRepresentationTest {
 
     @Test
     public void addAlreadyExistingFolderTest() throws Exception {
-        FileRepresentation<File> folder = new FileRepresentation<>(new GoogleTempFile(new File()));
+        FileRepresentation<File> folder = new FileRepresentation<>(new GoogleFileInfo(new File()));
         ownFile.addFolder(folder);
         assertEquals(1, ownFile.getFolders().size());
         assertTrue(ownFile.getFolders().contains(folder));
@@ -52,13 +52,13 @@ public class FileRepresentationTest {
 
     @Test
     public void metaFolderTest() throws Exception {
-        FileRepresentation<File> folder = new FileRepresentation<>(new GoogleTempFile(new File()));
+        FileRepresentation<File> folder = new FileRepresentation<>(new GoogleFileInfo(new File()));
         folder.addFolder(folder);
         assertEquals(1, folder.getFolders().size());
     }
     @Test
     public void addFileTest() throws Exception {
-        FileRepresentation<File> file = new FileRepresentation<>(new GoogleTempFile(new File()));
+        FileRepresentation<File> file = new FileRepresentation<>(new GoogleFileInfo(new File()));
         ownFile.addFile(file);
         assertEquals(1, ownFile.getFiles().size());
         assertTrue(ownFile.getFiles().contains(file));
@@ -66,7 +66,7 @@ public class FileRepresentationTest {
 
     @Test
     public void addTrashedFileTest() throws Exception {
-        FileRepresentation<File> trashedFile = new FileRepresentation<>(new GoogleTempFile(new File().setTrashed(true)));
+        FileRepresentation<File> trashedFile = new FileRepresentation<>(new GoogleFileInfo(new File().setTrashed(true)));
         ownFile.addFile(trashedFile);
         assertEquals(1, ownFile.getFiles().size());
         assertTrue(ownFile.getFiles().contains(trashedFile));
@@ -74,7 +74,7 @@ public class FileRepresentationTest {
 
     @Test
     public void addAlreadyExistingFileTest() throws Exception {
-        FileRepresentation<File> file = new FileRepresentation<>(new GoogleTempFile(new File()));
+        FileRepresentation<File> file = new FileRepresentation<>(new GoogleFileInfo(new File()));
         ownFile.addFile(file);
         assertEquals(1, ownFile.getFiles().size());
         assertTrue(ownFile.getFiles().contains(file));
@@ -84,14 +84,14 @@ public class FileRepresentationTest {
 
     @Test
     public void metaFileTest() throws Exception {
-        FileRepresentation<File> file = new FileRepresentation<>(new GoogleTempFile(new File()));
+        FileRepresentation<File> file = new FileRepresentation<>(new GoogleFileInfo(new File()));
         file.addFile(file);
         assertEquals(1, file.getFiles().size());
     }
 
     @Test
     public void emptyFileName() throws Exception {
-        FileRepresentation<File> file = new FileRepresentation<>(new GoogleTempFile(new File()));
+        FileRepresentation<File> file = new FileRepresentation<>(new GoogleFileInfo(new File()));
         assertEquals("", file.toString());
     }
 

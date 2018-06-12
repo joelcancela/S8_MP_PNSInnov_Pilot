@@ -265,15 +265,15 @@ public class GDrive {
 		List<FileRepresentation<com.google.api.services.drive.model.File>> folders = new ArrayList<>();
 		List<FileRepresentation<com.google.api.services.drive.model.File>> files = new ArrayList<>();
 
-		FileRepresentation<com.google.api.services.drive.model.File> root = new FileRepresentation<>(new GoogleTempFile(rootFile));
+		FileRepresentation<com.google.api.services.drive.model.File> root = new FileRepresentation<>(new GoogleFileInfo(rootFile));
 		folders.add(root);
 		List<com.google.api.services.drive.model.File> filesDrive = getFilesList(session);
 		for (com.google.api.services.drive.model.File file : filesDrive) {
 			if (file.getParents() != null) {
 				if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-					folders.add(new FileRepresentation <>(new GoogleTempFile(file)));
+					folders.add(new FileRepresentation <>(new GoogleFileInfo(file)));
 				} else {
-					files.add(new FileRepresentation <>(new GoogleTempFile(file)));
+					files.add(new FileRepresentation <>(new GoogleFileInfo(file)));
 				}
 			}
 		}
