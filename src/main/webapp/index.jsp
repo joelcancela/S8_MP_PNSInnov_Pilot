@@ -34,9 +34,9 @@
         </div>
         <% } else { %>
         <div class="col-sm-4 text-center">
-            <a href="api/login?drive=dropbox" class="btn btn-primary btn-lg active" role="button"><i
+            <a href="api/drive-list?drive=dropbox" class="btn btn-success btn-lg active" role="button"><i
                     class="fab fa-dropbox"></i>
-                Connect to Dropbox</a>
+                Access to Dropbox</a>
         </div>
         <% } %>
         <div class="col-sm-4 text-center">
