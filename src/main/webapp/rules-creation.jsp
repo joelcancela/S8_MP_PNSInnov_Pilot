@@ -15,11 +15,6 @@
 <div class="alert alert-danger" id="failCreateRule" role="alert" hidden>
     <strong>Error !</strong> One or more field are not completed to create the rule.
 </div>
-<c:if test="${it.error != null}">
-    <div class="alert alert-danger" id="salienceException" role="alert">
-        <strong>Error !</strong> ${it.error}
-    </div>
-</c:if>
 
 
 <div class="container">
@@ -94,14 +89,6 @@
                     <option value="${folder}">
                         </c:forEach>
                 </datalist>
-            </div>
-        </div>
-
-        <div class="panel panel-default form-group" id="weight-panel">
-            <div class="input-group">
-                <span class="input-group-addon">Weight of the rule :</span>
-                <input type="number" step="1" value="0" min="0" class="form-control" name="weight" id="weight"
-                       autocomplete="off" aria-describedby="basic-addon3">
             </div>
         </div>
 
