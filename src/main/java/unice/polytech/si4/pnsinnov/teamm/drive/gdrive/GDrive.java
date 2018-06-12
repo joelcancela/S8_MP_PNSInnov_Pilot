@@ -68,7 +68,7 @@ public class GDrive {
 		dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
 		// load client secrets
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-				new InputStreamReader(GDrive.class.getResourceAsStream("/client_secrets.json")));
+				new InputStreamReader(GDrive.class.getResourceAsStream("/gdrive_secrets.json")));
 		// set up authorization code flow
 		flow = new GoogleAuthorizationCodeFlow.Builder(
 				httpTransport, JSON_FACTORY, clientSecrets,

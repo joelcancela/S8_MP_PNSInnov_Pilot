@@ -47,6 +47,6 @@ public class GDriveOAuth {
 		GDrive.getGDrive().subscribeToChanges(gDriveSession);
 
 		response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-		response.sendRedirect("drive-list");
+		response.sendRedirect("drive-list?drive=gdrive");
 	}
 }
