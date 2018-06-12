@@ -92,7 +92,7 @@
             </div>
         </div>
 
-        <input type="submit" class="btn" id="submitButton">
+        <input type="submit" class="btn btn-success" id="submitButton" value="Create the rule">
     </form>
 
 </div>
