@@ -30,12 +30,10 @@ public class UpdateRuleOrder {
             if (ruleSet.isPresent()) {
                 int i = ruleNames.length;
                 for (String ruleName : ruleNames) {
-                    System.out.println("Name to match : " + ruleName);
                     for (String rule : ruleSet.get().getRules()) {
                         Pattern p = Pattern.compile("\"(.*)\"");
                         Matcher matcher = p.matcher(rule);
                         if (matcher.find()) {
-                            System.out.println("Title found : " + matcher.group(1));
                             if (matcher.group(1).equals(ruleName)) {
                                 newRuleOrder.add(rule.replaceAll("salience ([0-9]+)", "salience " + Integer.toString(i)));
                                 break;
