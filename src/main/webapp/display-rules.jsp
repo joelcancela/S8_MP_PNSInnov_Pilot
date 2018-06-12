@@ -17,22 +17,26 @@
                 <div class="alert alert-info" role="alert">No custom rule found.</div>
             </c:when>
             <c:otherwise>
-
                 <div class="card">
                     <div class="card-body">
                         <h2 class="card-title">Your rules</h2>
                         <h3 class="card-subtitle mb-2 text-muted">Modify the order by drag and drop</h3>
+                        <div>Most important rule</div>
                         <ul id="listRules" class="sortable-list">
                             <c:forEach items="${it.customRules}" var="rule">
-                                <li draggable="true" class="list-group-item">
+                                <li class="list-group-item">
                                     <a onclick="reloadPage()" href="deleteRule?ruleSalience=${rule[0]}"
-                                       style="float: right;"><i class="fas fa-times"></i></a>
-                                    <h3 class="list-group-item-heading ruleName" style="color: #1C94C4;">${rule[1]}</h3>
-                                    <div class="list-group-item-text">${rule[2]}</div>
+                                       style="float: right;" draggable="false"><i class="fas fa-times"></i></a>
+                                    <div class="handle">
+                                        <h3 class="list-group-item-heading ruleName"
+                                            style="color: #1C94C4;">${rule[1]}</h3>
+                                        <div class="list-group-item-text">${rule[2]}</div>
+                                    </div>
                                 </li>
                             </c:forEach>
                         </ul>
-                        <button class="btn btn-info" onclick="updateOrderRules()">Save this order</button>
+                        <div>Least important rule</div>
+                        <button class="btn btn-info pull-right" onclick="updateOrderRules()">Save this order</button>
                     </div>
                 </div>
             </c:otherwise>
@@ -62,14 +66,14 @@
         for (var i = 0; i < ruleNodes.length; i++) {
             names.push(ruleNodes[i].innerText.match(/"(.*?)"/)[1]);
         }
-        var params = {ruleNames : names};
+        var params = {ruleNames: names};
 
         method = "post";
         var form = document.createElement("form");
         form.setAttribute("method", method);
         form.setAttribute("action", "UpdateRuleOrder");
-        for(var key in params) {
-            if(params.hasOwnProperty(key)) {
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
                 var hiddenField = document.createElement("input");
                 hiddenField.setAttribute("type", "hidden");
                 hiddenField.setAttribute("name", key);
@@ -88,7 +92,8 @@
         onDrop: function ($item, container, _super) {
             console.log("Order changed");
             _super($item, container);
-        }
+        },
+        handle: "div.handle"
     });
 </script>
 </html>
