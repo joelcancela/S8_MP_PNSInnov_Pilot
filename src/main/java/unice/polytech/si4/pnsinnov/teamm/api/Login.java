@@ -17,7 +17,10 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Class Login
@@ -30,7 +33,7 @@ public class Login {
 
 	private static final Logger logger = LogManager.getLogger(Login.class.getName());
 	private static HashMap<String, GDriveSession> driveSessions = new HashMap<>();
-	private static HashMap<String, DropboxSession>  dropboxSessions = new HashMap<>();
+	private static HashMap<String, DropboxSession> dropboxSessions = new HashMap<>();
 
 	@GET
 	public Response authorizeDrive(@Context HttpServletRequest request,
@@ -107,9 +110,17 @@ public class Login {
 
 	public static GDriveSession retrieveDriveSessionFromCookie(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		String user = session.getAttribute("user.logged").toString();
+		String user = session.getAttribute("user.logged").toString();//FIXME to change user.logged and dropbox
 		logger.log(Level.INFO, "Retrieve drive session for : ", user);
 		GDriveSession gsession = Login.getDriveSessions(user);
 		return gsession;
+	}
+
+	public static DropboxSession retrieveDropboxSessionFromCookie(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		String user = session.getAttribute("user.logged_dropbox").toString();
+		logger.log(Level.INFO, "Retrive drive session for :" + user);
+		DropboxSession dropboxSession = Login.getDropboxSession(user);
+		return dropboxSession;
 	}
 }

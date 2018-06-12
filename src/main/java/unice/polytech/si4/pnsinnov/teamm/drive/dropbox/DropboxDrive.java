@@ -6,6 +6,7 @@ import com.dropbox.core.DbxWebAuth;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 
 import java.io.File;
 
@@ -56,5 +57,9 @@ public class DropboxDrive {
 		DbxRequestConfig requestConfig = new DbxRequestConfig(userid);//FIXME: to change
 		DbxWebAuth webAuth = new DbxWebAuth(requestConfig, appInfo);
 		return new DropboxSession(requestConfig, webAuth, appInfo, userid);
+	}
+
+	public FileRepresentation buildFileTree(DropboxSession session) {
+		return null; //TODO
 	}
 }

@@ -37,6 +37,6 @@ public class DropboxOAuth {
 		dropboxSession.setCode(code);
 
 		response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-		response.sendRedirect("drive-list");
+		response.sendRedirect("drive-list?drive=dropbox");
 	}
 }
