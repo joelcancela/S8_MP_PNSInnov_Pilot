@@ -7,7 +7,7 @@
 </jsp:include>
 <body>
 
-<jsp:include page="navbar.jsp"/>
+<jsp:include page="navbar-drive.jsp"/>
 
 <div class="alert alert-success" id="successCreateRule" role="alert" hidden>
     <strong>Success !</strong> Your rule has been successfully created.

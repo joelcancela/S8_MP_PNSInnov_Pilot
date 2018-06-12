@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: galih
-  Date: 6/7/18
-  Time: 9:04 AM
+  Date: 6/12/18
+  Time: 6:55 PM
   To change this template use File | Settings | File Templates.
 --%>
 <nav class="navbar navbar-default">
@@ -21,19 +21,24 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                    <% if (session.getAttribute("user.logged") == null) { %>
                 <li>
-                        <a href="${pageContext.request.contextPath}/login.jsp">
-                            <i class="fas fa-sign-in-alt"></i> Log In
-                        </a>
+                    <a href="drive-list"><i class="fas fa-cloud"></i> My Drive</a>
                 </li>
-                    <% } else {%>
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#importModal"><i class="fas fa-upload"></i> Import file</a>
+                </li>
+                <li>
+                    <a href="generateKey"><i class="fas fa-lock"></i> Get encryption key</a>
+                </li>
+                <li>
+                    <a href="ruleCreation"><i class="fas fa-edit"></i> Define rules</a>
+                </li>
+                <li>
+                    <a href="displayRules"><i class="far fa-eye"></i> Display my rules</a>
+                </li>
                 <li>
                     <a href="${pageContext.request.contextPath}/api/logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
                 </li>
-                    <% } %>
-
-
             </ul>
         </div><!-- /.navbar-collapse -->
     </div>
