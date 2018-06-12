@@ -33,8 +33,7 @@ public class CreateRule {
                             @FormParam("regex") String regex,
                             @FormParam("destination-dir") String destinationDir,
                             @FormParam("mimeTypeResult") String mimeTypeResult,
-                            @FormParam("regexMode") String regexMode,
-                            @FormParam("weight") int weight) {
+                            @FormParam("regexMode") String regexMode) {
 
         ConditionParameter conditionParameter = null;
         String toCompare = null;
@@ -77,19 +76,14 @@ public class CreateRule {
                         listSalience.add(Integer.parseInt(matcher.group(1)));
                     }
                 }
-                if (!listSalience.stream().filter(i -> i == weight).collect(Collectors.toList()).isEmpty()) {
-                    Map<String, String> map = new HashMap<>();
-                    map.put("error", "Weight " + weight + " already defined for an existing rule");
-                    return Response.ok(new Viewable("/rules-creation.jsp", map)).build();
-                }
             } else {
                 logger.log(Level.INFO, "Could not find user rules");
             }
             Rule rule = new Rule(createRuleName(options, toCompare), toCompare, destinationDir, conditionParameter);
             if (options.equals("patternButton")) {
-                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionRegexAsDRL(weight));
+                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionRegexAsDRL());
             } else {
-                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionAsDRL(weight));
+                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionAsDRL());
             }
         }
         return null;

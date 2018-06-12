@@ -43,11 +43,11 @@ public class DisplayRules {
 				newRule = newRule.replace("; end", "");
 				newRule = newRule.replace("salience " + list.get(0), "");
 				newRule = newRule.replace("then", "<strong>then</strong>");
+				newRule = newRule.replace("rule", "Rule");
 				list.addAll(Arrays.asList(newRule.split(":")));
 				customRules.add(list);
 			}
 		}
-		customRules.sort((o1, o2) -> Integer.parseInt(o2.get(0)) - Integer.parseInt(o1.get(0)));
 		map.put("customRules", customRules);
 		return Response.ok(new Viewable("/display-rules.jsp", map)).build();
 	}
