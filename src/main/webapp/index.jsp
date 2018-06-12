@@ -12,52 +12,63 @@
 
 <div class="container">
     <% if (session.getAttribute("user.logged") != null) { %>
-        <div class="row">
-            <% if (Login.getDriveSessions(session.getAttribute("user.logged").toString()) == null) { %>
-            <div class="col-sm-4 text-center">
-                <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
-                        class="fab fa-google-drive"></i>
-                    Connect to Google Drive</a>
-            </div>
-            <% } else { %>
-            <div class="col-sm-4 text-center">
-                <a href="api/drive-list" class="btn btn-success btn-lg active" role="button"><i
-                        class="fab fa-google-drive"></i>
-                    Access to Google Drive</a>
-            </div>
-            <% } %>
-            <div class="col-sm-4 text-center">
-                <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fab fa-dropbox"></i>
-                    Connect to Dropbox</a>
-            </div>
-            <div class="col-sm-4 text-center">
-                <a href="" class="btn btn-primary btn-lg active" role="button"><i class="fas fa-cloud"></i>
-                    Connect to One Drive</a>
-            </div>
+    <div class="row">
+        <% if (Login.getDriveSessions(session.getAttribute("user.logged").toString()) == null) { %>
+        <div class="col-sm-4 text-center">
+            <a href="api/login?drive=google" class="btn btn-primary btn-lg active" role="button"><i
+                    class="fab fa-google-drive"></i>
+                Connect to Google Drive</a>
         </div>
+        <% } else { %>
+        <div class="col-sm-4 text-center">
+            <a href="api/drive-list?drive=gdrive" class="btn btn-success btn-lg active" role="button"><i
+                    class="fab fa-google-drive"></i>
+                Access to Google Drive</a>
+        </div>
+        <% } %>
+        <% if (Login.getDropboxSession(session.getAttribute("user.logged").toString()) == null) { %>
+        <div class="col-sm-4 text-center">
+            <a href="api/login?drive=dropbox" class="btn btn-primary btn-lg active" role="button"><i
+                    class="fab fa-dropbox"></i>
+                Connect to Dropbox</a>
+        </div>
+        <% } else { %>
+        <div class="col-sm-4 text-center">
+            <a href="api/drive-list?drive=dropbox" class="btn btn-success btn-lg active" role="button"><i
+                    class="fab fa-dropbox"></i>
+                Access to Dropbox</a>
+        </div>
+        <% } %>
+        <div class="col-sm-4 text-center">
+            <a href="" class="btn btn-primary btn-lg disabled" role="button"><i class="fas fa-cloud"></i>
+                Connect to One Drive (Coming soon)</a>
+        </div>
+    </div>
     <% } else {%>
-        <div class="row">
-            <form method="post" action="api/subscribe" style="border:1px solid #ccc" class="form-signin">
-                <div class="col-md-2">
-                </div>
-                <div class="col-md-8">
-                    <h1>Sign Up</h1>
-                    <p>Please fill in this form to create an account.</p>
-                    <hr>
+    <div class="row">
+        <form method="post" action="api/subscribe" style="border:1px solid #ccc" class="form-signin">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8">
+                <h1>Sign Up</h1>
+                <p>Please fill in this form to create an account.</p>
+                <hr>
 
-                    <label class="col-md-3" for="username"><b>Username</b></label>
-                    <input class="col-md-9 form-control" type="text" placeholder="Enter Email" name="username" required>
+                <label class="col-md-3" for="username"><b>Username</b></label>
+                <input class="col-md-9 form-control" type="text" placeholder="Enter Email" name="username" required>
 
-                    <label class="col-md-3" for="password"><b>Password</b></label>
-                    <input class="col-md-9 form-control" type="password" placeholder="Enter Password" name="password" required>
+                <label class="col-md-3" for="password"><b>Password</b></label>
+                <input class="col-md-9 form-control" type="password" placeholder="Enter Password" name="password"
+                       required>
 
-                    <button class="btn btn-lg btn-primary btn-block col-md-12" type="submit" class="signupbtn">Sign Up</button>
+                <button class="btn btn-lg btn-primary btn-block col-md-12" type="submit" class="signupbtn">Sign Up
+                </button>
 
-                </div>
-                <div class="col-md-2">
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="col-md-2">
+            </div>
+        </form>
+    </div>
     <% } %>
 
     <div class="row">
@@ -68,7 +79,8 @@
                     <%
                         for (String user : Login.getAvailableUsers()) {
                     %>
-                    <li class="list-group-item"><%=user%></li>
+                    <li class="list-group-item"><%=user%>
+                    </li>
                     <%
                         }
                     %>
