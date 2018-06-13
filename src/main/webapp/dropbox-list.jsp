@@ -71,7 +71,7 @@
 
 
     <h3 style="margin: 1em 0 1em;">Files</h3>
-    <ownTags:directory tree="${it.fileRepresentation}"/>
+    <ownTags:directory tree="${it.fileRepresentation}" drive="dropbox"/>
 </div>
 </body>
 <!-- jQuery -->

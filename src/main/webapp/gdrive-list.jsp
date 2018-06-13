@@ -74,12 +74,12 @@
     <div>
         <div class="listing panel panel-default" style="display: inline-block;">
             <h3 style="margin: 1em 0 1em;">My Files</h3>
-            <ownTags:directory tree="${it.ownFile}"/>
+            <ownTags:directory tree="${it.ownFile}" drive="gdrive"/>
         </div>
         <c:if test="${it.simulate}">
             <div class="listing panel panel-default" style="display: inline-block;">
                 <h3 style="margin: 1em 0 1em;">Preview</h3>
-                <ownTags:directory-simulation tree="${it.treeSimulation}"/>
+                <ownTags:directory-simulation tree="${it.treeSimulation}" drive="gdrive"/>
             </div>
         </c:if>
     </div>

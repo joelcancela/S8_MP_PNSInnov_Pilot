@@ -15,9 +15,11 @@ import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 import unice.polytech.si4.pnsinnov.teamm.drive.exceptions.NullFileException;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class DropboxDrive
@@ -62,6 +64,14 @@ public class DropboxDrive {
         return new DropboxSession(requestConfig, webAuth, appInfo, userid);
     }
 
+    public String getFileName(DropboxSession session, String id) throws DbxException {
+        return session.getDropboxClient().files().getMetadata("id:"+id).getName();
+    }
+
+    public InputStream downloadFile(DropboxSession session, String id) throws DbxException {
+        return session.getDropboxClient().files().download("id:" + id).getInputStream();
+    }
+
     public FileRepresentation <Metadata> buildFileTree(DropboxSession session) {
         try {
             DropboxFileInfo rootInfo = new DropboxFileInfo("Drive Root");
@@ -79,10 +89,25 @@ public class DropboxDrive {
         Metadata data = fileData.getFile().getFile();
         String path = data == null ? "" : data.getPathLower();
         if (((DropboxFileInfo) fileData.getFile()).isFolder()) {
-            List <Metadata> entries = session.getDropboxClient().files().listFolder(path).getEntries();
-//        List <Metadata> entriesIncludingTrashed = session.getDropboxClient().files().listFolderBuilder("").withIncludeDeleted(true).start().getEntries();
+            List <Metadata> entries = session.getDropboxClient().files()
+                    .listFolderBuilder(path)
+                    .withIncludeDeleted(false)
+                    .start()
+                    .getEntries();
+            List <Metadata> trashed = session.getDropboxClient()
+                    .files()
+                    .listFolderBuilder(path)
+                    .withIncludeDeleted(true)
+                    .start()
+                    .getEntries()
+                    .stream()
+                    .filter(e -> ! entries.contains(e))
+                    .collect(Collectors.toList());
             for (Metadata entry : entries) {
                 DropboxFileInfo entryInfo = new DropboxFileInfo(entry);
+                if (trashed.contains(entry)) {
+                    entryInfo.setTrashed(true);
+                }
                 FileRepresentation <Metadata> entryR = new FileRepresentation <>(entryInfo);
                 if (entryInfo.isFolder()) {
                     fileData.addFolder(buildTree(session, entryR));

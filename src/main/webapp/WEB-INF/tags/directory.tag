@@ -1,4 +1,5 @@
 <%@ attribute name="tree" required="true" type="unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation" %>
+<%@ attribute name="drive" required="true" type="java.lang.String" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="ownTags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -51,12 +52,12 @@
                 text-warning"></i></span><a target="_blank" href="<c:out value="${folder.file.getWebViewLink()}"/>">
                     <c:out
                             value="${folder}"/></a><ownTags:directory
-                        tree="${folder}"/>
+                        tree="${folder}" drive="${drive}"/>
                 </li>
             </c:if>
         </c:forEach>
         <c:forEach items="${tree.getFiles()}" var="file">
-            <ownTags:directory tree="${file}"/>
+            <ownTags:directory tree="${file}" drive="${drive}"/>
             <c:if test="${file.file.getTrashed() == 'false'}">
                 <li>
                 <span class="fa-li">
@@ -64,7 +65,7 @@
                 </span>
                     <span><a target="_blank" href="<c:out value="${file.file.getWebViewLink()}"/>"><c:out
                             value="${file}"/></a></span>
-                    <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
+                    <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>&drive=${drive}">
                         <i class="fas fa-download"></i>
                     </a>
 

@@ -73,7 +73,7 @@ public abstract class FileInfo<T> {
     }
 
     public void setId(String id) {
-        this.id = id.replace(" ", "").replace(":", "");
+        this.id = id.replace(" ", "").replace("id:", "");
     }
 
     public void setSession(GDriveSession session) {
@@ -102,6 +102,10 @@ public abstract class FileInfo<T> {
 
     public boolean getTrashed() {
         return trashed.orElse(false);
+    }
+
+    public void setTrashed(boolean trashed) {
+        this.trashed = Optional.of(trashed);
     }
 
     public String getWebViewLink() {

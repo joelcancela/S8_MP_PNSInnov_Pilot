@@ -21,6 +21,7 @@ public class DropboxFileInfo extends FileInfo <Metadata> {
     }
 
     public boolean isFolder(){
+        /* The root doesn't seem to be a folder... */
         return name.equals("Drive Root") || file instanceof FolderMetadata;
     }
 
