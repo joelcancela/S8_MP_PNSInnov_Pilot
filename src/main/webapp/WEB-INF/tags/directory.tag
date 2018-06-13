@@ -1,4 +1,5 @@
 <%@ attribute name="tree" required="true" type="unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation" %>
+<%@ attribute name="drive" required="true" type="java.lang.String" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="ownTags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -51,12 +52,12 @@
                 text-warning"></i></span><a target="_blank" href="<c:out value="${folder.file.getWebViewLink()}"/>">
                     <c:out
                             value="${folder}"/></a><ownTags:directory
-                        tree="${folder}"/>
+                        tree="${folder}" drive="${drive}"/>
                 </li>
             </c:if>
         </c:forEach>
         <c:forEach items="${tree.getFiles()}" var="file">
-            <ownTags:directory tree="${file}"/>
+            <ownTags:directory tree="${file}" drive="${drive}"/>
             <c:if test="${file.file.getTrashed() == 'false'}">
                 <li>
                 <span class="fa-li">
@@ -64,27 +65,27 @@
                 </span>
                     <span><a target="_blank" href="<c:out value="${file.file.getWebViewLink()}"/>"><c:out
                             value="${file}"/></a></span>
-                    <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>">
+                    <a target="_blank" class="file" href="downloadDrive?fileid=<c:out value="${file.file.getId()}"/>&drive=${drive}">
                         <i class="fas fa-download"></i>
                     </a>
 
                     <c:choose>
                         <c:when test="${fnP:isFileCrypted(file)}">
                             <a target="_blank" class="file"
-                               href="filedecryption?encryptedFileId=<c:out value="${file.file.getId()}"/>">
+                               href="filedecryption?encryptedFileId=<c:out value="${file.file.getId()}"/>&drive=${drive}">
                                 <i class="fas fa-lock-open"></i>
                             </a>
                         </c:when>
                         <c:otherwise>
                             <a target="_blank" class="file"
-                               href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>">
+                               href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>&drive=${drive}">
                                 <i class="fas fa-lock"></i>
                             </a>
                         </c:otherwise>
                     </c:choose>
                     <a class="file"
                        onclick="deleteConfirm('<c:out value="${file.file.getId()}"/>','<c:out
-                               value="${file.file.getName()}"/>')"> <i
+                               value="${file.file.getName()}"/>', '<c:out value="${drive}"/>')"> <i
                             class="fas fa-times"></i>
                     </a>
                 </li>

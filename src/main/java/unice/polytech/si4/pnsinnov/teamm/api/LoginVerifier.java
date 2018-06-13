@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -43,17 +44,42 @@ public class LoginVerifier implements ContainerRequestFilter {
 		String loggedName = (loggedAttribute == null) ? "" : loggedAttribute.toString();
 		logger.log(Level.INFO, "REQUEST INTERCEPTED : " + requestContext.toString());
 		logger.log(Level.INFO, "FROM : " + resinfo.getResourceClass());
+		logger.log(Level.INFO, "Parameter : " + webRequest.getParameter("drive"));
 		logger.log(Level.INFO, "Session : " + (session == null));
 		logger.log(Level.INFO, "Connected : " + loggedAttribute == null);
 		logger.log(Level.INFO, "logged attribute : " + loggedName);
 		logger.log(Level.INFO, "Found : " + (Login.getDriveSessions(loggedName) == null));
 		List<Class> allowedClass = Arrays.asList(DropboxOAuth.class, GDriveOAuth.class, Login.class, Logout.class,
-				Subscribe.class);
+				Subscribe.class, DriveLister.class);
 		boolean notInLoginPage = allowedClass.stream().allMatch(e -> e != resinfo.getResourceClass());
-		boolean userNotExist = Login.getDriveSessions(loggedName) == null;
+		boolean gdriveConnected = Login.getDriveSessions(loggedName) != null;
+		logger.log(Level.INFO, "Gdrive Connected : " + gdriveConnected);
+		boolean dropboxConnected = Login.getDropboxSession(loggedName) != null;
+		logger.log(Level.INFO, "Dropbox Connected : " + dropboxConnected);
+		boolean userNotExist = (!gdriveConnected && !dropboxConnected);
+
 		logger.log(Level.INFO, "Redirecting to 403 : " + (session == null || ((loggedAttribute == null) && notInLoginPage) || (userNotExist && notInLoginPage)));
 		if (session == null || ((loggedAttribute == null) && notInLoginPage) || (session == null || ((loggedAttribute == null) && notInLoginPage) || (userNotExist && notInLoginPage))) {
 			requestContext.abortWith(ACCESS_FORBIDDEN);
+		}
+
+		// If request on listing with the drive as parameter
+		if (resinfo.getResourceClass() == DriveLister.class && webRequest.getParameter("drive") != null) {
+			logger.log(Level.INFO, "CONNECTION DRIVELISTER CHECKING ");
+			logger.log(Level.INFO, "Parameter : " + webRequest.getParameter("drive"));
+			logger.log(Level.INFO, "Gdrive not Connected : " + !gdriveConnected);
+			logger.log(Level.INFO, "In gdrive : " + (webRequest.getParameter("drive").equals("gdrive")));
+			logger.log(Level.INFO, "Dropbox not Connected : " + !dropboxConnected);
+			logger.log(Level.INFO, "In dropbox : " + (webRequest.getParameter("drive").equals("dropbox")));
+
+			if (webRequest.getParameter("drive").equals("gdrive") && !gdriveConnected) {
+				logger.log(Level.INFO, "CONNECTION DRIVELISTER CHECKING - DRIVE CASE");
+				requestContext.abortWith(ACCESS_FORBIDDEN);
+			}
+			if (webRequest.getParameter("drive").equals("dropbox") && !dropboxConnected) {
+				logger.log(Level.INFO, "CONNECTION DRIVELISTER CHECKING - DRIVE ");
+				requestContext.abortWith(ACCESS_FORBIDDEN);
+			}
 		}
 	}
 }

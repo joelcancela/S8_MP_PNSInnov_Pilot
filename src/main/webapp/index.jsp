@@ -60,8 +60,7 @@
                 <label class="col-md-3" for="password"><b>Password</b></label>
                 <input class="col-md-9 form-control" type="password" placeholder="Enter Password" name="password"
                        required>
-
-                <button class="btn btn-lg btn-primary btn-block col-md-12" type="submit" class="signupbtn">Sign Up
+                <button class="btn btn-lg btn-primary btn-block col-md-12 signupbtn" type="submit">Sign Up
                 </button>
 
             </div>

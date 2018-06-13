@@ -59,7 +59,7 @@ public class Rule {
 				.append(name)
 				.append("\" salience 0\n")
 				.append("when\n")
-				.append("    $file:FileInfo(nameFile ");
+				.append("    $file:FileInfo(name ");
 		if (conditionParameter.equals(ConditionParameter.REGEX_CONTAINS)) {
 			drl.append("contains \"");
 		} else {

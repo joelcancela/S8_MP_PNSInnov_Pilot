@@ -1,4 +1,5 @@
 <%@ attribute name="tree" required="true" type="unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation" %>
+<%@ attribute name="drive" required="true" type="java.lang.String" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="ownTags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -35,11 +36,11 @@
         </c:choose>
         <c:forEach items="${tree.getFolders()}" var="folder">
             <li><span class="fa-li"><i class="fas fa-folder-open
-                text-warning"></i></span><c:out value="${folder}"/><ownTags:directory-simulation tree="${folder}"/>
+                text-warning"></i></span><c:out value="${folder}"/><ownTags:directory-simulation tree="${folder}" drive="${drive}"/>
             </li>
         </c:forEach>
         <c:forEach items="${tree.getFiles()}" var="file">
-            <ownTags:directory-simulation tree="${file}"/>
+            <ownTags:directory-simulation tree="${file}" drive="${drive}"/>
             <li>
                 <span class="fa-li">
                     <i class="fas fa-file text-success"></i>

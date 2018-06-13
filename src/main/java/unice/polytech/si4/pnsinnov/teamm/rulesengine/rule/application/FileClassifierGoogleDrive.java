@@ -1,7 +1,6 @@
 package unice.polytech.si4.pnsinnov.teamm.rulesengine.rule.application;
 
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +18,7 @@ import unice.polytech.si4.pnsinnov.teamm.drive.FileInfo;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GoogleFileInfo;
 import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSet;
 import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSetSerializer;
 
@@ -41,7 +41,7 @@ public class FileClassifierGoogleDrive {
     }
 
     public FileRepresentation applyRules(List<File> files, GDriveSession session, String userID, boolean simulation) {
-        List<FileInfo> fileInfos = new ArrayList<>();
+        List<GoogleFileInfo> fileInfos = new ArrayList<>();
         FileClassifier fileClassifier = new FileClassifier();
         FileRepresentation treeFiles = null;
         if (simulation){
@@ -53,11 +53,10 @@ public class FileClassifierGoogleDrive {
         }
 
         for (File file : files) {
-            FileInfo fileInfo = new FileInfo();
+            GoogleFileInfo fileInfo = new GoogleFileInfo(file.getName().split("\\.")[0]);
             fileInfo.setSession(session);
             fileInfo.setExtension(file.getFileExtension());
             fileInfo.setMimeType(file.getMimeType());
-            fileInfo.setNameFile(file.getName().split("\\.")[0]);
             fileInfo.setAcceptedExtensions(fileClassifier.isAcceptedExtension(file.getFileExtension()));
             logger.log(Level.INFO, file.getName() + " is extensions accepted : " + fileInfo.isAcceptedExtensions());
             fileInfo.setAcceptedMimeType(fileClassifier.isAcceptedMimeType(file.getMimeType()));
@@ -92,7 +91,7 @@ public class FileClassifierGoogleDrive {
             KieBase kbase = kContainer.newKieBase(kbconf);
 
             for (FileInfo file : fileInfos) {
-                logger.log(Level.INFO, "### Applying rules on the file " + file.getNameFile() + " ###");
+                logger.log(Level.INFO, "### Applying rules on the file " + file.getName() + " ###");
                 KieSession kSession = kbase.newKieSession();
                 kSession.setGlobal("simulation", simulation);
                 kSession.setGlobal("treeFile", treeFiles);

@@ -16,6 +16,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            <img class="navbar-left" src="<%=request.getContextPath()%>/img/logo.png" alt="Logo" width="50px" height="50px">
             <a class="navbar-brand" href="/Pilot">Welcome to Pilot !</a>
         </div>
 
