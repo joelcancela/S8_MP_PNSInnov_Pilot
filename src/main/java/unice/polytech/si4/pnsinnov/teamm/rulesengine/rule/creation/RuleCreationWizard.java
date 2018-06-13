@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -27,10 +28,11 @@ public class RuleCreationWizard {
 
 	@GET
 	public Response getFolders(@Context HttpServletRequest request,
-	                           @Context HttpServletResponse response) {
+	                           @Context HttpServletResponse response,
+							   @QueryParam("drive") String driveType) {
 		List<String> folderNames = new ArrayList<>();
 		Map<String, Object> map = new HashMap();
-
+		map.put("drive", driveType);
 		try {
 			GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 			List<File> allFiles = GDrive.getGDrive().getFilesList(session);

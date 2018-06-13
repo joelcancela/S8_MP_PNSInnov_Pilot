@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="drive-list"><i class="fas fa-cloud"></i> My Drive</a>
+                    <a href="drive-list?drive=<%= request.getParameter("drive")%>"><i class="fas fa-cloud"></i> My Drive</a>
                 </li>
                 <li>
                     <a href="#" data-toggle="modal" data-target="#importModal"><i class="fas fa-upload"></i> Import file</a>
@@ -31,10 +31,10 @@
                     <a href="generateKey"><i class="fas fa-lock"></i> Get encryption key</a>
                 </li>
                 <li>
-                    <a href="ruleCreation"><i class="fas fa-edit"></i> Define rules</a>
+                    <a href="ruleCreation?drive=<%= request.getParameter("drive")%>"><i class="fas fa-edit"></i> Define rules</a>
                 </li>
                 <li>
-                    <a href="displayRules"><i class="far fa-eye"></i> Display my rules</a>
+                    <a href="displayRules?drive=<%= request.getParameter("drive")%>"><i class="far fa-eye"></i> Display my rules</a>
                 </li>
                 <li>
                     <a href="${pageContext.request.contextPath}/api/logout"><i class="fas fa-sign-out-alt"></i> Log out</a>

@@ -6,7 +6,9 @@
 </jsp:include>
 <body>
 
-<jsp:include page="navbar-drive.jsp"/>
+<jsp:include page="navbar-drive.jsp">
+    <jsp:param name="drive" value="gdrive"/>
+</jsp:include>
 
 <c:if test="${it.success != null}">
     <div class="alert alert-success">

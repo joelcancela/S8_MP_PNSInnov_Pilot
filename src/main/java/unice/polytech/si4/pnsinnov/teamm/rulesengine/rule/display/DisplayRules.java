@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.*;
@@ -19,8 +20,10 @@ import java.util.regex.Pattern;
 public class DisplayRules {
 	@GET
 	public Response getCustomRules(@Context HttpServletRequest request,
-	                               @Context HttpServletResponse response) {
+                                   @Context HttpServletResponse response,
+                                   @QueryParam("drive") String driveType) {
 		Map<String, Object> map = new HashMap<>();
+		map.put("drive", driveType);
 		List<List<String>> customRules = new ArrayList<>();
 		Optional<RuleSet> ruleSet = RuleSetSerializer.getRuleSetForUser(Login.retrieverUserIDFromCookie(request));
 		if (ruleSet.isPresent()) {
