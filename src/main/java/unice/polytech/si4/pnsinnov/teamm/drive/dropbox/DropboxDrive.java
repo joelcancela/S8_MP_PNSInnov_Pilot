@@ -15,6 +15,8 @@ import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 import unice.polytech.si4.pnsinnov.teamm.drive.exceptions.NullFileException;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -31,20 +33,14 @@ public class DropboxDrive {
     public DropboxDrive() {
 
         try {
-            String secretsPath = getClass().getResource("/dropbox_secrets.json").toString().replace("file:/", "");
-            File dropboxSecret = new File(secretsPath);
-            logger.log(Level.ERROR, secretsPath);
-            logger.log(Level.ERROR, secretsPath);
-            logger.log(Level.ERROR, secretsPath);
-            logger.log(Level.ERROR, secretsPath);
-            logger.log(Level.ERROR, secretsPath);
+            URL secretsPath = getClass().getResource("/dropbox_secrets.json");
+            logger.log(Level.INFO, secretsPath);
+            File dropboxSecret = new File(secretsPath.toURI());
             appInfo = DbxAppInfo.Reader.readFromFile(dropboxSecret);
             logger.log(Level.DEBUG, appInfo.toString());
-        } catch (com.dropbox.core.json.JsonReader.FileLoadException e) {
+        } catch (com.dropbox.core.json.JsonReader.FileLoadException | URISyntaxException e) {
             logger.log(Level.ERROR, e.getMessage());
         }
-        logger.log(Level.DEBUG, appInfo.toString());
-        logger.log(Level.DEBUG, appInfo.toString());
         logger.log(Level.DEBUG, appInfo.toString());
         logger.log(Level.DEBUG, appInfo.getHost());
         logger.log(Level.DEBUG, appInfo.getKey());
