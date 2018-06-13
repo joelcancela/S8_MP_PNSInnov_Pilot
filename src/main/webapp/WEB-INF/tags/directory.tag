@@ -85,7 +85,7 @@
                     </c:choose>
                     <a class="file"
                        onclick="deleteConfirm('<c:out value="${file.file.getId()}"/>','<c:out
-                               value="${file.file.getName()}"/>')"> <i
+                               value="${file.file.getName()}"/>', '<c:out value="${drive}"/>')"> <i
                             class="fas fa-times"></i>
                     </a>
                 </li>
