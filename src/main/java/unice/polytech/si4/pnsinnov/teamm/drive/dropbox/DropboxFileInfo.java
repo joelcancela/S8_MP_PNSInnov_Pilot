@@ -15,12 +15,13 @@ public class DropboxFileInfo extends FileInfo <Metadata> {
 
     public DropboxFileInfo(Metadata file) {
         super(file);
-        id = isFolder() ? ((FolderMetadata) file).getId() : ((FileMetadata) file).getId();
-        name = file.getName();
+        this.setId(isFolder() ? ((FolderMetadata) file).getId() : ((FileMetadata) file).getId());
+        this.setName(file.getName());
+//        webViewLink = isFolder() ? ((FolderMetadata) file).
     }
 
     public boolean isFolder(){
-        return file instanceof FolderMetadata;
+        return name.equals("Drive Root") || file instanceof FolderMetadata;
     }
 
     @Override

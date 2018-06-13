@@ -73,7 +73,7 @@ public abstract class FileInfo<T> {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = id.replace(" ", "").replace(":", "");
     }
 
     public void setSession(GDriveSession session) {
@@ -106,6 +106,10 @@ public abstract class FileInfo<T> {
 
     public String getWebViewLink() {
         return webViewLink;
+    }
+
+    public void setWebViewLink(String webViewLink) {
+        this.webViewLink = webViewLink;
     }
 }
 

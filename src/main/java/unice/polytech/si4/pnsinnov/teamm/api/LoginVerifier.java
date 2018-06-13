@@ -48,7 +48,7 @@ public class LoginVerifier implements ContainerRequestFilter {
 		logger.log(Level.INFO, "logged attribute : " + loggedName);
 		logger.log(Level.INFO, "Found : " + (Login.getDriveSessions(loggedName) == null));
 		List<Class> allowedClass = Arrays.asList(DropboxOAuth.class, GDriveOAuth.class, Login.class, Logout.class,
-				Subscribe.class);
+				Subscribe.class, DriveLister.class);
 		boolean notInLoginPage = allowedClass.stream().allMatch(e -> e != resinfo.getResourceClass());
 		boolean userNotExist = Login.getDriveSessions(loggedName) == null;
 		logger.log(Level.INFO, "Redirecting to 403 : " + (session == null || ((loggedAttribute == null) && notInLoginPage) || (userNotExist && notInLoginPage)));

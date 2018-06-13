@@ -68,28 +68,34 @@ public class DropboxDrive {
 
     public FileRepresentation <Metadata> buildFileTree(DropboxSession session) {
         try {
-            List <Metadata> entries = session.getDropboxClient().files().listFolder("").getEntries();
-            List <Metadata> entriesIncludingTrashed = session.getDropboxClient().files().listFolderBuilder("").withIncludeDeleted(true).start().getEntries();
-//			FileRequest entries2 = session.getDropboxClient().fileRequests().list().getFileRequests().get(0);
-//			FileRequest entries2 = session.getDropboxClient().fileRequests();
             DropboxFileInfo rootInfo = new DropboxFileInfo("Drive Root");
             /* Pas d'ID pour la racine, API de gitan */
             rootInfo.setId("rootId");
             FileRepresentation <Metadata> root = new FileRepresentation <>(rootInfo);
-            for (Metadata entry : entries) {
-//				((FileMetadata) entry)
-                DropboxFileInfo entryInfo = new DropboxFileInfo(entry);
-                FileRepresentation <Metadata> entryR = new FileRepresentation <>(entryInfo);
-                if (entryInfo.isFolder()) {
-                    root.addFolder(entryR);
-                } else {
-                    root.addFile(entryR);
-                }
-            }
-            return root;
+            return buildTree(session, root);
         } catch (DbxException | NullFileException e) {
             logger.log(Level.ERROR, e.getMessage());
             return null; //TODO
         }
     }
+
+    private FileRepresentation <Metadata> buildTree(DropboxSession session, FileRepresentation <Metadata> fileData) throws DbxException, NullFileException {
+        Metadata data = fileData.getFile().getFile();
+        String path = data == null ? "" : data.getPathLower();
+        if (((DropboxFileInfo) fileData.getFile()).isFolder()) {
+            List <Metadata> entries = session.getDropboxClient().files().listFolder(path).getEntries();
+//        List <Metadata> entriesIncludingTrashed = session.getDropboxClient().files().listFolderBuilder("").withIncludeDeleted(true).start().getEntries();
+            for (Metadata entry : entries) {
+                DropboxFileInfo entryInfo = new DropboxFileInfo(entry);
+                FileRepresentation <Metadata> entryR = new FileRepresentation <>(entryInfo);
+                if (entryInfo.isFolder()) {
+                    fileData.addFolder(buildTree(session, entryR));
+                } else {
+                    fileData.addFile(buildTree(session, entryR));
+                }
+            }
+        }
+        return fileData;
+    }
+
 }

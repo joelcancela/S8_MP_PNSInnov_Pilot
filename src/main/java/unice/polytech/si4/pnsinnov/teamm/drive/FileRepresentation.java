@@ -51,7 +51,7 @@ public class FileRepresentation <T> implements Serializable {
 
     public void addChildFolder(FileInfo <T> folder) throws NullFileException {
         folder.setName(folder.getName());
-        folder.setId(folder.getName().replace(" ", ""));
+        folder.setId(folder.getName());
         folder.setMimeType("application/vnd.google-apps.folder");
         addFolder(new FileRepresentation <>(folder));
     }
