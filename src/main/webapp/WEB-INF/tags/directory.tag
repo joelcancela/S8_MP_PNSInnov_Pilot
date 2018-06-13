@@ -72,13 +72,13 @@
                     <c:choose>
                         <c:when test="${fnP:isFileCrypted(file)}">
                             <a target="_blank" class="file"
-                               href="filedecryption?encryptedFileId=<c:out value="${file.file.getId()}"/>">
+                               href="filedecryption?encryptedFileId=<c:out value="${file.file.getId()}"/>&drive=${drive}">
                                 <i class="fas fa-lock-open"></i>
                             </a>
                         </c:when>
                         <c:otherwise>
                             <a target="_blank" class="file"
-                               href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>">
+                               href="fileencryption?fileid=<c:out value="${file.file.getId()}"/>&drive=${drive}">
                                 <i class="fas fa-lock"></i>
                             </a>
                         </c:otherwise>

@@ -53,7 +53,7 @@ public class FileDownloader {
             DropboxSession session = Login.retrieveDropboxSessionFromCookie(request);
             try {
                 filename = DropboxDrive.getDropboxDrive().getFileName(session, fileid);
-                out = DropboxDrive.getDropboxDrive().downloadFile(session, fileid);
+                out = DropboxDrive.getDropboxDrive().downloadFileDirect(session, fileid);
             } catch (DbxException e) {
                 logger.log(Level.ERROR, e.getMessage());
             }

@@ -1,10 +1,13 @@
 package unice.polytech.si4.pnsinnov.teamm.encryption;
 
+import com.dropbox.core.DbxException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.server.mvc.Viewable;
 import unice.polytech.si4.pnsinnov.teamm.api.Login;
+import unice.polytech.si4.pnsinnov.teamm.drive.dropbox.DropboxDrive;
+import unice.polytech.si4.pnsinnov.teamm.drive.dropbox.DropboxSession;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
@@ -35,65 +38,87 @@ import static unice.polytech.si4.pnsinnov.teamm.encryption.KeyGeneration.CIPHER_
  */
 @Path("fileencryption")
 public class FileEncryption extends Encryption {
-	private static final Logger logger = LogManager.getLogger(FileEncryption.class);
+    private static final Logger logger = LogManager.getLogger(FileEncryption.class);
 
-	@QueryParam("fileid")
-	String fileid;
+    @QueryParam("fileid")
+    String fileid;
 
-	@GET
-	public Response retrieveAndCipherFile(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+    @QueryParam("drive")
+    String drive;
 
-		Map<String, Object> map = new HashMap<>();
+    @GET
+    public Response retrieveAndCipherFile(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 
-		if (fileid == null || fileid.isEmpty()) {
-			map.put("error", "A file id must be provided");
-		} else {
-			File file = null;
-			try {
-				String downloadedPath = GDrive.getGDrive().downloadFile(session, fileid, null);
-				//TODO : Currently exportedMime is mocked in method, must be provided by gui
-				logger.log(Level.INFO, "File downloaded to " + downloadedPath);
-				file = new File(downloadedPath);
-				File outFile = encryptFile(file, KeyGeneration.getKey());
+        Map <String, Object> map = new HashMap <>();
 
-				GDrive.getGDrive().uploadFile(session, false, outFile);
+        if (fileid == null || fileid.isEmpty()) {
+            map.put("error", "A file id must be provided");
+        } else {
+            File file = null;
+            if (drive.equals("gdrive")) {
+                GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
+                try {
+                    String downloadedPath = GDrive.getGDrive().downloadFile(session, fileid, null);
+                    //TODO : Currently exportedMime is mocked in method, must be provided by gui
+                    logger.log(Level.INFO, "File downloaded to " + downloadedPath);
+                    file = new File(downloadedPath);
+                    File outFile = encryptFile(file, KeyGeneration.getKey());
 
-				map.put("success", "the file " + file.getName() + " has crypted and uploaded as : " + getNewName(file.getName(), true));
+                    GDrive.getGDrive().uploadFile(session, false, outFile);
 
-			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
-				logger.log(Level.ERROR, e.getMessage());
-				map.put("error", "An error occured while crypting the file " + file.getName());
-			}
-		}
-		try {
-			map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
-		} catch (IOException e) {
-			logger.log(Level.ERROR, e.getMessage());
-		}
-		return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
-	}
+                    map.put("success", "the file " + file.getName() + " has crypted and uploaded as : " + getNewName(file.getName(), true));
+                    map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
+                    logger.log(Level.ERROR, e.getMessage());
+                    map.put("error", "An error occured while crypting the file " + file.getName());
+                }
+                return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
+            } else if (drive.equals("dropbox")) {
+                DropboxSession session = Login.retrieveDropboxSessionFromCookie(request);
+                try {
+                    file = DropboxDrive.getDropboxDrive().downloadFile(session, fileid);
+                    File outFile = encryptFile(file, KeyGeneration.getKey());
+                    //TODO : Currently exportedMime is mocked in method, must be provided by gui
+                    logger.log(Level.INFO, "File downloaded to " + file.getAbsolutePath());
 
-	public File encryptFile(File inputFile, SecretKey key) throws IOException, BadPaddingException,
-			IllegalBlockSizeException,
-			InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
-		Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
-		cipher.init(Cipher.ENCRYPT_MODE, key);
+                    DropboxDrive.getDropboxDrive().uploadFile(session, outFile);
 
-		File outFile;
-		FileOutputStream outputStream;
-		try (FileInputStream inputStream = new FileInputStream(inputFile)) {
-			byte[] inputBytes = new byte[(int) inputFile.length()];
-			inputStream.read(inputBytes);
+                    map.put("success", "the file " + file.getName() + " has crypted and uploaded as : " + getNewName(file.getName(), true));
+                    map.put("fileRepresentation", DropboxDrive.getDropboxDrive().buildFileTree(session));
 
-			byte[] outputBytes = cipher.doFinal(inputBytes);
+                } catch
+                        (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException | DbxException
+                                e) {
+                    logger.log(Level.ERROR, e.getMessage());
+                    map.put("error", "An error occured while crypting the file " + file.getName());
+                }
+                return Response.ok(new Viewable("/dropbox-list.jsp", map)).build();
 
-			outFile = new File(getNewName(inputFile.getPath(), true));
-			outputStream = new FileOutputStream(outFile);
-			outputStream.write(outputBytes);
-		}
-		outputStream.close();
-		return outFile;
-	}
+            }
+        }
+        return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
+    }
+
+    public File encryptFile(File inputFile, SecretKey key) throws IOException, BadPaddingException,
+            IllegalBlockSizeException,
+            InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
+        Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+
+        File outFile;
+        FileOutputStream outputStream;
+        try (FileInputStream inputStream = new FileInputStream(inputFile)) {
+            byte[] inputBytes = new byte[(int) inputFile.length()];
+            inputStream.read(inputBytes);
+
+            byte[] outputBytes = cipher.doFinal(inputBytes);
+
+            outFile = new File(getNewName(inputFile.getPath(), true));
+            outputStream = new FileOutputStream(outFile);
+            outputStream.write(outputBytes);
+        }
+        outputStream.close();
+        return outFile;
+    }
 
 }

@@ -14,8 +14,7 @@ import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 import unice.polytech.si4.pnsinnov.teamm.drive.exceptions.NullFileException;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -65,11 +64,22 @@ public class DropboxDrive {
     }
 
     public String getFileName(DropboxSession session, String id) throws DbxException {
-        return session.getDropboxClient().files().getMetadata("id:"+id).getName();
+        return session.getDropboxClient().files().getMetadata("id:" + id).getName();
     }
 
-    public InputStream downloadFile(DropboxSession session, String id) throws DbxException {
+    public InputStream downloadFileDirect(DropboxSession session, String id) throws DbxException {
         return session.getDropboxClient().files().download("id:" + id).getInputStream();
+    }
+
+    public File downloadFile(DropboxSession session, String id) throws DbxException, IOException {
+        InputStream is = downloadFileDirect(session, id);
+        byte[] buffer = new byte[is.available()];
+        is.read(buffer);
+
+        File targetFile = new File(getFileName(session, id));
+        OutputStream outStream = new FileOutputStream(targetFile);
+        outStream.write(buffer);
+        return targetFile;
     }
 
     public FileRepresentation <Metadata> buildFileTree(DropboxSession session) {
@@ -119,4 +129,7 @@ public class DropboxDrive {
         return fileData;
     }
 
+    public void uploadFile(DropboxSession session, File file) throws DbxException, IOException {
+        session.getDropboxClient().files().upload("/" + file.getName()).uploadAndFinish(new FileInputStream(file));
+    }
 }
