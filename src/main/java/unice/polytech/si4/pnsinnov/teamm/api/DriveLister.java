@@ -1,5 +1,6 @@
 package unice.polytech.si4.pnsinnov.teamm.api;
 
+import com.google.api.services.drive.model.File;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +38,7 @@ public class DriveLister {
 		Map<String, Object> map = new HashMap<>();
 		if (driveType.equals("gdrive")) {
 			GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
-
+			checkNeededFolders(session);
 			try {
 				logger.log(Level.INFO, "session is : " + session);
 				map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
@@ -53,5 +55,31 @@ public class DriveLister {
 		}
 		return Response.status(404).build();
 
+	}
+
+	private void checkNeededFolders(GDriveSession session) {
+		createFolderIfNecessary("_NoRuleApplied", session);
+		createFolderIfNecessary("_Automatic", session);
+
+	}
+
+	private void createFolderIfNecessary(String name, GDriveSession session) {
+		try {
+			List<File> files = session.getDrive().files().list()
+					.setQ("mimeType='application/vnd.google-apps.folder' and trashed=false and name='" + name + "'")
+					.execute().getFiles();
+			if (files.isEmpty()) {
+				File fileMetaData = new File();
+				fileMetaData.setName(name);
+				fileMetaData.setMimeType("application/vnd.google-apps.folder");
+				try {
+					session.getDrive().files().create(fileMetaData).setFields("id").execute();
+				} catch (IOException e) {
+					logger.log(Level.ERROR, e.getMessage());
+				}
+			}
+		} catch (IOException e) {
+			logger.log(Level.ERROR, e.getMessage());
+		}
 	}
 }

@@ -41,7 +41,6 @@ public class FileClassifierGoogleDrive {
     }
 
     public FileRepresentation applyRules(List<File> files, GDriveSession session, String userID, boolean simulation) {
-        checkNeededFolders(session);
         List<FileInfo> fileInfos = new ArrayList<>();
         FileClassifier fileClassifier = new FileClassifier();
         FileRepresentation treeFiles = null;
@@ -105,31 +104,5 @@ public class FileClassifierGoogleDrive {
             logger.log(Level.ERROR, e.getMessage());
         }
         return treeFiles;
-    }
-
-    private void checkNeededFolders(GDriveSession session) {
-        createFolderIfNecessary("_NoRuleApplied", session);
-        createFolderIfNecessary("_Automatic", session);
-
-    }
-
-    private void createFolderIfNecessary(String name, GDriveSession session) {
-        try {
-            List<File> files = session.getDrive().files().list()
-                    .setQ("mimeType='application/vnd.google-apps.folder' and trashed=false and name='" + name + "'")
-                    .execute().getFiles();
-            if (files.isEmpty()) {
-                File fileMetaData = new File();
-                fileMetaData.setName(name);
-                fileMetaData.setMimeType("application/vnd.google-apps.folder");
-                try {
-                    session.getDrive().files().create(fileMetaData).setFields("id").execute();
-                } catch (IOException e) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
-        } catch (IOException e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
     }
 }
