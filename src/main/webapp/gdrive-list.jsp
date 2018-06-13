@@ -22,16 +22,24 @@
 
 <c:if test="${it.key != null}">
     <div class="alert alert-info">
-        <strong>Info !</strong> Your encryption key is : <c:out value="${it.key}"/>
+        <strong>Information </strong> Your encryption key is : <c:out value="${it.key}"/>
+    </div>
+</c:if>
+
+<c:if test="${it.createdFolders != null}">
+    <div class="alert alert-info" id="createFolderInfo">
+        <strong>Information </strong> We created ${it.createdFolders} folder(s) in your Drive
     </div>
 </c:if>
 
 <div class="container">
     <form action="drools" method="post" style="margin: 0px;display:inline;">
-        <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal" data-target="#ownModal">
+        <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal"
+               data-target="#ownModal">
     </form>
     <form action="drools-simulate" method="post" style="margin: 0px;display:inline;">
-        <input type="submit" value="Preview" class="btn btn-info" data-backdrop="static" data-toggle="modal" data-target="#ownModal">
+        <input type="submit" value="Preview" class="btn btn-info" data-backdrop="static" data-toggle="modal"
+               data-target="#ownModal">
     </form>
 
     <div class="modal fade" id="ownModal" tabindex="-1" role="dialog" aria-labelledby="ownModalLabel">
@@ -92,4 +100,12 @@
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 <script src="../js/deleteModal.js"></script>
+<script>
+    $(document).ready(function () {
+        var $div = $("#createFolderInfo");
+        setTimeout(function () {
+            $div.hide();
+        }, 5000);
+    });
+</script>
 </html>

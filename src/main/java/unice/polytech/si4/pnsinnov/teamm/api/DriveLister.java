@@ -18,6 +18,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,10 @@ public class DriveLister {
 		Map<String, Object> map = new HashMap<>();
 		if (driveType.equals("gdrive")) {
 			GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
-			checkNeededFolders(session);
+			List<String> createdFolders = checkNeededFolders(session);
+			if (!createdFolders.isEmpty()){
+				map.put("createdFolders", String.join(" and ", createdFolders));
+			}
 			try {
 				logger.log(Level.INFO, "session is : " + session);
 				map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
@@ -57,13 +61,16 @@ public class DriveLister {
 
 	}
 
-	private void checkNeededFolders(GDriveSession session) {
-		createFolderIfNecessary("_NoRuleApplied", session);
-		createFolderIfNecessary("_Automatic", session);
-
+	private List<String> checkNeededFolders(GDriveSession session) {
+		boolean noRuleAppliedCreated = createFolderIfNecessary("_NoRuleApplied", session);
+		boolean automaticCreated = createFolderIfNecessary("_Automatic", session);
+		List<String> result = new ArrayList<>();
+		if (noRuleAppliedCreated) result.add("_NoRuleApplied");
+		if (automaticCreated) result.add("_Automatic");
+		return result;
 	}
 
-	private void createFolderIfNecessary(String name, GDriveSession session) {
+	private boolean createFolderIfNecessary(String name, GDriveSession session) {
 		try {
 			List<File> files = session.getDrive().files().list()
 					.setQ("mimeType='application/vnd.google-apps.folder' and trashed=false and name='" + name + "'")
@@ -74,12 +81,15 @@ public class DriveLister {
 				fileMetaData.setMimeType("application/vnd.google-apps.folder");
 				try {
 					session.getDrive().files().create(fileMetaData).setFields("id").execute();
+					return true;
 				} catch (IOException e) {
 					logger.log(Level.ERROR, e.getMessage());
 				}
 			}
+			return false;
 		} catch (IOException e) {
 			logger.log(Level.ERROR, e.getMessage());
 		}
+		return false;
 	}
 }
