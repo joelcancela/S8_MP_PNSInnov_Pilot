@@ -1,4 +1,4 @@
-function deleteConfirm(fileid, filename) {
+function deleteConfirm(fileid, filename, drive) {
     var modalID = fileid.replace(/\./g, "").replace(/\s/g, '');
     var dom = "<!-- Modal -->\n" +
         "  <div class=\"modal fade\" id=\"modalDeletion" + modalID + "\" role=\"dialog\">\n" +
@@ -12,7 +12,7 @@ function deleteConfirm(fileid, filename) {
         "        </div>\n" +
         "        <div class=\"modal-body\">\n" +
         "          <p>Are you sure you want to delete the file '<b>" + filename + "</b>' ?</p>\n" +
-        "<button type=\"button\" onclick=\"deleteFilePost('"+fileid+"')\" class=\"btn btn-danger\"" +
+        "<button type=\"button\" onclick=\"deleteFilePost('" + fileid + "','" + drive+ "')\" class=\"btn btn-danger\"" +
         " data-dismiss=\"modal\">Yes," +
         " delete" +
         " the" +
@@ -31,12 +31,13 @@ function deleteConfirm(fileid, filename) {
     $('#modalDeletion'+modalID).modal();
 }
 
-function deleteFilePost(fileid){
+function deleteFilePost(fileid, drive){
     $.ajax({
         type: 'POST',
         url: 'deleteDrive',
         data: {
-            'fileid': fileid
+            'fileid': fileid,
+            'drive': drive
         },
         success: function(msg){
             console.log("File deleted");
