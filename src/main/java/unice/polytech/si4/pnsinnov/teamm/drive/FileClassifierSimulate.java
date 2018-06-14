@@ -67,13 +67,13 @@ public class FileClassifierSimulate {
             try {
                 List<Metadata> files = DropboxDrive.getDropboxDrive().getFilesList(session, "/_Automatic");
                 FileRepresentation tree = new FileClassifierDropBox().applyRules(files, session, Login.retrieverUserIDFromCookie(request), true);
-                map.put("ownFile", DropboxDrive.getDropboxDrive().buildFileTree(session));
+                map.put("fileRepresentation", DropboxDrive.getDropboxDrive().buildFileTree(session));
                 map.put("treeSimulation", tree);
                 map.put("simulate", true);
             } catch (DbxException e) {
                 e.printStackTrace();
             }
-            return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
+            return Response.ok(new Viewable("/dropbox-list.jsp", map)).build();
         }
     }
 }

@@ -17,7 +17,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/Pilot">
-                <img class="navbar-left" src="<%=request.getContextPath()%>/img/logo.png" alt="Logo" width="50px"
+                <img style="margin-top: -1em;" class="navbar-left" src="<%=request.getContextPath()%>/img/logo.png" alt="Logo" width="50px"
                      height="50px">
                 Welcome to Pilot !
             </a>

@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <jsp:include page="header.jsp">
-    <jsp:param name="title" value="Google Drive Files List"/>
+    <jsp:param name="title" value="DropBox Files List"/>
 </jsp:include>
 <body>
 
@@ -84,12 +84,12 @@
     <div>
         <div class="listing panel panel-default" style="display: inline-block;">
             <h3 style="margin: 1em 0 1em;">My Files</h3>
-            <ownTags:directory tree="${it.fileRepresentation}" drive="gdrive"/>
+            <ownTags:directory tree="${it.fileRepresentation}" drive="dropbox"/>
         </div>
         <c:if test="${it.simulate}">
             <div class="listing panel panel-default" style="display: inline-block;">
                 <h3 style="margin: 1em 0 1em;">Preview</h3>
-                <ownTags:directory-simulation tree="${it.treeSimulation}" drive="gdrive"/>
+                <ownTags:directory-simulation tree="${it.treeSimulation}" drive="dropbox"/>
             </div>
         </c:if>
     </div>
