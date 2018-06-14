@@ -82,6 +82,10 @@ public abstract class FileInfo<T> {
         this.gDriveSession = gDriveSession;
     }
 
+    public void setDropboxSession(DropboxSession dropboxSession) {
+        this.dropboxSession = dropboxSession;
+    }
+
     public T getFile() {
         return file;
     }

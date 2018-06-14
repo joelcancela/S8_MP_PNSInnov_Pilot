@@ -44,7 +44,7 @@ public class RuleCreationWizard {
                 createFoldersListGoogle(folderNames, allFiles);
             } else if (driveType.equals("dropbox")) {
                 DropboxSession session = Login.retrieveDropboxSessionFromCookie(request);
-                List <Metadata> allFiles = DropboxDrive.getDropboxDrive().getFilesList(session);
+                List <Metadata> allFiles = DropboxDrive.getDropboxDrive().getFilesList(session, "");
                 createFoldersListDropbox(folderNames, allFiles);
             }
 

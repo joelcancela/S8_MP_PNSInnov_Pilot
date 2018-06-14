@@ -13,6 +13,7 @@ import com.google.api.services.drive.Drive;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.drive.FileInfo;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 import unice.polytech.si4.pnsinnov.teamm.drive.exceptions.NullFileException;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
  *
  * @author Joël CANCELA VAZ
  */
-public class DropboxDrive {
+public class DropboxDrive extends FileInfo<Metadata> {
 
     private static Logger logger = LogManager.getLogger(DropboxDrive.class);
     private DbxAppInfo appInfo = null;
@@ -52,6 +53,11 @@ public class DropboxDrive {
         logger.log(Level.DEBUG, appInfo.getSecret());
         logger.log(Level.DEBUG, appInfo.toString());
         // Run through Dropbox API authorization process
+    }
+
+    @Override
+    public void moveFile(String folderName, boolean simulation, FileRepresentation<Metadata> treeFile) {
+
     }
 
     public static DropboxDrive getDropboxDrive() {
@@ -138,9 +144,9 @@ public class DropboxDrive {
     }
 
 
-    public List<Metadata> getFilesList(DropboxSession session) throws DbxException {
+    public List<Metadata> getFilesList(DropboxSession session, String path) throws DbxException {
         List <Metadata> files = session.getDropboxClient().files()
-                .listFolderBuilder("")
+                .listFolderBuilder(path)
                 .withIncludeDeleted(false)
                 .withRecursive(true)
                 .withIncludeMediaInfo(true)
