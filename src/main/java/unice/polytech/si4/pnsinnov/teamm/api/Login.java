@@ -128,7 +128,7 @@ public class Login {
 	public static GDriveSession retrieveDriveSessionFromCookie(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		String user = session.getAttribute("user.logged").toString();//FIXME to change user.logged and dropbox
-		logger.log(Level.INFO, "Retrieve drive session for : ", user);
+		logger.log(Level.INFO, "Retrieve drive gDriveSession for : ", user);
 		GDriveSession gsession = Login.getDriveSessions(user);
 		return gsession;
 	}
@@ -136,7 +136,7 @@ public class Login {
 	public static DropboxSession retrieveDropboxSessionFromCookie(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		String user = session.getAttribute("user.logged").toString();
-		logger.log(Level.INFO, "Retrive drive session for :" + user);
+		logger.log(Level.INFO, "Retrive drive gDriveSession for :" + user);
 		DropboxSession dropboxSession = Login.getDropboxSession(user);
 		return dropboxSession;
 	}

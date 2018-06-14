@@ -2,6 +2,7 @@ package unice.polytech.si4.pnsinnov.teamm.drive;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import unice.polytech.si4.pnsinnov.teamm.drive.dropbox.DropboxSession;
 import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
 import java.util.Optional;
@@ -18,7 +19,8 @@ public abstract class FileInfo<T> {
     private static final Logger logger = LogManager.getLogger(FileInfo.class);
     private boolean acceptedMimeType;
     private boolean acceptedExtensions;
-    protected GDriveSession session;
+    protected GDriveSession gDriveSession;
+    protected DropboxSession dropboxSession;
     protected Optional<Boolean> trashed;
     protected String webViewLink;
 
@@ -76,8 +78,8 @@ public abstract class FileInfo<T> {
         this.id = id.replace(" ", "").replace("id:", "");
     }
 
-    public void setSession(GDriveSession session) {
-        this.session = session;
+    public void setgDriveSession(GDriveSession gDriveSession) {
+        this.gDriveSession = gDriveSession;
     }
 
     public T getFile() {

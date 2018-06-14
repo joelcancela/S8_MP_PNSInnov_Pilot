@@ -44,7 +44,7 @@ public class DriveLister {
 				map.put("createdFolders", String.join(" and ", createdFolders));
 			}
 			try {
-				logger.log(Level.INFO, "session is : " + session);
+				logger.log(Level.INFO, "gDriveSession is : " + session);
 				map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
 			} catch (IOException e) {
 				logger.log(Level.ERROR, e.getMessage());
@@ -53,7 +53,7 @@ public class DriveLister {
 			return Response.ok(new Viewable("/gdrive-list.jsp", map)).build();
 		} else if (driveType.equals("dropbox")) {
 			DropboxSession session = Login.retrieveDropboxSessionFromCookie(request);
-			logger.log(Level.INFO, "session is : " + session);
+			logger.log(Level.INFO, "gDriveSession is : " + session);
 			map.put("fileRepresentation", DropboxDrive.getDropboxDrive().buildFileTree(session));
 			return Response.ok(new Viewable("/dropbox-list.jsp", map)).build();
 		}

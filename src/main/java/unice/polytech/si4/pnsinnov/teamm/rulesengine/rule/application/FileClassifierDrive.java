@@ -36,11 +36,11 @@ public class FileClassifierDrive {
 		GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 
 		List<File> files = GDrive.getGDrive().getAutomaticFilesList(session);
-		logger.log(Level.DEBUG, "PASSING FILES : " + files.stream().map(file -> file.getName()).collect(Collectors
+		logger.log(Level.DEBUG, "PASSING FILES : " + files.stream().map(File::getName).collect(Collectors
 				.toList()));
 		new FileClassifierGoogleDrive().applyRules(files, session, Login.retrieverUserIDFromCookie(request), false);
 
-		Map<String, Object> map = new HashMap();
+		Map<String, Object> map = new HashMap<>();
 		try {
 			map.put("ownFile", GDrive.getGDrive().buildFileTree(session));
 		} catch (IOException e) {

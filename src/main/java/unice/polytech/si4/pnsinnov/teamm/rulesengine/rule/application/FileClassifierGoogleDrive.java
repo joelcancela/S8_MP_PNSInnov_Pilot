@@ -54,7 +54,7 @@ public class FileClassifierGoogleDrive {
 
         for (File file : files) {
             GoogleFileInfo fileInfo = new GoogleFileInfo(file.getName().split("\\.")[0]);
-            fileInfo.setSession(session);
+            fileInfo.setgDriveSession(session);
             fileInfo.setExtension(file.getFileExtension());
             fileInfo.setMimeType(file.getMimeType());
             fileInfo.setAcceptedExtensions(fileClassifier.isAcceptedExtension(file.getFileExtension()));

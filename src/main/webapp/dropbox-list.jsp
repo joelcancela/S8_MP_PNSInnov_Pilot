@@ -2,12 +2,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <jsp:include page="header.jsp">
-    <jsp:param name="title" value="Dropbox Drive Files List"/>
+    <jsp:param name="title" value="Google Drive Files List"/>
 </jsp:include>
 <body>
 
 <jsp:include page="navbar-drive.jsp">
-    <jsp:param name="drive" value="gdrive"/>
+    <jsp:param name="drive" value="dropbox"/>
 </jsp:include>
 
 <c:if test="${it.success != null}">
@@ -24,13 +24,23 @@
 
 <c:if test="${it.key != null}">
     <div class="alert alert-info">
-        <strong>Info !</strong> Your encryption key is : <c:out value="${it.key}"/>
+        <strong>Information </strong> Your encryption key is : <c:out value="${it.key}"/>
+    </div>
+</c:if>
+
+<c:if test="${it.createdFolders != null}">
+    <div class="alert alert-info" id="createFolderInfo">
+        <strong>Information </strong> We created ${it.createdFolders} folder(s) in your Drive
     </div>
 </c:if>
 
 <div class="container">
-    <form action="drools" method="post" style="margin: 0px;">
+    <form action="drools" method="post" style="margin: 0px;display:inline;">
         <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal"
+               data-target="#ownModal">
+    </form>
+    <form action="drools-simulate" method="post" style="margin: 0px;display:inline;">
+        <input type="submit" value="Preview" class="btn btn-info" data-backdrop="static" data-toggle="modal"
                data-target="#ownModal">
     </form>
 
@@ -71,9 +81,18 @@
         </div>
     </div>
 
-
-    <h3 style="margin: 1em 0 1em;">Files</h3>
-    <ownTags:directory tree="${it.fileRepresentation}" drive="dropbox"/>
+    <div>
+        <div class="listing panel panel-default" style="display: inline-block;">
+            <h3 style="margin: 1em 0 1em;">My Files</h3>
+            <ownTags:directory tree="${it.fileRepresentation}" drive="gdrive"/>
+        </div>
+        <c:if test="${it.simulate}">
+            <div class="listing panel panel-default" style="display: inline-block;">
+                <h3 style="margin: 1em 0 1em;">Preview</h3>
+                <ownTags:directory-simulation tree="${it.treeSimulation}" drive="gdrive"/>
+            </div>
+        </c:if>
+    </div>
 </div>
 </body>
 <!-- jQuery -->
@@ -83,4 +102,12 @@
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 <script src="../js/deleteModal.js"></script>
+<script>
+    $(document).ready(function () {
+        var $div = $("#createFolderInfo");
+        setTimeout(function () {
+            $div.hide();
+        }, 5000);
+    });
+</script>
 </html>

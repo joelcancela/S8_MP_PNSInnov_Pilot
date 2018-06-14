@@ -46,6 +46,7 @@ public class GoogleFileInfo extends FileInfo<File> {
             folderName = fileClassifier.getFolderNameExtension(this.getExtension());
         }
 
+        /* Check if the destination directory exists */
         try {
             if (simulation) {
                 for (FileRepresentation<File> f : treeFile.getFolders()) {
@@ -56,7 +57,7 @@ public class GoogleFileInfo extends FileInfo<File> {
                     }
                 }
             } else {
-                FileList result = session.getDrive().files().list()
+                FileList result = gDriveSession.getDrive().files().list()
                         .setQ("mimeType='application/vnd.google-apps.folder' and trashed=false")
                         .execute();
                 for (File f : result.getFiles()) {
@@ -72,6 +73,7 @@ public class GoogleFileInfo extends FileInfo<File> {
             logger.log(Level.ERROR, e.getMessage());
         }
 
+        /* Creates directory if it doesn't exist */
         if (!folderExist) {
             fileMetaData = new File();
             fileMetaData.setName(folderName);
@@ -85,7 +87,7 @@ public class GoogleFileInfo extends FileInfo<File> {
                 }
             } else {
                 try {
-                    fileMetaData = session.getDrive().files().create(fileMetaData).setFields("id").execute();
+                    fileMetaData = gDriveSession.getDrive().files().create(fileMetaData).setFields("id").execute();
                     logger.log(Level.INFO, "Folder " + folderName + " created");
                 } catch (IOException e) {
                     logger.log(Level.ERROR, e.getMessage());
@@ -93,11 +95,10 @@ public class GoogleFileInfo extends FileInfo<File> {
             }
         }
 
+        /* Apply move */
         if (simulation) {
             FileRepresentation<File> parentRepresentation = null;
             FileRepresentation<File> sourceRepresentation = null;
-            logger.log(Level.ERROR, treeFile);
-            logger.log(Level.ERROR, treeFile.getFolders());
             for (FileRepresentation<File> folderRepresentation : treeFile.getFolders()) {
                 if (folderRepresentation.file.getName().equals(folderName)) {
                     parentRepresentation = folderRepresentation;
@@ -117,7 +118,7 @@ public class GoogleFileInfo extends FileInfo<File> {
 
             File fileParents = null;
             try {
-                fileParents = session.getDrive().files().get(this.file.getId()).setFields("parents").execute();
+                fileParents = gDriveSession.getDrive().files().get(this.file.getId()).setFields("parents").execute();
             } catch (IOException e) {
                 logger.log(Level.ERROR, e.getMessage());
             }
@@ -136,7 +137,7 @@ public class GoogleFileInfo extends FileInfo<File> {
             // Move the file to the new folder
             try {
                 logger.log(Level.INFO, "Move file " + this.file.getName() + " to " + folderName);
-                file = session.getDrive().files().update(this.file.getId(), null)
+                file = gDriveSession.getDrive().files().update(this.file.getId(), null)
                         .setAddParents(fileMetaData.getId())
                         .setRemoveParents(previousParents.toString())
                         .setFields("id, parents")

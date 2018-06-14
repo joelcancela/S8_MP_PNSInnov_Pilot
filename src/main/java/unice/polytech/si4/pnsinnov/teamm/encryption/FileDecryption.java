@@ -51,7 +51,7 @@ public class FileDecryption extends Encryption {
 		if (encryptedFileId == null || encryptedFileId.isEmpty()) {
 			map.put("error", "A target file to decrypt must be provided");
 		} else {
-			if (drive.equals("drive")) {
+			if (drive.equals("gdrive")) {
 				GDriveSession session = Login.retrieveDriveSessionFromCookie(request);
 				String downloadedPath = null;
 				try {

@@ -28,7 +28,7 @@ class RuleCreationWizardTest {
     @Test
     void createFoldersList() {
         List<String> foldersList = new ArrayList <>();
-        ruleCreationWizard.createFoldersList(foldersList, files);
+        ruleCreationWizard.createFoldersListGoogle(foldersList, files);
         assertEquals(1, foldersList.size());
     }
 }

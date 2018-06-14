@@ -7,16 +7,20 @@ import com.dropbox.core.DbxWebAuth;
 import com.dropbox.core.v1.DbxEntry;
 import com.dropbox.core.v2.filerequests.FileRequest;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
+import com.google.api.services.drive.Drive;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 import unice.polytech.si4.pnsinnov.teamm.drive.exceptions.NullFileException;
+import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -131,5 +135,25 @@ public class DropboxDrive {
 
     public void uploadFile(DropboxSession session, File file) throws DbxException, IOException {
         session.getDropboxClient().files().upload("/" + file.getName()).uploadAndFinish(new FileInputStream(file));
+    }
+
+
+    public List<Metadata> getFilesList(DropboxSession session) throws DbxException {
+        List <Metadata> files = session.getDropboxClient().files()
+                .listFolderBuilder("")
+                .withIncludeDeleted(false)
+                .withRecursive(true)
+                .withIncludeMediaInfo(true)
+                .start()
+                .getEntries()
+                .stream()
+                .filter(metadata -> metadata instanceof FileMetadata)
+                .collect(Collectors.toList());
+        if (files.isEmpty()) {
+            logger.log(Level.INFO, "No files found.");
+        } else {
+            logger.log(Level.INFO, files.size() + " Files found.");
+        }
+        return files;
     }
 }

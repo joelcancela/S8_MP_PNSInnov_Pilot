@@ -41,7 +41,7 @@ public class GDriveOAuth {
 		try {
 			gDriveSession.setCredential(code);
 		} catch (GeneralSecurityException e) {
-			logger.log(Level.ERROR, "Error occurred while set google session credentials");
+			logger.log(Level.ERROR, "Error occurred while set google gDriveSession credentials");
 		}
 
 		GDrive.getGDrive().subscribeToChanges(gDriveSession);
