@@ -16,22 +16,25 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img class="navbar-left" src="<%=request.getContextPath()%>/img/logo.png" alt="Logo" width="50px" height="50px">
-            <a class="navbar-brand" href="/Pilot">Welcome to Pilot !</a>
+            <a class="navbar-brand" href="/Pilot">
+                <img class="navbar-left" src="<%=request.getContextPath()%>/img/logo.png" alt="Logo" width="50px"
+                     height="50px">
+                Welcome to Pilot !
+            </a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <% if (session.getAttribute("user.logged") == null) { %>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/login.jsp">
-                            <i class="fas fa-sign-in-alt"></i> Log In
-                        </a>
-                    </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/login.jsp">
+                        <i class="fas fa-sign-in-alt"></i> Log In
+                    </a>
+                </li>
                 <% } else {%>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/api/logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
-                    </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/api/logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
+                </li>
                 <% } %>
 
 

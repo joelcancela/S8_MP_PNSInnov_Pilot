@@ -16,8 +16,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img class="navbar-left" src="<%=request.getContextPath()%>/img/logo.png" alt="Logo" width="50px" height="50px">
-            <a class="navbar-brand" href="/Pilot">Welcome to Pilot !</a>
+            <a class="navbar-brand" href="/Pilot">
+                <img class="navbar-left" src="<%=request.getContextPath()%>/img/logo.png" alt="Logo" width="50px"
+                     height="50px">
+                Welcome to Pilot !
+            </a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -32,10 +35,12 @@
                     <a href="generateKey"><i class="fas fa-lock"></i> Get encryption key</a>
                 </li>
                 <li>
-                    <a href="ruleCreation?drive=<%= request.getParameter("drive")%>"><i class="fas fa-edit"></i> Define rules</a>
+                    <a href="ruleCreation?drive=<%= request.getParameter("drive")%>"><i class="fas fa-edit"></i> Define
+                        rules</a>
                 </li>
                 <li>
-                    <a href="displayRules?drive=<%= request.getParameter("drive")%>"><i class="far fa-eye"></i> Display my rules</a>
+                    <a href="displayRules?drive=<%= request.getParameter("drive")%>"><i class="far fa-eye"></i> Display
+                        my rules</a>
                 </li>
                 <li>
                     <a href="${pageContext.request.contextPath}/api/logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
