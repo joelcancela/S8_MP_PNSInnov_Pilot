@@ -59,6 +59,7 @@ public class CreateRule {
                     break;
             }
         }
+        int numberOfRules = 0;
         if (toCompare != null
                 && destinationDir != null
                 && conditionParameter != null
@@ -68,6 +69,7 @@ public class CreateRule {
             Optional<RuleSet> ruleSet = RuleSetSerializer.getRuleSetForUser(Login.retrieverUserIDFromCookie(request));
             if (ruleSet.isPresent()) {
                 List<String> temp = ruleSet.get().getRules();
+                numberOfRules = temp.size();
                 List<Integer> listSalience = new ArrayList<>();
                 for (String rule : temp) {
                     Pattern p = Pattern.compile("salience ([0-9]+)");
@@ -81,9 +83,9 @@ public class CreateRule {
             }
             Rule rule = new Rule(createRuleName(options, toCompare), toCompare, destinationDir, conditionParameter);
             if (options.equals("patternButton")) {
-                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionRegexAsDRL());
+                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionRegexAsDRL(numberOfRules));
             } else {
-                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionAsDRL());
+                rule.addRuleToSystem(Login.retrieverUserIDFromCookie(request), rule.conditionAsDRL(numberOfRules));
             }
         }
         return null;

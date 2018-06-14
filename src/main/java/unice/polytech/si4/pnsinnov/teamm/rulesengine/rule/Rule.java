@@ -34,11 +34,11 @@ public class Rule {
 		this.conditionParameter = conditionParameter;
 	}
 
-	public String conditionAsDRL() throws IllegalStateException, IllegalArgumentException {
+	public String conditionAsDRL(int numberOfRules) throws IllegalStateException, IllegalArgumentException {
 		StringBuilder drl = new StringBuilder();
 		drl.append("\n\nrule \"")
 				.append(name)
-				.append("\" salience 0\n")
+				.append("\" salience "+numberOfRules+"\n")
 				.append("when\n")
 				.append("    $file:FileInfo(")
 				.append(conditionParameter.parameterString)
@@ -53,11 +53,11 @@ public class Rule {
 		return drl.toString();
 	}
 
-	public String conditionRegexAsDRL() {
+	public String conditionRegexAsDRL(int numberOfRules) {
 		StringBuilder drl = new StringBuilder();
 		drl.append("\n\nrule \"")
 				.append(name)
-				.append("\" salience 0\n")
+				.append("\" salience "+numberOfRules+"\n")
 				.append("when\n")
 				.append("    $file:FileInfo(name ");
 		if (conditionParameter.equals(ConditionParameter.REGEX_CONTAINS)) {
