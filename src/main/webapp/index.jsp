@@ -41,7 +41,7 @@
         <% } %>
         <div class="col-sm-4 text-center">
             <a href="" class="btn btn-primary btn-lg disabled" role="button"><i class="fas fa-cloud"></i>
-                Connect to One Drive (Coming soon)</a>
+                Connect to OneDrive (Coming soon)</a>
         </div>
     </div>
     <% } else {%>

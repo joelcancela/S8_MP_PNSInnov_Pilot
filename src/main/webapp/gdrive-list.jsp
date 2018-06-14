@@ -35,11 +35,11 @@
 </c:if>
 
 <div class="container">
-    <form action="drools" method="post" style="margin: 0px;display:inline;">
+    <form action="drools?drive=gdrive" method="post" style="margin: 0px;display:inline;">
         <input type="submit" value="Classify" class="btn btn-success" data-backdrop="static" data-toggle="modal"
                data-target="#ownModal">
     </form>
-    <form action="drools-simulatedrive=gdrive" method="post" style="margin: 0px;display:inline;">
+    <form action="drools-simulate?drive=gdrive" method="post" style="margin: 0px;display:inline;">
         <input type="submit" value="Preview" class="btn btn-info" data-backdrop="static" data-toggle="modal"
                data-target="#ownModal">
     </form>

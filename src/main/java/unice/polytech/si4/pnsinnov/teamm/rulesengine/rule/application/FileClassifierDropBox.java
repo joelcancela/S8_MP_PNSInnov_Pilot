@@ -20,9 +20,6 @@ import unice.polytech.si4.pnsinnov.teamm.drive.FileRepresentation;
 import unice.polytech.si4.pnsinnov.teamm.drive.dropbox.DropboxDrive;
 import unice.polytech.si4.pnsinnov.teamm.drive.dropbox.DropboxFileInfo;
 import unice.polytech.si4.pnsinnov.teamm.drive.dropbox.DropboxSession;
-import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDrive;
-import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GDriveSession;
-import unice.polytech.si4.pnsinnov.teamm.drive.gdrive.GoogleFileInfo;
 import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSet;
 import unice.polytech.si4.pnsinnov.teamm.rulesengine.persistence.RuleSetSerializer;
 

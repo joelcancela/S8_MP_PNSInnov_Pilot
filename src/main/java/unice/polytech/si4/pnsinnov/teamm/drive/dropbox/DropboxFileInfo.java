@@ -124,7 +124,7 @@ public class DropboxFileInfo extends FileInfo <Metadata> {
             // Move the file to the new folder
             try {
                 logger.log(Level.INFO, "Move file " + this.file.getName() + " to " + folderName);
-                file = dropboxSession.getDropboxClient().files().moveV2(this.file.getName(), folderName).getMetadata();
+                file = dropboxSession.getDropboxClient().files().moveV2("/_Automatic/"+this.file.getName(), "/"+folderName+"/"+this.file.getName()).getMetadata();
             } catch (DbxException e) {
                 logger.log(Level.ERROR, e.getMessage());
             }
