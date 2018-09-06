@@ -11,6 +11,11 @@ Projet PNSInnov de l'équipe M composée de :
 
 Pilot est une solution qui aide à la gestion d’un espace de stockage en ligne. Notre solution se greffe sur différents espaces de stockage en ligne déjà existants. Elle est innovante dans la mesure où elle offre à l’utilisateur la possibilité de ranger automatiquement ses fichiers en fonction de règles établies et de les chiffrer s’il le désire.
 
+## Captures d'écran
+
+![Menu](/img/different-drives.png)
+![Exemple GDrive](/img/GDrive.png)
+
 ## Développé en Java avec
 
 - Jersey (JAX-RS)
